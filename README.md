@@ -20,12 +20,18 @@ urgent items jump straight to the Today tier. Also: urgency triage (eviction
 notice, shutoff, no food → **Today**), personal-situation boosters ("Because of who you are" — veteran,
 single parent, 60+, tribal, rural, already-on-SNAP, etc.), free-text problems
 in the member's own words, print, and copy-as-text. (Three tabs — The Quiz / My Results
-/ Privacy. The quiz is one small page per topic — 15 topic pages drawn from
-the community's Quick Guide spaces and Matthew's reports (home, bills, food &
-everyday needs, health/dental/vision, family, seniors, veterans, disability,
-work, business, nonprofit, cars, school, legal & safety, pets) with 49
-pickable problems in total, plus 5 finishing pages — progress bar over all 20. A solid frame in the four
-brand colors runs around the whole app.)
+/ Privacy. The quiz is one small page per topic — 15 topic pages that **mirror
+the community's own guide spaces one-for-one** (home & housing, bills/debt/money,
+food & everyday needs, health care, family, seniors, veterans, disability,
+work & career, business, nonprofit, cars & getting around, school, taxes,
+legal & safety) with 86 pickable problems in total, plus 5 finishing pages —
+progress bar over all 20. Every option matches a posted guide in Lesko Help
+(harvested via the community MCP: the full Healthcare Assistance guide list,
+Bills-Debt-Homes & Cars, Families-Seniors & Disabilities, Taxes & Legal Help,
+all 28 Business-Nonprofits & Career guides, Cars & Car Repairs, Grant Basics
+STEP 0), and each result card links its community guide post first under
+"In Lesko Help." A solid frame in the four brand colors runs around the
+whole app.)
 
 Priority tiers ride on the card suits:
 **♥ Today · ♦ This week · ♠ This month · ♣ When you're steady.**
@@ -43,10 +49,11 @@ Priority tiers ride on the card suits:
   nothing breaks inside a Mighty Networks iframe embed.
 
 The program catalog lives in `index.html` inside the `NEEDS` array (one object
-per problem card) and `FLAGS` (the because-of-who-you-are boosters). Each item
-is `{ n: name, w: what you get, how, url, tel, only: "XX" }` — `{ZIP}` and
-`{STATE}` are substituted from the member's answers, and `only` limits an item
-to one state (e.g. California's smog-repair fund).
+per problem card), `GUIDES` (every posted community guide, by URL — cards
+reference them in `comm`), and `FLAGS` (the because-of-who-you-are boosters).
+Each item is `{ n: name, w: what you get, how, url, tel, only: "XX" }` —
+`{ZIP}` and `{STATE}` are substituted from the member's answers, and `only`
+limits an item to one state (e.g. California's smog-repair fund).
 
 ## Data currency
 
