@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="A free, private call-sheet builder from the Lesko Help community. Answer a few questions - get a numbered call sheet for every problem: what to ask for, who to call, and what to say. In the right order.">
+<meta name="description" content="A free, private needs assessment from the Lesko Help community. Answer a few questions - get a clear, numbered list of what to ask for, who to call, and what to say. In the right order.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%232e43c8'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='38' font-weight='bold' fill='white' text-anchor='middle'%3E%3F%3C/text%3E%3C/svg%3E">
 <title>What Should I Ask For?</title>
 <style>
@@ -1084,10 +1084,11 @@ select {
   <!-- ================================================================ hero -->
   <section class="hero">
     <div>
-      <h1>Stop searching.<br>Start <em>asking.</em></h1>
-      <p class="hero-sub">A free call-sheet builder from the Lesko Help community.
-      Answer a few questions about what's going on in your life — get a numbered call sheet
-      for every problem: what to ask for, who to call, and what to say. In the right order.</p>
+      <h1>Take a breath.<br>Get clear on what to <em>ask for.</em></h1>
+      <p class="hero-sub">You don't have to figure this out alone — or all at once.
+      Answer a few questions about what's going on in your life, and get a clear,
+      numbered list of what to ask for, who to call, and what to say. In the right order.
+      Free, from the Lesko Help community.</p>
     </div>
     <aside class="privacy-chip">
       <span class="mono-label">🔒&nbsp; 100% Private</span>
@@ -1099,10 +1100,9 @@ select {
   <!-- ================================================================ tabs -->
   <nav class="tabbar" aria-label="Sections">
     <button class="tab active" data-tab="situation">01 · My Situation</button>
-    <button class="tab" data-tab="sheet">02 · My Call Sheets<span class="bub" id="bub-sheet" hidden>0</span></button>
-    <button class="tab" data-tab="progress">03 · My Progress</button>
-    <button class="tab" data-tab="tips">04 · Tips &amp; Scripts</button>
-    <button class="tab" data-tab="privacy">05 · Privacy</button>
+    <button class="tab" data-tab="sheet">02 · My Results<span class="bub" id="bub-sheet" hidden>0</span></button>
+    <button class="tab" data-tab="tips">03 · Tips &amp; Scripts</button>
+    <button class="tab" data-tab="privacy">04 · Privacy</button>
   </nav>
 
   <!-- ======================================================== 01 SITUATION -->
@@ -1119,7 +1119,7 @@ select {
 
       <aside class="rail">
         <div class="card">
-          <span class="mono-label">Your call sheets so far</span>
+          <span class="mono-label">Your list so far</span>
           <div id="rail-body">
             <div class="rail-empty">
               <div class="q" aria-hidden="true">?</div>
@@ -1137,14 +1137,14 @@ select {
   <!-- ======================================================= 02 CALL SHEET -->
   <section class="panel" id="panel-sheet" hidden>
     <div class="print-head">
-      <span class="mono-label">Lesko Help · My Call Sheets · <span id="print-date"></span></span>
+      <span class="mono-label">Lesko Help · What Should I Ask For? · <span id="print-date"></span></span>
     </div>
 
     <div class="sheet-top">
       <div>
-        <h2>My call <em>sheets</em></h2>
-        <p class="lead" id="sheet-lead">One call sheet per problem, numbered and in order.
-        Check things off as you call — this page remembers for you.</p>
+        <h2>Here’s what to <em>ask for</em></h2>
+        <p class="lead" id="sheet-lead">Your problems, numbered and in priority order —
+        each with what to ask for, who to call, and what to say.</p>
       </div>
       <div class="sheet-actions noprint">
         <button class="btn ghost" id="btn-copy">⧉ Copy as text</button>
@@ -1163,21 +1163,14 @@ select {
     <div id="sheet-body">
       <div class="empty-sheet">
         <div class="q" aria-hidden="true">?</div>
-        <h3>No call sheets yet</h3>
+        <h3>No results yet</h3>
         <p>Answer the questions under <b>01 · My Situation</b> and your
-        call sheets will be built right here — one per problem.</p>
+        personal ask list will be built right here.</p>
         <button class="btn big" data-goto="situation">Start with question 1 →</button>
       </div>
     </div>
   </section>
 
-  <!-- ========================================================= 03 PROGRESS -->
-  <section class="panel" id="panel-progress" hidden>
-    <h2>My <em>progress</em></h2>
-    <p class="lead">Getting free money is phone work. Every box you check on your
-    call sheet shows up here — proof that you're working the list.</p>
-    <div id="progress-body"></div>
-  </section>
 
   <!-- ============================================================= 04 TIPS -->
   <section class="panel" id="panel-tips" hidden>
@@ -1197,7 +1190,7 @@ select {
       <span class="mono-label">Rule 2 · The money isn't in Washington</span>
       <p>The money starts in Washington, but it's handed out by your state
       capital, your county, your city, and local nonprofits. That's why your
-      call sheet is full of <b>local</b> offices — they're the ones writing
+      results are full of <b>local</b> offices — they're the ones writing
       checks.</p>
     </div>
 
@@ -1287,7 +1280,7 @@ select {
         <li><div><span class="r-name"><a href="https://lesko-help-2.mn.co/spaces/24461105" target="_blank" rel="noopener">AI Grant Researcher</a></span>
           <span class="r-what">— get a research report on programs for your exact situation and zip code.</span></div></li>
         <li><div><span class="r-name"><a href="https://lesko-help-2.mn.co/spaces/24440881" target="_blank" rel="noopener">Call Sheet Classes</a></span>
-          <span class="r-what">— live classes on building and working a call sheet like this one.</span></div></li>
+          <span class="r-what">— live classes that turn results like these into a working call sheet.</span></div></li>
         <li><div><span class="r-name"><a href="https://lesko-help-2.mn.co/spaces/24366189" target="_blank" rel="noopener">Application Classes</a></span>
           <span class="r-what">— get walked through the actual applications.</span></div></li>
         <li><div><span class="r-name"><a href="https://lesko-help-2.mn.co/spaces/23328015" target="_blank" rel="noopener">Thursday Drop-In Clinic</a></span>
@@ -1310,7 +1303,7 @@ select {
 
     <div class="mini t-green" data-suit="♣">
       <span class="mono-label">Everything stays on your device</span>
-      <p>Your answers and your call sheet are saved only in this browser, on
+      <p>Your answers and your results are saved only in this browser, on
       this device — like notes on your own refrigerator. Nothing is sent to us,
       to Lesko Help, or to anyone else. There is no account, no email, no
       tracking of what you pick.</p>
@@ -1328,9 +1321,9 @@ select {
       <span class="mono-label">Good to know</span>
       <ul style="margin:10px 0 4px;padding-left:22px;font-size:15px;line-height:1.6;max-width:70ch">
         <li>Clearing your browser data, or switching devices or browsers, means
-        your saved call sheet won't follow you — print it or copy it somewhere
+        your saved results won't follow you — print them or copy them somewhere
         safe if you want a backup.</li>
-        <li>The links on your call sheet go to official government and nonprofit
+        <li>The links in your results go to official government and nonprofit
         websites. Once you leave this page, their privacy rules apply.</li>
         <li>This tool is education and research help from the Lesko Help
         community — it can show you where the programs are, but only the agency
@@ -1340,8 +1333,8 @@ select {
 
     <div class="card">
       <span class="mono-label">Start over</span>
-      <p style="margin:8px 0 12px;max-width:66ch">This wipes your answers, your
-      call sheet, and your progress from this device. There's no undo.</p>
+      <p style="margin:8px 0 12px;max-width:66ch">This wipes your answers and your
+      results from this device. There's no undo.</p>
       <button class="btn red" id="btn-wipe">🗑 Erase everything &amp; start fresh</button>
     </div>
   </section>
@@ -2196,7 +2189,7 @@ function toast(msg) {
 /* ==================================================================
    Tabs
    ================================================================== */
-const PANELS = ["situation", "sheet", "progress", "tips", "privacy"];
+const PANELS = ["situation", "sheet", "tips", "privacy"];
 
 function goTab(id) {
   PANELS.forEach((p) => {
@@ -2204,7 +2197,6 @@ function goTab(id) {
   });
   document.querySelectorAll(".tab").forEach((b) => b.classList.toggle("active", b.dataset.tab === id));
   if (id === "sheet") renderSheet();
-  if (id === "progress") renderProgress();
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
@@ -2259,7 +2251,7 @@ function wizFoot(n) {
   return `<div class="qfoot">
       <button class="btn ghost" data-wz="back" ${n === 1 ? "style='visibility:hidden'" : ""}>← Back</button>
       <span class="fine">${n === 1 ? "6 short steps · about 3 minutes · not an application — nothing is sent anywhere" : ""}</span>
-      <button class="btn ${last ? "big" : ""}" data-wz="next">${last ? "Build my call sheet →" : "Next →"}</button>
+      <button class="btn ${last ? "big" : ""}" data-wz="next">${last ? "Get my results →" : "Next →"}</button>
     </div>`;
 }
 
@@ -2519,9 +2511,9 @@ function renderRail() {
       }).join("") +
       customs.map((c) => `<li><span class="s" style="color:var(--${c.urgent ? "red" : "ink-faint"})">${c.urgent ? "♥" : "?"}</span>${esc(c.t)}</li>`).join("");
     el.innerHTML = `
-      <div class="rail-count">${total}<small> call sheet${total === 1 ? "" : "s"} → <b>${doors}</b> doors to knock on</small></div>
+      <div class="rail-count">${total}<small> problem${total === 1 ? "" : "s"} → <b>${doors}</b> doors to knock on</small></div>
       <ul class="rail-list">${rows}</ul>
-      ${S.built ? `<p style="margin:14px 0 0"><button class="btn" data-goto="sheet">See my call sheet →</button></p>` : ""}`;
+      ${S.built ? `<p style="margin:14px 0 0"><button class="btn" data-goto="sheet">See my results →</button></p>` : ""}`;
   }
   const bub = $("#bub-sheet");
   bub.hidden = !S.built || !total;
@@ -2539,19 +2531,16 @@ function buildSheet() {
   S.built = true;
   saveS();
   goTab("sheet");
-  toast("Your call sheets are ready — one per problem. Say financial assistance, never grants.");
+  toast("Here’s what to ask for — in the right order. Say financial assistance, never grants.");
 }
 
 function resItem(ndId, sec, i, r) {
   if (r.only && r.only !== S.state) return "";
-  const key = ndId + "|" + sec + "|" + i;
-  const done = !!S.done[key];
   const bits = [];
   if (r.url) bits.push(`<a href="${esc(fillUrl(r.url))}" target="_blank" rel="noopener">${esc(fillUrl(r.url).replace(/^https?:\/\/(www\.)?/, "").split("/")[0])}</a>`);
   if (r.tel) bits.push(`<a href="tel:${esc(r.tel.replace(/[^\d]/g, "") || r.tel)}">${esc(r.tel)}</a>`);
   if (r.how) bits.unshift(esc(fill(r.how)));
-  return `<li class="${done ? "done-row" : ""}">
-    <button class="ck ${done ? "done" : ""}" data-ck="${esc(key)}" aria-label="Mark done: ${esc(r.n)}" aria-pressed="${done}"></button>
+  return `<li>
     <div><span class="r-name">${esc(fill(r.n))}</span> <span class="r-what">— ${esc(fill(r.w))}</span>
     ${bits.length ? `<span class="r-how">${bits.join(" · ")}</span>` : ""}</div>
   </li>`;
@@ -2570,7 +2559,7 @@ function askCard(nd, num) {
     <div class="ask-head">
       <div class="ask-num" aria-hidden="true">${num}</div>
       <div>
-        <span class="ask-eyebrow">Call sheet ${String(num).padStart(2, "0")}</span>
+        <span class="ask-eyebrow">Ask ${String(num).padStart(2, "0")}</span>
         <div class="badges"><span class="badge ${t.badge}">${t.suit} ${t.label}</span></div>
         <h3 class="ask-title">${esc(nd.sheetTitle)}</h3>
       </div>
@@ -2606,7 +2595,7 @@ function customCard(entry, num) {
     <div class="ask-head">
       <div class="ask-num" aria-hidden="true">${num}</div>
       <div>
-        <span class="ask-eyebrow">Call sheet ${String(num).padStart(2, "0")}</span>
+        <span class="ask-eyebrow">Ask ${String(num).padStart(2, "0")}</span>
         <div class="badges"><span class="badge ${t.badge}">${t.suit} ${t.label}</span><span class="badge plain">in your words</span></div>
         <h3 class="ask-title">${esc(entry.t)}</h3>
       </div>
@@ -2640,7 +2629,7 @@ function boosterCard() {
     <div class="ask-head">
       <div class="ask-num" aria-hidden="true">★</div>
       <div>
-        <span class="ask-eyebrow">Bonus sheet</span>
+        <span class="ask-eyebrow">Bonus asks</span>
         <div class="badges"><span class="badge week">♦ Extra doors</span></div>
         <h3 class="ask-title">Because of who you are</h3>
       </div>
@@ -2661,8 +2650,8 @@ function renderSheet() {
   if (!S.built || (!picked.length && !customs.length)) {
     el.innerHTML = `<div class="empty-sheet">
       <div class="q" aria-hidden="true">?</div>
-      <h3>No call sheets yet</h3>
-      <p>Answer the questions under <b>01 · My Situation</b> and your call sheets will be built right here — one per problem.</p>
+      <h3>No results yet</h3>
+      <p>Answer the questions under <b>01 · My Situation</b> and your personal ask list will be built right here.</p>
       <button class="btn big" data-goto="situation">Start with question 1 →</button>
     </div>`;
     $("#sheet-legend").hidden = true;
@@ -2673,7 +2662,7 @@ function renderSheet() {
   $("#print-date").textContent = new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
   $("#sheet-lead").innerHTML =
     (stateName() ? `Built for <b>${esc(stateName())}</b>${S.zip ? " · ZIP " + esc(S.zip) : ""}. ` : "") +
-    `One numbered call sheet per problem — work them top to bottom, <em style="color:var(--red)">and never say “grants” on the phone; say “financial assistance.”</em>`;
+    `Numbered, in priority order — work it top to bottom, <em style="color:var(--red)">and never say “grants” on the phone; say “financial assistance.”</em>`;
 
   // one ordered list: real needs + "Other" problems, sorted by tier (stable)
   const entries = [
@@ -2685,7 +2674,7 @@ function renderSheet() {
 
   html += `<div class="first-calls">
     <span class="mono-label">Before anything else — the three master keys</span>
-    <h3>Every call sheet starts with these</h3>
+    <h3>Start with these, whatever’s on your list</h3>
     <ol>
       <li><b>Dial 211</b> (or text your ZIP to 898-211) — one call sorts your whole situation into local programs. <a href="https://www.211.org" target="_blank" rel="noopener">211.org</a></li>
       <li><b>FindHelp.org</b> — every nonprofit program near you${S.zip ? `: <a href="https://www.findhelp.org/search_results/${encodeURIComponent(S.zip)}" target="_blank" rel="noopener">see your ZIP</a>` : ` — <a href="https://www.findhelp.org" target="_blank" rel="noopener">findhelp.org</a>`}.</li>
@@ -2716,14 +2705,6 @@ function renderSheet() {
 
   el.innerHTML = html;
 
-  el.querySelectorAll("[data-ck]").forEach((b) => b.addEventListener("click", () => {
-    const k = b.dataset.ck;
-    S.done[k] = !S.done[k];
-    if (!S.done[k]) delete S.done[k];
-    saveS();
-    renderSheet();
-    if (S.done[k] !== undefined) toast("Checked off. Keep dialing — the next yes is out there.");
-  }));
 }
 
 /* ==================================================================
@@ -2738,7 +2719,7 @@ function sheetAsText() {
   ].sort((a, b) => a.tier - b.tier);
 
   const L = [];
-  L.push("MY CALL SHEETS — Lesko Help");
+  L.push("WHAT I SHOULD ASK FOR — Lesko Help");
   L.push((stateName() ? stateName() + (S.zip ? " · " + S.zip : "") + " · " : "") + new Date().toLocaleDateString("en-US"));
   L.push("Rule: never say “grants” — say “financial assistance.”");
   L.push("");
@@ -2760,7 +2741,7 @@ function sheetAsText() {
     if (e.nd) {
       const nd = e.nd;
       const t = TIERS[effectiveTier(nd)];
-      L.push("CALL SHEET " + num + " — " + nd.sheetTitle.toUpperCase() + "  [" + t.label + "]");
+      L.push("ASK " + num + " — " + nd.sheetTitle.toUpperCase() + "  [" + t.label + "]");
       L.push("   SAY: “" + fill(nd.say) + "”");
       (nd.fed || []).forEach(item);
       (nd.local || []).forEach(item);
@@ -2769,7 +2750,7 @@ function sheetAsText() {
       if (nd.tip) L.push("   TIP: " + fill(nd.tip));
     } else {
       const c = e.c;
-      L.push("CALL SHEET " + num + " — " + c.t.toUpperCase() + "  [" + (c.urgent ? "Today" : "This month") + "]");
+      L.push("ASK " + num + " — " + c.t.toUpperCase() + "  [" + (c.urgent ? "Today" : "This month") + "]");
       L.push("   SAY: “I'm dealing with " + c.t.toLowerCase() + " and I'm looking for any financial assistance or free services for my situation.”");
       L.push("   • 211 · FindHelp.org · your librarian · your Congressperson's caseworker");
     }
@@ -2792,55 +2773,6 @@ function sheetAsText() {
   return L.join("\n");
 }
 
-/* ==================================================================
-   Progress
-   ================================================================== */
-function totalDoors() {
-  let n = 0;
-  const count = (items) => (items || []).forEach((r) => { if (!r.only || r.only === S.state) n += 1; });
-  NEEDS.filter((nd) => S.needs.includes(nd.id)).forEach((nd) => { count(nd.fed); count(nd.local); count(nd.human); });
-  n += customEntries().length * 4;
-  return n;
-}
-
-function renderProgress() {
-  const el = $("#progress-body");
-  const done = Object.keys(S.done).length;
-  const total = totalDoors();
-  if (!S.built || !total) {
-    el.innerHTML = `<div class="empty-sheet">
-      <div class="q" aria-hidden="true">?</div>
-      <h3>Nothing to track yet</h3>
-      <p>Build your call sheet first — then every box you check shows up here.</p>
-      <button class="btn big" data-goto="situation">Build my call sheet →</button>
-    </div>`;
-    return;
-  }
-  const pct = Math.min(100, Math.round((done / total) * 100));
-  const enc =
-    done === 0 ? "Every yes starts with an awkward first call. Make one today — just one." :
-    done < 3 ? "You've started — that already puts you ahead of most people. Keep the streak." :
-    done < 8 ? "This is real research. Every call teaches you who to call next." :
-    "You're working this list like a pro. Matthew would wear his best question-mark suit for you.";
-  const sheets = NEEDS.filter((nd) => S.needs.includes(nd.id)).length + customEntries().length;
-  el.innerHTML = `
-    <div class="stat-row">
-      <div class="stat"><b>${sheets}</b><span>call sheets</span></div>
-      <div class="stat"><b>${done}</b><span>doors knocked</span></div>
-      <div class="stat"><b>${Math.max(0, total - done)}</b><span>doors left</span></div>
-      <div class="stat"><b>${pct}%</b><span>of your sheet</span></div>
-    </div>
-    <div class="qtrack" style="height:10px;margin-bottom:18px"><i style="width:${pct}%"></i></div>
-    <div class="mini t-yellow" data-suit="♦">
-      <span class="mono-label">Keep going</span>
-      <p>${enc}</p>
-    </div>
-    <div class="mini t-green" data-suit="♣">
-      <span class="mono-label">Got money? Got a yes?</span>
-      <p>Post it in <a href="${SPACES.success.url}" target="_blank" rel="noopener">Success Stories</a> — and tell the room what words worked. Your call is somebody else's map.</p>
-    </div>
-    <p class="fine">Checkmarks live on your call sheet (tab 02). This page just adds them up.</p>`;
-}
 
 /* ==================================================================
    Buttons: copy, print, edit, wipe

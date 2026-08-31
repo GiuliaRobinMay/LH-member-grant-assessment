@@ -1,8 +1,8 @@
-# What Should I Ask For? — the Lesko Help call-sheet builder
+# What Should I Ask For? — the Lesko Help member needs assessment
 
 A free, private needs-assessment tool for Lesko Help members. Members answer six
-short questions about what's going on in their life, and the tool builds their
-**call sheets — one numbered call sheet per problem**, in priority order, each with
+short questions about what's going on in their life, and get their **results:
+one numbered ask per problem**, in priority order, each with
 
 - **Say this on the phone** — the exact ask, in Matthew's
   "financial assistance, never grants" language
@@ -15,11 +15,13 @@ short questions about what's going on in their life, and the tool builds their
 - **In Lesko Help** — the community spaces and classes for that topic
 
 Plus: an **"Other" box on every choice screen** (needs groups, urgency, and
-about-you) so problems we didn't list still get their own call sheet — typed
+about-you) so problems we didn't list still get their own numbered ask — typed
 urgent items jump straight to the Today tier. Also: urgency triage (eviction
 notice, shutoff, no food → **Today**), personal-situation boosters ("Because of who you are" — veteran,
 single parent, 60+, tribal, rural, already-on-SNAP, etc.), free-text problems
-in the member's own words, progress tracking, print, and copy-as-text.
+in the member's own words, print, and copy-as-text. (Deliberately no
+call-sheet or progress features — this tool is the assessment and the result;
+the call-sheet workflow lives in the community's Call Sheet Classes.)
 
 Priority tiers ride on the card suits:
 **♥ Today · ♦ This week · ♠ This month · ♣ When you're steady.**
@@ -59,7 +61,7 @@ Embed in a Mighty Networks space (Lesko Toolbox collection) with:
 ```html
 <iframe
   src="https://leskomemberassessment.netlify.app/"
-  title="What Should I Ask For? — Lesko Help call sheet builder"
+  title="What Should I Ask For? — Lesko Help member needs assessment"
   style="width:100%; height:90vh; min-height:900px; border:0; border-radius:16px; background:#faf6ec;"
   loading="lazy"
   allow="clipboard-write">
