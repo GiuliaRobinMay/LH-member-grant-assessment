@@ -916,22 +916,66 @@ select {
   color: var(--ink-soft);
 }
 
-/* boosters + tier legend */
-.legend {
+/* ------------------- the list: one problem = one row, grouped by tier */
+.tier-head {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px 16px;
   align-items: center;
-  margin: 0 0 18px;
-  font-size: 13.5px;
-  color: var(--ink-soft);
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--tier-color, var(--ink));
+  margin: 26px 0 10px;
 }
+.tier-head .s { font-family: var(--suit-font); font-size: 16px; }
+.tier-head::after { content: ""; flex: 1; height: 1px; background: var(--hairline-soft); }
+.tier-head.t0 { --tier-color: var(--red); }
+.tier-head.t1 { --tier-color: var(--gold-2); }
+.tier-head.t2 { --tier-color: var(--blue); }
+.tier-head.t3 { --tier-color: var(--green); }
 
-.legend .s { font-family: var(--suit-font); margin-right: 4px; }
-.legend .l0 .s { color: var(--red); }
-.legend .l1 .s { color: var(--gold-2); }
-.legend .l2 .s { color: var(--blue); }
-.legend .l3 .s { color: var(--green); }
+.ask-row {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border: 1px solid var(--tier-line, var(--hairline));
+  border-radius: 10px;
+  background: var(--paper-2);
+  padding: 12px 16px 12px 20px;
+  margin-bottom: 9px;
+  box-shadow: 0 1px 2px rgba(22, 34, 63, 0.04);
+}
+.ask-row::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: var(--tier-color, var(--ink));
+}
+.ask-row.t0 { --tier-color: var(--red);    --tier-line: rgba(232, 69, 60, 0.4); }
+.ask-row.t1 { --tier-color: var(--gold-2); --tier-line: rgba(203, 150, 20, 0.45); }
+.ask-row.t2 { --tier-color: var(--blue);   --tier-line: rgba(46, 67, 200, 0.35); }
+.ask-row.t3 { --tier-color: var(--green);  --tier-line: rgba(46, 158, 91, 0.4); }
+.ask-row .num {
+  font-family: var(--serif);
+  font-size: 21px;
+  line-height: 1;
+  color: var(--tier-color, var(--ink));
+  min-width: 30px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.ask-row .row-main { flex: 1; min-width: 0; }
+.ask-row .row-title { font-family: var(--serif); font-size: 18.5px; line-height: 1.25; }
+.ask-row .badge { vertical-align: 2px; margin-left: 6px; }
+.ask-row .row-go { flex: 0 0 auto; font-size: 13.5px; white-space: nowrap; }
+@media (max-width: 560px) {
+  .ask-row { flex-wrap: wrap; }
+  .ask-row .row-go { margin-left: 44px; }
+}
 
 .empty-sheet { text-align: center; padding: 40px 18px; }
 
@@ -1081,7 +1125,7 @@ select {
   .wrap { width: 100%; }
   .panel { display: block !important; }
   #panel-situation, #panel-progress, #panel-tips, #panel-privacy { display: none !important; }
-  .ask, .card, .first-calls { box-shadow: none; break-inside: avoid; }
+  .ask, .ask-row, .card, .first-calls { box-shadow: none; break-inside: avoid; }
   .first-calls { background: #fff; color: var(--ink); border: 1.5px solid var(--ink); }
   .first-calls h3, .first-calls b { color: var(--ink); }
   .first-calls a, .first-calls .mono-label { color: var(--ink); }
@@ -1113,8 +1157,8 @@ select {
   <section class="hero">
     <div>
       <h1>Get clear on what to <em>ask for.</em></h1>
-      <p class="hero-sub">Take the free grant quiz. It shows you what to ask for,
-      who to call, and what to say — in the right order.</p>
+      <p class="hero-sub">Take the quiz. It turns your situation into one clear
+      list of what to ask for — every problem named, in priority order.</p>
     </div>
     <aside class="privacy-chip">
       <span class="mono-label">🔒&nbsp; 100% Private</span>
@@ -1126,7 +1170,7 @@ select {
   <!-- ================================================================ tabs -->
   <nav class="tabbar" aria-label="Sections">
     <button class="tab active" data-tab="situation">01 · The Quiz</button>
-    <button class="tab" data-tab="sheet">02 · My Results<span class="bub" id="bub-sheet" hidden>0</span></button>
+    <button class="tab" data-tab="sheet">02 · My List<span class="bub" id="bub-sheet" hidden>0</span></button>
     <button class="tab" data-tab="privacy">03 · Privacy</button>
   </nav>
 
@@ -1146,8 +1190,8 @@ select {
     <div class="sheet-top">
       <div>
         <h2>Here’s what to <em>ask for</em></h2>
-        <p class="lead" id="sheet-lead">Your problems, numbered and in priority order —
-        each with what to ask for, who to call, and what to say.</p>
+        <p class="lead" id="sheet-lead">Your problems, named and put in priority
+        order. One problem = one ask — the community takes each one from there.</p>
       </div>
       <div class="sheet-actions noprint">
         <button class="btn ghost" id="btn-copy">⧉ Copy as text</button>
@@ -1156,19 +1200,12 @@ select {
       </div>
     </div>
 
-    <div class="legend noprint" id="sheet-legend" hidden>
-      <span class="l0"><span class="s">&hearts;</span>Today</span>
-      <span class="l1"><span class="s">&diams;</span>This week</span>
-      <span class="l2"><span class="s">&spades;</span>This month</span>
-      <span class="l3"><span class="s">&clubs;</span>When you're steady</span>
-    </div>
-
     <div id="sheet-body">
       <div class="empty-sheet">
         <div class="q" aria-hidden="true">?</div>
-        <h3>No results yet</h3>
-        <p>Answer the questions under <b>01 · My Situation</b> and your
-        personal ask list will be built right here.</p>
+        <h3>No list yet</h3>
+        <p>Take the quiz under <b>01 · The Quiz</b> and your list of what to
+        ask for will be built right here.</p>
         <button class="btn big" data-goto="situation">Take the quiz →</button>
       </div>
     </div>
@@ -1179,12 +1216,12 @@ select {
   <!-- ========================================================== 05 PRIVACY -->
   <section class="panel" id="panel-privacy" hidden>
     <h2>Your business stays <em>your business</em></h2>
-    <p class="lead">This tool was built the Lesko Help way: free, private, and
+    <p class="lead">This tool was built the Lesko Help way: private, simple, and
     on your side.</p>
 
     <div class="mini t-green" data-suit="♣">
       <span class="mono-label">Everything stays on your device</span>
-      <p>Your answers and your results are saved only in this browser, on
+      <p>Your answers and your list are saved only in this browser, on
       this device — like notes on your own refrigerator. Nothing is sent to us,
       to Lesko Help, or to anyone else. There is no account, no email, no
       tracking of what you pick.</p>
@@ -1202,13 +1239,14 @@ select {
       <span class="mono-label">Good to know</span>
       <ul style="margin:10px 0 4px;padding-left:22px;font-size:15px;line-height:1.6;max-width:70ch">
         <li>Clearing your browser data, or switching devices or browsers, means
-        your saved results won't follow you — print them or copy them somewhere
+        your saved list won't follow you — print it or copy it somewhere
         safe if you want a backup.</li>
-        <li>The links in your results go to official government and nonprofit
-        websites. Once you leave this page, their privacy rules apply.</li>
-        <li>This tool is education and research help from the Lesko Help
-        community — it can show you where the programs are, but only the agency
-        giving out money can decide if you qualify.</li>
+        <li>The links in your list go back into the Lesko Help community —
+        its guides, channels and classes. Once you leave this page, that
+        site's rules apply.</li>
+        <li>This tool does one thing: it helps you name your problems and put
+        them in order. The community's guides, researchers and classes take
+        each problem from there.</li>
       </ul>
     </div>
 
@@ -1222,7 +1260,7 @@ select {
 
   <!-- ================================================================ foot -->
   <footer class="foot">
-    <span class="mono-label">Lesko Help · What Should I Ask For? · Free. Like it should be.</span>
+    <span class="mono-label">Lesko Help · What Should I Ask For? · One problem = one ask.</span>
     <div class="foot-suit" title="?">?</div>
   </footer>
 
@@ -3666,125 +3704,68 @@ function updateBub() {
 }
 
 /* ==================================================================
-   Building & rendering the call sheet
+   Building & rendering the list.
+   The list is the whole product: the member's problems, named and put
+   in priority order — one problem = one ask. Answers live in the
+   community, so each row links only its quick guide / space, and the
+   navy box routes every problem to the AI Grant Researcher, the
+   Questions Channel, the Thursday Clinic and Call Sheet Classes.
+   (The NEEDS entries still carry say/fed/local/human data — that feeds
+   the later call-sheet step, and is deliberately NOT rendered here.)
    ================================================================== */
 function buildSheet() {
-  // urgency can add needs the member didn't tick
+  // urgency can add problems the member didn't tick
   for (const u of URGENTS) {
     if (S.urgent.includes(u.id) && !S.needs.includes(u.need)) S.needs.push(u.need);
   }
   S.built = true;
   saveS();
   goTab("sheet");
-  toast("Here’s what to ask for — in the right order. Say financial assistance, never grants.");
+  toast("Here’s your list — what to ask for, in priority order.");
 }
 
-function resItem(ndId, sec, i, r) {
-  if (r.only && r.only !== S.state) return "";
-  const bits = [];
-  if (r.url) bits.push(`<a href="${esc(fillUrl(r.url))}" target="_blank" rel="noopener">${esc(fillUrl(r.url).replace(/^https?:\/\/(www\.)?/, "").split("/")[0])}</a>`);
-  if (r.tel) bits.push(`<a href="tel:${esc(r.tel.replace(/[^\d]/g, "") || r.tel)}">${esc(r.tel)}</a>`);
-  if (r.how) bits.unshift(esc(fill(r.how)));
-  return `<li>
-    <div><span class="r-name">${esc(fill(r.n))}</span> <span class="r-what">— ${esc(fill(r.w))}</span>
-    ${bits.length ? `<span class="r-how">${bits.join(" · ")}</span>` : ""}</div>
-  </li>`;
+/* the one community link for a row: its quick guide if it has one, else its space */
+function rowGo(nd) {
+  const links = (nd.comm || []).map(commLink).filter(Boolean);
+  const guide = links.find((c) => c.url && c.url.includes("/posts/"));
+  if (guide) return { label: "Quick guide →", url: guide.url, name: guide.n };
+  if (links[0]) return { label: "Community space →", url: links[0].url, name: links[0].n };
+  return null;
 }
 
-function sectionHtml(ndId, tag, cls, title, items) {
-  const rows = (items || []).map((r, i) => resItem(ndId, tag, i, r)).join("");
-  if (!rows) return "";
-  return `<h4><span class="tag ${cls}">${tag}</span>${title}</h4><ul class="res">${rows}</ul>`;
+function askRow(nd, num) {
+  const tIdx = effectiveTier(nd);
+  const go = rowGo(nd);
+  return `<div class="ask-row t${tIdx}">
+    <span class="num" aria-hidden="true">${num}</span>
+    <div class="row-main"><span class="row-title">${esc(nd.label)}</span></div>
+    ${go ? `<a class="row-go" href="${esc(go.url)}" target="_blank" rel="noopener" title="${esc(go.name)}">${go.label}</a>` : ""}
+  </div>`;
 }
 
-function askCard(nd, num) {
-  const t = TIERS[effectiveTier(nd)];
-  const comm = (nd.comm || []).map(commLink).filter(Boolean);
-  return `<article class="ask ${t.cls}" data-suit="${t.suit}">
-    <div class="ask-head">
-      <div class="ask-num" aria-hidden="true">${num}</div>
-      <div>
-        <span class="ask-eyebrow">Ask ${String(num).padStart(2, "0")}</span>
-        <div class="badges"><span class="badge ${t.badge}">${t.suit} ${t.label}</span></div>
-        <h3 class="ask-title">${esc(nd.sheetTitle)}</h3>
-      </div>
-    </div>
-    <div class="ask-body">
-      <div class="say">
-        <span class="mono-label">Say this on the phone</span>
-        <p class="said">“${esc(fill(nd.say))}”</p>
-      </div>
-      ${sectionHtml(nd.id, "fed", "fed", "Federal help", nd.fed)}
-      ${sectionHtml(nd.id, "local", "local", "State & local help" + (stateName() ? " · " + esc(stateName()) : ""), nd.local)}
-      ${sectionHtml(nd.id, "human", "human", "Go talk to a human", nd.human)}
-      ${comm.length ? `<h4><span class="tag comm">community</span>In Lesko Help</h4><ul class="res">${comm.map((c) =>
-        `<li><div><span class="r-name"><a href="${c.url}" target="_blank" rel="noopener">${esc(c.n)}</a></span>${c.w ? ` <span class="r-what">— ${esc(c.w)}</span>` : ""}</div></li>`).join("")}</ul>` : ""}
-    </div>
-    ${nd.tip ? `<div class="ask-foot"><span>💡 ${esc(fill(nd.tip))}</span></div>` : ""}
-  </article>`;
+function customRow(entry, num) {
+  const tIdx = entry.urgent ? 0 : 2;
+  const sp = GROUP_SPACE[entry.g] ? SPACES[GROUP_SPACE[entry.g]] : SPACES.questions;
+  return `<div class="ask-row t${tIdx}">
+    <span class="num" aria-hidden="true">${num}</span>
+    <div class="row-main"><span class="row-title">${esc(entry.t)}</span><span class="badge plain">in your words</span></div>
+    <a class="row-go" href="${sp.url}" target="_blank" rel="noopener" title="${esc(sp.n)}">Community space →</a>
+  </div>`;
 }
 
-function customCard(entry, num) {
-  const t = entry.urgent ? TIERS[0] : TIERS[2];
-  const items = [
-    { n: "211 — describe it in your own words", w: entry.urgent ? "tell them it's urgent — they route emergencies all day and they know who handles yours" : "they hear everything, and they know who handles yours", tel: "211", url: "https://www.211.org" },
-    { n: "FindHelp near {ZIP}", w: "type a few words of your problem into the search box", url: "https://www.findhelp.org/search_results/{ZIP}" },
-    { n: "Your reference librarian", w: "a free professional researcher — bring this exact problem to the library desk" },
-    { n: "Your Congressperson's caseworker", w: "if any government office is involved, their staff untangles it free", url: "https://www.commoncause.org/find-your-representative/" }
-  ];
-  const groupSpace = GROUP_SPACE[entry.g] ? SPACES[GROUP_SPACE[entry.g]] : null;
-  const say = entry.urgent
-    ? `This can't wait — I'm dealing with ${entry.t.toLowerCase()} and I need emergency help today. Am I in the right place, and if not, who handles this?`
-    : `Hi, I'm dealing with ${entry.t.toLowerCase()} and I'm looking for any financial assistance or free services for my situation. Am I in the right place — and if not, who should I call?`;
-  return `<article class="ask ${t.cls}" data-suit="${t.suit}">
-    <div class="ask-head">
-      <div class="ask-num" aria-hidden="true">${num}</div>
-      <div>
-        <span class="ask-eyebrow">Ask ${String(num).padStart(2, "0")}</span>
-        <div class="badges"><span class="badge ${t.badge}">${t.suit} ${t.label}</span><span class="badge plain">in your words</span></div>
-        <h3 class="ask-title">${esc(entry.t)}</h3>
-      </div>
-    </div>
-    <div class="ask-body">
-      <div class="say">
-        <span class="mono-label">Say this on the phone</span>
-        <p class="said">“${esc(say)}”</p>
-      </div>
-      ${sectionHtml("custom-" + entry.key, "local", "local", "Start with these", items)}
-      <h4><span class="tag comm">community</span>In Lesko Help</h4>
-      <ul class="res">
-        ${groupSpace ? `<li><div><span class="r-name"><a href="${groupSpace.url}" target="_blank" rel="noopener">${esc(groupSpace.n)}</a></span> <span class="r-what">— the guide space for this kind of problem</span></div></li>` : ""}
-        <li><div><span class="r-name"><a href="${SPACES.questions.url}" target="_blank" rel="noopener">Questions Channel</a></span> <span class="r-what">— post this exact problem; the staff answers</span></div></li>
-        <li><div><span class="r-name"><a href="${SPACES.airesearch.url}" target="_blank" rel="noopener">AI Grant Researcher</a></span> <span class="r-what">— request a research report on it for your ZIP</span></div></li>
-      </ul>
-    </div>
-  </article>`;
-}
-
-function boosterCard() {
-  const picked = FLAGS.filter((f) => S.flags.includes(f.id));
+/* who you are — worth mentioning with every ask; no programs listed here */
+function boosterMini() {
+  const picked = FLAGS.filter((f) => S.flags.includes(f.id)).map((f) => f.label);
   const other = (S.flagOther || "").trim();
   if (!picked.length && !other) return "";
-  const otherItems = other ? [
-    { n: "Use it on every call", w: `say "is there anything for someone who is ${other.toLowerCase()}?" — set-asides exist that no list has` },
-    { n: "Questions Channel", w: "post it — the Lesko Help staff will research programs for exactly this", url: SPACES.questions.url },
-    { n: "AI Grant Researcher", w: "request a report on programs for your situation and ZIP", url: SPACES.airesearch.url }
-  ] : [];
-  return `<article class="ask t1" data-suit="♦">
-    <div class="ask-head">
-      <div class="ask-num" aria-hidden="true">★</div>
-      <div>
-        <span class="ask-eyebrow">Bonus asks</span>
-        <div class="badges"><span class="badge week">♦ Extra doors</span></div>
-        <h3 class="ask-title">Because of who you are</h3>
-      </div>
-    </div>
-    <div class="ask-body">
-      <p style="margin:4px 0 6px;color:var(--ink-soft);max-width:70ch">Programs set aside for people in your shoes. Mention these words on every call — they unlock things.</p>
-      ${picked.map((f) => sectionHtml("flag-" + f.id, "unlock", "human", f.label, f.doors)).join("")}
-      ${other ? sectionHtml("flag-other", "unlock", "human", "In your words: “" + esc(other) + "”", otherItems) : ""}
-    </div>
-  </article>`;
+  const who = picked.concat(other ? ["“" + other + "”"] : []);
+  return `<div class="mini t-blue" data-suit="♦">
+    <span class="mono-label">Say who you are, every time you ask</span>
+    <p><b>${who.map(esc).join(" · ")}</b> — whole pots of money are set aside for
+    people in these shoes. Mention it with every problem on this list, and tell the
+    <a href="${SPACES.airesearch.url}" target="_blank" rel="noopener">AI Grant Researcher</a>
+    too, so your report covers the set-asides.</p>
+  </div>`;
 }
 
 function renderSheet() {
@@ -3795,64 +3776,58 @@ function renderSheet() {
   if (!S.built || (!picked.length && !customs.length)) {
     el.innerHTML = `<div class="empty-sheet">
       <div class="q" aria-hidden="true">?</div>
-      <h3>No results yet</h3>
-      <p>Take the quiz under <b>01 · The Quiz</b> and your personal ask list will be built right here.</p>
+      <h3>No list yet</h3>
+      <p>Take the quiz under <b>01 · The Quiz</b> and your list of what to
+      ask for will be built right here.</p>
       <button class="btn big" data-goto="situation">Take the quiz →</button>
     </div>`;
-    $("#sheet-legend").hidden = true;
     return;
   }
 
-  $("#sheet-legend").hidden = false;
   $("#print-date").textContent = new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
   $("#sheet-lead").innerHTML =
     (stateName() ? `Built for <b>${esc(stateName())}</b>${S.zip ? " · ZIP " + esc(S.zip) : ""}. ` : "") +
-    `Numbered, in priority order — work it top to bottom, <em style="color:var(--red)">and never say “grants” on the phone; say “financial assistance.”</em>`;
+    `Your problems, named and put in order. <em style="color:var(--red)">One problem = one ask</em> — the community takes each one from there.`;
 
-  // one ordered list: real needs + "Other" problems, sorted by tier (stable)
+  // one ordered list: picked problems + "Other" problems, sorted by tier (stable)
   const entries = [
-    ...picked.map((nd) => ({ tier: effectiveTier(nd), render: (num) => askCard(nd, num) })),
-    ...customs.map((c) => ({ tier: c.urgent ? 0 : 2, render: (num) => customCard(c, num) }))
+    ...picked.map((nd) => ({ tier: effectiveTier(nd), render: (num) => askRow(nd, num) })),
+    ...customs.map((c) => ({ tier: c.urgent ? 0 : 2, render: (num) => customRow(c, num) }))
   ].sort((a, b) => a.tier - b.tier);
 
-  let html = "";
-
-  html += `<div class="first-calls">
-    <span class="mono-label">Before anything else — the three master keys</span>
-    <h3>Start with these, whatever’s on your list</h3>
+  let html = `<div class="first-calls">
+    <span class="mono-label">This list is the point</span>
+    <h3>Now take it into the community</h3>
     <ol>
-      <li><b>Dial 211</b> (or text your ZIP to 898-211) — one call sorts your whole situation into local programs. <a href="https://www.211.org" target="_blank" rel="noopener">211.org</a></li>
-      <li><b>FindHelp.org</b> — every nonprofit program near you${S.zip ? `: <a href="https://www.findhelp.org/search_results/${encodeURIComponent(S.zip)}" target="_blank" rel="noopener">see your ZIP</a>` : ` — <a href="https://www.findhelp.org" target="_blank" rel="noopener">findhelp.org</a>`}.</li>
-      <li><b>The USA.gov Benefit Finder</b> — a 10-minute anonymous quiz across 1,000+ federal programs. <a href="https://www.usa.gov/benefit-finder" target="_blank" rel="noopener">usa.gov/benefit-finder</a></li>
-      <li><b>Lesko's own first doors</b> — the community's
-        <a href="${GUIDES.step0.url}" target="_blank" rel="noopener">Where to Find Emergency Help</a> guide and
-        <a href="${GUIDES.contact10.url}" target="_blank" rel="noopener">Contact These 10 Key Organizations First</a>.</li>
+      <li><b>Open the quick guide</b> next to each problem — the community’s own page for that exact ask.</li>
+      <li><b>Ask the <a href="${SPACES.airesearch.url}" target="_blank" rel="noopener">AI Grant Researcher</a></b> — give it one problem from this list, and your state, and it researches that ask for you.</li>
+      <li><b>Not sure about one?</b> Post it in the <a href="${SPACES.questions.url}" target="_blank" rel="noopener">Questions Channel</a> or bring it to the <a href="${SPACES.clinic.url}" target="_blank" rel="noopener">Thursday Drop-In Clinic</a>.</li>
+      <li><b>Ready to make calls?</b> That’s what <a href="${SPACES.callsheets.url}" target="_blank" rel="noopener">Call Sheet Classes</a> are for — one problem = one call sheet.</li>
     </ol>
   </div>`;
 
-  html += `<div class="mini t-blue noprint" data-suit="♠">
-    <span class="mono-label">Have these ready when you call</span>
-    <p>Photo ID · proof of income (pay stubs or award letters) · the bills or notices themselves · your lease or mortgage statement. Real applications may ask for your SSN <b>at their office or on their official site</b> — never give it to anyone who called <em>you</em>.</p>
-  </div>`;
-
   let num = 0;
+  let lastTier = -1;
   let boosterPlaced = false;
   for (const e of entries) {
-    if (!boosterPlaced && e.tier >= 2) { html += boosterCard(); boosterPlaced = true; }
+    if (!boosterPlaced && e.tier >= 2) { html += boosterMini(); boosterPlaced = true; }
+    if (e.tier !== lastTier) {
+      const t = TIERS[e.tier];
+      html += `<h3 class="tier-head t${e.tier}"><span class="s">${t.suit}</span> ${t.label}</h3>`;
+      lastTier = e.tier;
+    }
     num += 1;
     html += e.render(num);
   }
-  if (!boosterPlaced) html += boosterCard();
+  if (!boosterPlaced) html += boosterMini();
 
   html += `<div class="mini t-green" data-suit="♣">
     <span class="mono-label">When you get a yes</span>
-    <p>Post it in <a href="${SPACES.success.url}" target="_blank" rel="noopener">Success Stories</a> — your win is the map for the next member. And when you hit a wall, bring this sheet to the
-    <a href="${SPACES.clinic.url}" target="_blank" rel="noopener">Thursday Drop-In Clinic</a> or ask in the
-    <a href="${SPACES.questions.url}" target="_blank" rel="noopener">Questions Channel</a>.</p>
+    <p>Post it in <a href="${SPACES.success.url}" target="_blank" rel="noopener">Success Stories</a> —
+    your win is the map for the next member.</p>
   </div>`;
 
   el.innerHTML = html;
-
 }
 
 /* ==================================================================
@@ -3869,55 +3844,41 @@ function sheetAsText() {
   const L = [];
   L.push("WHAT I SHOULD ASK FOR — Lesko Help");
   L.push((stateName() ? stateName() + (S.zip ? " · " + S.zip : "") + " · " : "") + new Date().toLocaleDateString("en-US"));
-  L.push("Rule: never say “grants” — say “financial assistance.”");
-  L.push("");
-  L.push("FIRST — the three master keys:");
-  L.push("  1. Dial 211 (or text your ZIP to 898-211) — 211.org");
-  L.push("  2. FindHelp.org" + (S.zip ? " — findhelp.org/search_results/" + S.zip : ""));
-  L.push("  3. USA.gov Benefit Finder — usa.gov/benefit-finder");
+  L.push("One problem = one ask. Work the list in order.");
   L.push("");
   let num = 0;
-  const item = (r) => {
-    if (r.only && r.only !== S.state) return;
-    const bits = [fill(r.n), "— " + fill(r.w)];
-    if (r.url) bits.push("· " + fillUrl(r.url));
-    if (r.tel) bits.push("· " + r.tel);
-    L.push("   • " + bits.join(" "));
-  };
+  let lastTier = -1;
   for (const e of entries) {
+    if (e.tier !== lastTier) {
+      const t = TIERS[e.tier];
+      L.push(t.suit + " " + t.label.toUpperCase());
+      lastTier = e.tier;
+    }
     num += 1;
     if (e.nd) {
-      const nd = e.nd;
-      const t = TIERS[effectiveTier(nd)];
-      L.push("ASK " + num + " — " + nd.sheetTitle.toUpperCase() + "  [" + t.label + "]");
-      L.push("   SAY: “" + fill(nd.say) + "”");
-      (nd.fed || []).forEach(item);
-      (nd.local || []).forEach(item);
-      (nd.human || []).forEach(item);
-      (nd.comm || []).forEach((k) => { const c = commLink(k); if (c) L.push("   • Lesko Help: " + c.n + " · " + c.url); });
-      if (nd.tip) L.push("   TIP: " + fill(nd.tip));
+      const go = rowGo(e.nd);
+      L.push("  " + num + ". " + e.nd.label + (go ? "  — guide: " + go.url : ""));
     } else {
-      const c = e.c;
-      L.push("ASK " + num + " — " + c.t.toUpperCase() + "  [" + (c.urgent ? "Today" : "This month") + "]");
-      L.push("   SAY: “I'm dealing with " + c.t.toLowerCase() + " and I'm looking for any financial assistance or free services for my situation.”");
-      L.push("   • 211 · FindHelp.org · your librarian · your Congressperson's caseworker");
+      const sp = GROUP_SPACE[e.c.g] ? SPACES[GROUP_SPACE[e.c.g]] : SPACES.questions;
+      L.push("  " + num + ". " + e.c.t + " (in your words)  — ask here: " + sp.url);
     }
-    L.push("");
   }
-  const flags = FLAGS.filter((f) => S.flags.includes(f.id));
+  L.push("");
+  const flags = FLAGS.filter((f) => S.flags.includes(f.id)).map((f) => f.label);
   const other = (S.flagOther || "").trim();
   if (flags.length || other) {
-    L.push("EXTRA DOORS — because of who you are:");
-    flags.forEach((f) => {
-      L.push("  " + f.label + ":");
-      f.doors.forEach((r) => L.push("   • " + fill(r.n) + " — " + fill(r.w) + (r.url ? " · " + fillUrl(r.url) : "") + (r.tel ? " · " + r.tel : "")));
-    });
-    if (other) L.push("  In your words: “" + other + "” — ask on every call: “is there anything for someone in my situation?”");
+    L.push("SAY WHO YOU ARE, EVERY TIME: " + flags.concat(other ? ["“" + other + "”"] : []).join(" · "));
     L.push("");
   }
-  L.push("Stuck? Questions Channel: " + SPACES.questions.url);
-  L.push("Got a yes? Success Stories: " + SPACES.success.url);
-  L.push("— Free. Like it should be. · Lesko Help");
+  L.push("TAKE EACH PROBLEM INTO LESKO HELP:");
+  L.push("  • Its quick guide (linked above)");
+  L.push("  • AI Grant Researcher: " + SPACES.airesearch.url);
+  L.push("  • Questions Channel: " + SPACES.questions.url);
+  L.push("  • Thursday Drop-In Clinic: " + SPACES.clinic.url);
+  L.push("  • Call Sheet Classes (one problem = one call sheet): " + SPACES.callsheets.url);
+  L.push("");
+  L.push("Got a yes? Post it in Success Stories: " + SPACES.success.url);
+  L.push("— Lesko Help · One problem = one ask.");
   return L.join("\n");
 }
 
