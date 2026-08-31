@@ -5,22 +5,25 @@ problem = one call sheet** — but most members can't yet name their problems.
 This quiz does exactly one thing: it walks them through every topic the
 community covers, helps them recognize *"oh — this is my problem, and that,
 and that,"* and hands back **their list: every problem named, in priority
-order.** Nothing else.
+order — each with a ready-to-copy question in the member's own voice**
+("I'm in Maryland (ZIP 21201). About me: Single parent · Veteran. I'm
+behind on rent and afraid of eviction — where can I get help?"). Location
+and who-they-are are baked into every question automatically.
 
 It deliberately does **not** give answers, program directories, phone
-numbers, or scripts — that's the community's job, later. Each row on the
-list links straight to where the ask goes next in Lesko Help:
+numbers, or scripts — that's the community's job, later. Every row carries
+the same three-step proposal:
 
-- the problem's own **quick guide** (every quiz option mirrors a posted
-  community guide),
-- the **AI Grant Researcher** (research one problem for your state),
-- the **Questions Channel** and **Thursday Drop-In Clinic**,
-- **Call Sheet Classes** — where one problem becomes one call sheet.
+- **copy the question** and paste it in the **Questions Channel**,
+- **read the quick guide** for that problem (every quiz option mirrors a
+  posted community guide),
+- **bring it to a Call Sheet Class** — where one problem becomes one call
+  sheet.
 
 The quiz: **15 topic pages that mirror the community's guide spaces
 one-for-one** (home & housing, bills/debt/money, food & everyday needs,
 health care, family, seniors, veterans, disability, work & career,
-business, nonprofit, cars & getting around, school, taxes, legal & safety)
+business, nonprofit, cars & transportation, school, taxes, legal & safety)
 with 86 pickable problems, an **"Other" box on every screen**, urgency
 triage (eviction notice, shutoff, no food → **Today**), who-you-are flags
 (veteran, single parent, 60+, tribal, rural…) that become a *"say who you
@@ -29,13 +32,15 @@ words, print, and copy-as-text. Plus 5 finishing pages — progress bar over
 all 20. Three tabs: The Quiz / My List / Privacy. A solid frame in the four
 brand colors runs around the whole app.
 
-Priority tiers ride on the card suits:
-**♥ Today · ♦ This week · ♠ This month · ♣ When you're steady.**
+Priority tiers ride on the card suits — sequence words, never time
+promises: **♥ Do this first · ♦ Then work on these · ♠ After that ·
+♣ When you're steady.**
 
 Copy notes (per Giulia): never call it *free* (members pay for the
 community), never call it a *grant quiz* (it asks about problems, not
-grants), and the results page promises only the list — not "who to call"
-or "what to say."
+grants), the list promises only clarity — not "who to call" or "what to
+say" — and don't route members to the AI Grant Researcher from here; the
+Questions Channel, the quick guides and Call Sheet Classes are the doors.
 
 ## Privacy model (same as the Credit Score Coach)
 

@@ -939,12 +939,12 @@ select {
   position: relative;
   overflow: hidden;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 14px;
   border: 1px solid var(--tier-line, var(--hairline));
   border-radius: 10px;
   background: var(--paper-2);
-  padding: 12px 16px 12px 20px;
+  padding: 14px 16px 12px 20px;
   margin-bottom: 9px;
   box-shadow: 0 1px 2px rgba(22, 34, 63, 0.04);
 }
@@ -971,10 +971,34 @@ select {
 .ask-row .row-main { flex: 1; min-width: 0; }
 .ask-row .row-title { font-family: var(--serif); font-size: 18.5px; line-height: 1.25; }
 .ask-row .badge { vertical-align: 2px; margin-left: 6px; }
-.ask-row .row-go { flex: 0 0 auto; font-size: 13.5px; white-space: nowrap; }
+.ask-row .row-q {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 15.5px;
+  line-height: 1.45;
+  margin: 5px 0 6px;
+  max-width: 64ch;
+}
+.ask-row .row-acts { font-size: 13px; color: var(--ink-soft); margin: 0; }
+.ask-row .row-copy { flex: 0 0 auto; font-size: 12px; padding: 7px 12px; margin-top: 2px; }
 @media (max-width: 560px) {
   .ask-row { flex-wrap: wrap; }
-  .ask-row .row-go { margin-left: 44px; }
+  .ask-row .row-copy { margin-left: 44px; order: 3; }
+}
+
+.point-chip {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: var(--yellow);
+  color: var(--ink);
+  border-radius: 999px;
+  padding: 4px 11px;
+  vertical-align: 6px;
+  margin-left: 10px;
+  white-space: nowrap;
 }
 
 .empty-sheet { text-align: center; padding: 40px 18px; }
@@ -1189,14 +1213,13 @@ select {
 
     <div class="sheet-top">
       <div>
-        <h2>Here’s what to <em>ask for</em></h2>
-        <p class="lead" id="sheet-lead">Your problems, named and put in priority
-        order. One problem = one ask — the community takes each one from there.</p>
+        <h2>Here’s what to <em>ask for</em><span class="point-chip">This list is the point</span></h2>
+        <p class="lead" id="sheet-lead">Work it top to bottom — every problem
+        comes with its question, ready to copy and ask.</p>
       </div>
       <div class="sheet-actions noprint">
         <button class="btn ghost" id="btn-copy">⧉ Copy as text</button>
         <button class="btn ghost" id="btn-print">⎙ Print</button>
-        <button class="btn" id="btn-edit">✎ Change my answers</button>
       </div>
     </div>
 
@@ -1430,7 +1453,7 @@ const PAGES = [
   { id: "work",       title: "Work & career",                 suit: "♦" },
   { id: "business",   title: "Your business",                 suit: "♠" },
   { id: "nonprofit",  title: "Starting a nonprofit",          suit: "♣" },
-  { id: "cars",       title: "Cars & getting around",         suit: "♥" },
+  { id: "cars",       title: "Cars & transportation",         suit: "♥" },
   { id: "school",     title: "School & education",            suit: "♦" },
   { id: "taxes",      title: "Taxes",                         suit: "♣" },
   { id: "safe",       title: "Legal help & safety",           suit: "♠" }
@@ -1443,6 +1466,7 @@ const NEEDS = [
     id: "rent", group: "home", tier: 1,
     label: "Rent, eviction or moving costs",
     sheetTitle: "Help with rent, eviction or moving costs",
+    q: "I'm behind on rent and afraid of eviction — where can I get help before this becomes a court case?",
     say: "I'm behind on my rent and I'm looking for any financial assistance with rent or an eviction — emergency rental assistance, one-time help, or a payment plan. What do you have, and what else should I call?",
     fed: [
       { n: "HUD rental help, state by state", w: "the official list of every rent-help door in {STATE} — subsidized apartments, vouchers, and emergency programs", how: "pick your state and start calling", url: "https://www.hud.gov/topics/rental_assistance/local" },
@@ -1465,6 +1489,7 @@ const NEEDS = [
     id: "shelter", group: "home", tier: 0,
     label: "Somewhere to stay",
     sheetTitle: "A safe place to stay",
+    q: "I'm about to lose the place I'm staying and I have nowhere to go — who can help me today?",
     say: "I'm about to lose my housing / I have nowhere to stay. I need emergency shelter or rapid re-housing help. Where do I go today, and what should I bring?",
     fed: [
       { n: "HUD homeless help in {STATE}", w: "every official door for shelter and rehousing in your state", url: "https://www.hud.gov/states" }
@@ -1484,6 +1509,7 @@ const NEEDS = [
     id: "mortgage", group: "home", tier: 1,
     label: "Mortgage trouble or foreclosure",
     sheetTitle: "Mortgage help & stopping a foreclosure",
+    q: "I'm falling behind on my mortgage and scared of foreclosure — where can I get help before it's too late?",
     say: "I'm worried about falling behind on my mortgage and I'm looking for financial assistance or free counseling before it becomes a foreclosure. What programs does my state have?",
     fed: [
       { n: "State Homeowner Assistance / hardship programs", w: "the big pandemic-era fund has mostly closed, but some states still have hardship help — your state housing finance agency knows what's open today", how: "find your state agency and ask: \"what homeowner help is still open?\"", url: "https://www.ncsha.org/housing-help/" },
@@ -1504,6 +1530,7 @@ const NEEDS = [
     id: "repairs", group: "home", tier: 2,
     label: "Home repairs & energy upgrades",
     sheetTitle: "Money for home repairs & energy upgrades",
+    q: "My home needs repairs I can't afford — what repair help can a homeowner like me ask for?",
     say: "I own my home and it needs repairs I can't afford. I'm looking for home repair grants or forgivable loans for homeowners — what do you have, and who else in the county gives repair help?",
     fed: [
       { n: "USDA Section 504 repair grants & loans", w: "up to $10,000 in grants (62+) and up to $40,000 in 1% loans for homes outside big cities", how: "call your USDA Rural Development office", url: "https://www.rd.usda.gov/programs-services/single-family-housing-programs/single-family-housing-repair-loans-grants" },
@@ -1526,6 +1553,7 @@ const NEEDS = [
     id: "buyhome", group: "home", tier: 3,
     label: "Buying a home",
     sheetTitle: "Down-payment help to buy a home",
+    q: "I want to buy a home but I don't have the down payment — what first-time buyer help should I ask for?",
     say: "I want to buy a home and I'm looking for first-time buyer programs — down payment assistance, closing cost grants, and any homebuyer classes I should take to qualify.",
     fed: [
       { n: "Your state Housing Finance Agency", w: "down-payment grants and cheap first mortgages — this is where the big buyer money lives", how: "find your state's agency and ask for \"homebuyer programs\"", url: "https://www.ncsha.org/membership/hfa-members/" },
@@ -1547,6 +1575,7 @@ const NEEDS = [
     id: "disaster", group: "home", tier: 0,
     label: "Hit by a disaster (storm, fire, flood)",
     sheetTitle: "Recovering after a disaster",
+    q: "A disaster just hit our home — what recovery help can I ask for, and where do I start?",
     say: "We were hit by the ____ . I want to register for FEMA assistance and find every other recovery program — state, county, and charity — before deadlines pass.",
     fed: [
       { n: "DisasterAssistance.gov", w: "one application covers FEMA money for repairs, housing and losses", url: "https://www.disasterassistance.gov", tel: "800-621-3362" },
@@ -1568,6 +1597,7 @@ const NEEDS = [
     id: "utilities", group: "bills", tier: 1,
     label: "Utility bills (heat, electric, water)",
     sheetTitle: "Help with utility bills",
+    q: "My utility bill is more than I can pay and I'm afraid of a shutoff — what bill help can I ask for?",
     say: "I need help with my utility bill. I'd like to apply for energy assistance, and I'd also like to know about your hardship fund and a payment plan so my service stays on.",
     fed: [
       { n: "LIHEAP — energy bill help", w: "hundreds of dollars toward heating/cooling bills, and crisis help if you have a shutoff notice", how: "apply through your state LIHEAP office — apply early, offices are stretched this year", url: "https://www.acf.gov/ocs/map/liheap-map-state-and-territory-contact-listing", tel: "866-674-6327" },
@@ -1589,6 +1619,7 @@ const NEEDS = [
     id: "debt", group: "bills", tier: 2,
     label: "Debt, credit cards & credit repair",
     sheetTitle: "Debt help & fixing your credit",
+    q: "My debts and credit cards are burying me — where do I find honest, free help to deal with them?",
     say: "I want to deal with my debt with free, legitimate help. I'm looking for a nonprofit credit counselor — not a debt settlement company — to review my situation and my options.",
     fed: [
       { n: "CFPB complaint line", w: "file a complaint against any bank, lender or collector — companies must respond, usually within 15 days; billions have been returned this way", url: "https://www.consumerfinance.gov/complaint/" },
@@ -1609,6 +1640,7 @@ const NEEDS = [
     id: "forgive", group: "bills", tier: 2,
     label: "Getting companies to forgive bills",
     sheetTitle: "Getting companies to forgive debt & bills",
+    q: "I can't pay a bill in full because of a hardship — how do I ask the company to forgive or lower it?",
     say: "I'm going through a hardship and I can't pay this bill in full. I'd like to apply for your hardship program — and if there isn't one, I'd like to talk about settling this for less or a payment I can actually keep.",
     fed: [
       { n: "The magic words: \"hardship program\"", w: "credit cards, utilities, hospitals, phone companies — most keep hardship plans, settlements and write-offs they never advertise; you have to ask for that department by name" }
@@ -1629,6 +1661,7 @@ const NEEDS = [
     id: "collectors", group: "bills", tier: 1,
     label: "Bill collectors are after me",
     sheetTitle: "Making bill collectors follow the law",
+    q: "Bill collectors keep calling me — what are my rights, and how do I make them stop?",
     say: "Send me written validation of this debt. Until I receive it, I'm requesting that you stop calling me at work. I know my rights under the Fair Debt Collection Practices Act.",
     fed: [
       { n: "Debt validation — your legal right", w: "collectors must send written proof of the debt; demand it in writing and many old or bought debts simply fold", url: "https://www.consumerfinance.gov/ask-cfpb/what-is-a-debt-collection-validation-notice-en-2109/" },
@@ -1650,6 +1683,7 @@ const NEEDS = [
     id: "phone", group: "bills", tier: 2,
     label: "Phone, internet & a computer",
     sheetTitle: "Phone, internet & a computer",
+    q: "I can't afford my phone or internet — what low-cost programs can I ask for?",
     say: "I'm looking for the low-income phone and internet programs — Lifeline, your cheapest fixed plan, and any local program that gives out free or cheap computers.",
     fed: [
       { n: "Lifeline", w: "a monthly discount on phone or internet service for lower-income households", url: "https://www.lifelinesupport.org", tel: "800-234-9473" }
@@ -1670,6 +1704,7 @@ const NEEDS = [
     id: "loans", group: "bills", tier: 2,
     label: "Student loans",
     sheetTitle: "Shrinking your student loans",
+    q: "My student loans are too heavy — what lower-payment or forgiveness options should I ask about?",
     say: "I want to check every forgiveness and lower-payment option for my student loans — income-driven repayment, Public Service Loan Forgiveness, and anything for my situation.",
     fed: [
       { n: "Income-driven repayment (rules changed in 2026)", w: "payments tied to your income — a new plan (RAP) started July 2026 and the old SAVE plan is ending, so if you were on SAVE you must pick a new plan now", url: "https://studentaid.gov/idr/", tel: "800-433-3243" },
@@ -1687,8 +1722,9 @@ const NEEDS = [
 
   {
     id: "income", group: "bills", tier: 1,
-    label: "Not enough money coming in",
+    label: "Lost my job or lost income",
     sheetTitle: "Quick income while you work the list",
+    q: "I lost my job / my hours were cut — what cash help can I ask for while I get back on my feet?",
     say: "While I apply for programs, I need income now. What same-week work do you have, and do I qualify for unemployment or any cash assistance in the meantime?",
     fed: [
       { n: "Unemployment insurance", w: "if you lost hours or a job — apply the week it happens, not later", url: "https://www.careeronestop.org/localhelp/unemploymentbenefits/unemployment-benefits.aspx" },
@@ -1709,6 +1745,7 @@ const NEEDS = [
     id: "funeral", group: "bills", tier: 2,
     label: "Funeral costs",
     sheetTitle: "Help with funeral costs",
+    q: "We lost someone and can't afford the funeral — what help exists for a family like ours?",
     say: "We just lost someone and the funeral is more than we can pay. What help exists — county burial assistance, Social Security, veteran burial benefits — and what are the honest low-cost options?",
     fed: [
       { n: "Social Security survivor benefits", w: "the $255 lump-sum death payment plus monthly survivor checks many families never claim", url: "https://www.ssa.gov/survivors", tel: "800-772-1213" },
@@ -1730,6 +1767,7 @@ const NEEDS = [
     id: "food", group: "food", tier: 1,
     label: "Food for the house",
     sheetTitle: "Food for the house",
+    q: "We don't have enough food money for the month — what food help can I ask for besides the food bank?",
     say: "I need help with food for my household. I'd like to apply for SNAP, and while that processes I need the nearest food pantries and any produce or senior food programs.",
     fed: [
       { n: "SNAP (food stamps)", w: "monthly grocery money on a card — the average household gets thousands a year", how: "apply through your state SNAP office", url: "https://www.fns.usda.gov/snap/state-directory" },
@@ -1751,6 +1789,7 @@ const NEEDS = [
     id: "goods", group: "food", tier: 2,
     label: "Clothes, furniture & household goods",
     sheetTitle: "Clothes, furniture & household goods",
+    q: "We need basics — clothes, a bed, furniture — where can I ask for vouchers or donated goods?",
     say: "We need basic household things — clothes, a bed, furniture. Do you give vouchers or referrals, and which programs near me help with this?",
     fed: [],
     local: [
@@ -1770,6 +1809,7 @@ const NEEDS = [
     id: "holiday", group: "food", tier: 2,
     label: "Holiday help (toys, food baskets, gifts)",
     sheetTitle: "Holiday help — toys, food baskets, gifts",
+    q: "We could use holiday help this year — toys and a food basket — where do I sign up, and when?",
     say: "We could use help this holiday season — toys for the kids and a holiday food basket. When do sign-ups open, and what do I need to bring?",
     fed: [],
     local: [
@@ -1790,6 +1830,7 @@ const NEEDS = [
     id: "crisis", group: "health", tier: 0,
     label: "24/7 crisis help",
     sheetTitle: "24/7 crisis help — someone to talk to right now",
+    q: "I'm going through a really rough moment and I need someone to talk to right now — where do I turn?",
     say: "I'm in a rough moment and I need to talk to someone right now. Stay with me and tell me what my options are tonight.",
     fed: [
       { n: "988 Suicide & Crisis Lifeline", w: "free, 24/7, call or text 988 — for any overwhelming moment, not only emergencies; veterans press 1", tel: "988", url: "https://988lifeline.org" },
@@ -1810,6 +1851,7 @@ const NEEDS = [
     id: "mental", group: "health", tier: 1,
     label: "Stress & mental health",
     sheetTitle: "Stress & mental health help you can afford",
+    q: "I need counseling but I can't pay full price — where can I ask for low-cost mental health help?",
     say: "I'm looking for counseling I can afford. Do you offer sliding-scale rates, and what free support programs are there near me?",
     fed: [
       { n: "988 Lifeline", w: "free 24/7 call or text support for any rough moment — not only emergencies", tel: "988", url: "https://988lifeline.org" },
@@ -1831,6 +1873,7 @@ const NEEDS = [
     id: "addiction", group: "health", tier: 1,
     label: "Addiction recovery",
     sheetTitle: "Addiction recovery — treatment you can afford",
+    q: "I want help with drinking or drugs and I can't afford treatment — where can I start this week?",
     say: "I want help with drinking / drugs. What treatment can I actually afford, and what can I start this week?",
     fed: [
       { n: "SAMHSA National Helpline", w: "free, confidential, 24/7 — they find treatment that fits your money situation", tel: "800-662-4357", url: "https://www.samhsa.gov/find-help/national-helpline" },
@@ -1852,6 +1895,7 @@ const NEEDS = [
     id: "quitsmoke", group: "health", tier: 3,
     label: "Quit smoking & vaping",
     sheetTitle: "Quit smoking & vaping — free coaching & patches",
+    q: "I want to quit smoking or vaping — what free help and free patches can I ask for?",
     say: "I want to quit. What free coaching do you offer, and can you send me free patches or gum?",
     fed: [
       { n: "1-800-QUIT-NOW", w: "your state quitline: free coaching, and most states mail free patches or gum when you enroll", tel: "800-784-8669" },
@@ -1871,6 +1915,7 @@ const NEEDS = [
     id: "brain", group: "health", tier: 2,
     label: "Brain & neuro support",
     sheetTitle: "Brain injury, epilepsy, MS, Parkinson's, dementia — support",
+    q: "My family is dealing with a brain condition (injury, epilepsy, MS, Parkinson's, memory loss) — what support can we ask for?",
     say: "My family is dealing with ____ (brain injury, epilepsy, MS, Parkinson's, memory loss). What helplines, programs and financial help exist for this exact diagnosis?",
     fed: [
       { n: "Brain Injury Association info line", w: "free national line that connects brain-injury families to state programs and funds", tel: "800-444-6443", url: "https://biausa.org" },
@@ -1891,6 +1936,7 @@ const NEEDS = [
     id: "healthyfood", group: "health", tier: 2,
     label: "Healthy food on a budget",
     sheetTitle: "Healthy food on a budget",
+    q: "I want to feed us healthy on a tight budget — what programs stretch my food money?",
     say: "I'm trying to feed us healthy on a tight budget. What programs stretch my food money — produce-match programs, senior market coupons, free nutrition classes?",
     fed: [
       { n: "Double Up Food Bucks & SNAP produce match", w: "in many states your SNAP dollars double on fruits and vegetables — $20 becomes $40", url: "https://doubleupamerica.org" },
@@ -1912,6 +1958,7 @@ const NEEDS = [
     id: "dental", group: "health", tier: 2,
     label: "Free & low-cost dental care",
     sheetTitle: "Free & low-cost dental care",
+    q: "I need dental work I can't afford — where can I ask for free or low-cost dental care?",
     say: "I need dental work I can't afford. Where are the free or sliding-scale dental clinics near me, and do I qualify for Dental Lifeline?",
     fed: [
       { n: "Community health center dental chairs", w: "sliding-scale cleanings, fillings and extractions most people don't know exist", url: "https://findahealthcenter.hrsa.gov" },
@@ -1933,6 +1980,7 @@ const NEEDS = [
     id: "medical", group: "health", tier: 1,
     label: "Free clinics & health insurance",
     sheetTitle: "Free clinics & getting covered",
+    q: "I have no insurance and can't afford the doctor — where can I be seen, and what coverage can I ask for?",
     say: "I don't have insurance / can't afford care. Can I be seen on a sliding scale, and can someone help me apply for Medicaid or a marketplace plan?",
     fed: [
       { n: "Medicaid / CHIP", w: "free or nearly-free health coverage — and in many states it can pay bills from the last 3 months", how: "apply any time of year", url: "https://www.healthcare.gov/medicaid-chip/" },
@@ -1953,6 +2001,7 @@ const NEEDS = [
     id: "rx", group: "health", tier: 2,
     label: "Prescription drug help",
     sheetTitle: "Help paying for prescriptions",
+    q: "I can't afford my prescriptions — what medicine help can I ask for?",
     say: "I can't afford my prescriptions. What patient assistance programs or discounts are there for my medicines?",
     fed: [
       { n: "NeedyMeds", w: "the master directory of drug-maker free-medicine programs, copay cards and discounts", url: "https://www.needymeds.org", tel: "800-503-6897" },
@@ -1973,6 +2022,7 @@ const NEEDS = [
     id: "vision", group: "health", tier: 2,
     label: "Vision & hearing care",
     sheetTitle: "Glasses, eye care & hearing aids",
+    q: "I need glasses or a hearing aid I can't afford — what help can I ask for?",
     say: "I need glasses / an eye exam / a hearing aid and can't afford them. What free or low-cost programs are there for someone in my situation?",
     fed: [
       { n: "Vocational Rehabilitation", w: "if you work or want to work, the state can pay for glasses and hearing aids as job equipment", url: "https://rsa.ed.gov/about/states" }
@@ -1994,6 +2044,7 @@ const NEEDS = [
     id: "medicare", group: "health", tier: 2,
     label: "Medicare & benefits check",
     sheetTitle: "Medicare & benefits — pay less, get more",
+    q: "I'm on Medicare (or turning 65) and it costs too much — what savings programs can I ask for?",
     say: "I'm on Medicare (or turning 65). Can you check whether I qualify for the Medicare Savings Program and Extra Help — and review my plan with me for free?",
     fed: [
       { n: "Medicare Savings Programs", w: "your state can pay your monthly Medicare premium — millions qualify and never apply", url: "https://www.medicare.gov/basics/costs/help/medicare-savings-programs" },
@@ -2014,6 +2065,7 @@ const NEEDS = [
     id: "medbills", group: "health", tier: 1,
     label: "Medical bills assistance",
     sheetTitle: "Getting help with a medical bill",
+    q: "I got a medical bill I can't pay — how do I ask the hospital for financial assistance?",
     say: "I can't afford this medical bill. I'd like to apply for your financial assistance (charity care) program, and please don't send this to collections while my application is open.",
     fed: [
       { n: "Ask for the itemized bill first", w: "errors are routine — you only pay what's real, and the itemized version is your legal right", how: "call billing: \"send me an itemized bill\"" },
@@ -2034,6 +2086,7 @@ const NEEDS = [
     id: "meddebt", group: "health", tier: 2,
     label: "Medical debt relief",
     sheetTitle: "Getting out from under medical debt",
+    q: "Old medical debt is hanging over me — what are my options to shrink it or clear it?",
     say: "This medical debt is old or in collections. What are my options — charity care after the fact, a settlement, or getting it off my credit report?",
     fed: [
       { n: "Small & paid medical debts are off credit reports", w: "paid medical collections and bills under $500 no longer appear — pull your free report and dispute any that still show", url: "https://www.annualcreditreport.com" },
@@ -2055,6 +2108,7 @@ const NEEDS = [
     id: "chronic", group: "health", tier: 2,
     label: "Serious & chronic illness",
     sheetTitle: "Serious & chronic illness — funds for your diagnosis",
+    q: "I have a serious illness and the costs keep piling up — what funds exist for my diagnosis?",
     say: "I have ____ and the costs are piling up. What copay funds, foundation grants and support programs exist for this exact diagnosis?",
     fed: [
       { n: "PAN Foundation", w: "copay grants by diagnosis — funds open and close all year", url: "https://www.panfoundation.org" },
@@ -2076,6 +2130,7 @@ const NEEDS = [
     id: "caregiver", group: "health", tier: 2,
     label: "Help for caregivers",
     sheetTitle: "Support (and pay) for caregiving",
+    q: "I take care of a family member at home — what support (or pay) can a caregiver like me ask for?",
     say: "I take care of my ____ at home. Are there programs that pay family caregivers in my state, and what respite or support services can we get?",
     fed: [
       { n: "Medicaid self-directed care", w: "many states let the person you care for hire YOU — $16–$25/hr in some states", how: "ask their Medicaid caseworker about \"self-directed\" or \"consumer-directed\" care", url: "https://www.medicaid.gov/medicaid/long-term-services-supports/self-directed-services" },
@@ -2097,6 +2152,7 @@ const NEEDS = [
     id: "pets", group: "health", tier: 3,
     label: "Pet & veterinary help",
     sheetTitle: "Help with vet bills & pet food",
+    q: "My pet needs care I can't afford — where can I ask for vet-bill or pet-food help?",
     say: "My pet needs care I can't afford right now. Do you have a low-cost clinic, a payment plan, or a fund that helps with this kind of treatment?",
     fed: [
       { n: "RedRover urgent care grants", w: "small grants for urgent, life-saving vet care", url: "https://redrover.org/relief" }
@@ -2117,6 +2173,7 @@ const NEEDS = [
     id: "medtravel", group: "health", tier: 2,
     label: "Travel & lodging for medical care",
     sheetTitle: "Getting to treatment — rides, flights & lodging",
+    q: "My treatment is far from home — what travel, gas or lodging help can a patient ask for?",
     say: "My treatment is far from home. Are there free flights, gas help, or free places to stay for patients and family?",
     fed: [],
     local: [
@@ -2137,6 +2194,7 @@ const NEEDS = [
     id: "famgen", group: "family", tier: 1,
     label: "The big family programs (cash, Head Start & more)",
     sheetTitle: "Help for families & children — the big programs",
+    q: "We're a family with kids and money is tight — what family programs should we be asking for?",
     say: "We're a family with kids and money is tight. Can you check us for everything — cash assistance, food, health coverage, Head Start, and any programs for the kids?",
     fed: [
       { n: "TANF cash assistance", w: "monthly cash for families with kids — apply through your state", url: "https://www.acf.gov/ofa/map/about/help-families" },
@@ -2158,6 +2216,7 @@ const NEEDS = [
     id: "childcare", group: "family", tier: 1,
     label: "Childcare costs",
     sheetTitle: "Childcare & money for raising kids",
+    q: "I can't afford childcare and I need to work — what childcare help can I ask for?",
     say: "I need help affording childcare so I can work. How do I apply for the childcare subsidy in my state, and is there a waitlist I should get on today?",
     fed: [
       { n: "State childcare assistance (CCDF)", w: "the government pays most of your childcare bill while you work or train", how: "find your state's program", url: "https://childcare.gov/state-resources" },
@@ -2179,6 +2238,7 @@ const NEEDS = [
     id: "baby", group: "family", tier: 1,
     label: "Pregnancy & a new baby",
     sheetTitle: "Help through pregnancy & a new baby",
+    q: "I'm pregnant / just had a baby — what programs for new parents should I ask for?",
     say: "I'm pregnant / just had a baby. I'd like to sign up for WIC, and I'm looking for any programs for new parents — home visits, diapers, cribs, and help with medical costs.",
     fed: [
       { n: "WIC", w: "free groceries, formula, breastfeeding help and a nutritionist — through pregnancy and until kids turn 5", url: "https://www.fns.usda.gov/wic/applicant-participant/apply" },
@@ -2200,6 +2260,7 @@ const NEEDS = [
     id: "fosteradopt", group: "family", tier: 2,
     label: "Foster care & adoption",
     sheetTitle: "Foster & adoption help — money and support",
+    q: "We're fostering or adopting — what support and monthly help should we be asking about?",
     say: "We're fostering / adopting (or thinking about it). What monthly support, medical coverage and startup help exists — and what should we ask before signing anything?",
     fed: [
       { n: "Adoption assistance + the adoption tax credit", w: "adopting from foster care is usually free, comes with monthly assistance and Medicaid — and a tax credit on top", url: "https://www.childwelfare.gov/topics/adoption/adopt-assistance/" },
@@ -2220,6 +2281,7 @@ const NEEDS = [
     id: "iep", group: "family", tier: 2,
     label: "Special education & IEP help",
     sheetTitle: "Special education & IEP help",
+    q: "My child is struggling in school — how do I ask for special education help and know our rights?",
     say: "My child is struggling in school. I'm requesting a full special-education evaluation, in writing — and I'd like the parent center to walk me through our rights.",
     fed: [
       { n: "Your Parent Training & Information Center", w: "every state has one — free advocates who know IEP law and sit with you at school meetings", url: "https://www.parentcenterhub.org/find-your-center/" },
@@ -2240,6 +2302,7 @@ const NEEDS = [
     id: "childsupport", group: "family", tier: 2,
     label: "Child support — getting it or fixing it",
     sheetTitle: "Child support — getting it or fixing it",
+    q: "I need help with child support — collecting it, or changing an order I can't pay — where do I start?",
     say: "I need help with child support — collecting what's owed, or changing an order I truly can't pay. How do I start with the state office, and where's the free legal help?",
     fed: [
       { n: "State child support services", w: "the state collects for free — locating parents, garnishing, reopening old cases", url: "https://www.acf.gov/css/parents" }
@@ -2259,6 +2322,7 @@ const NEEDS = [
     id: "schoolkids", group: "family", tier: 1,
     label: "School costs, supplies & kids' activities",
     sheetTitle: "School costs, supplies & kids' activities",
+    q: "School costs are squeezing us — supplies, fees, activities — what help can families ask for?",
     say: "My kids need school supplies and I can't cover the fees and activities. What can the school waive, and what community programs should we be on?",
     fed: [
       { n: "Free school meals", w: "breakfast and lunch — one form at the school office, and it unlocks other fee waivers", how: "ask the school office for the meal application" }
@@ -2281,6 +2345,7 @@ const NEEDS = [
     id: "seniorcheck", group: "seniors", tier: 2,
     label: "A full senior benefits check-up",
     sheetTitle: "Seniors: your full benefits check-up",
+    q: "I'm a senior on a fixed income — what benefits am I missing, and who checks that for me?",
     say: "I'm a senior on a fixed income. Can you run a full benefits check for me — food, Medicare savings, utility help, property tax relief — everything someone my age in my county may qualify for?",
     fed: [
       { n: "BenefitsCheckUp", w: "NCOA's free screener — the average senior finds thousands per year in missed benefits", url: "https://benefitscheckup.org" },
@@ -2303,6 +2368,7 @@ const NEEDS = [
     id: "seniorhome", group: "seniors", tier: 1,
     label: "Meals, rides & help at home (60+)",
     sheetTitle: "Meals, rides & help at home",
+    q: "I'm over 60 and could use meals, rides or help at home — what senior services can I ask for?",
     say: "I'm over 60 and I could use [meals / rides / help around the house]. What programs are there for someone my age, and how do I sign up?",
     fed: [
       { n: "Meals on Wheels", w: "hot meals delivered, plus a friendly check-in", url: "https://www.mealsonwheelsamerica.org/find-meals" },
@@ -2323,6 +2389,7 @@ const NEEDS = [
     id: "seniorrepair", group: "seniors", tier: 2,
     label: "Senior home repairs, ramps & grab bars",
     sheetTitle: "Senior home repairs, ramps & grab bars",
+    q: "I'm a senior homeowner and need repairs, grab bars or a ramp — what help can I ask for?",
     say: "I'm a senior homeowner and I need repairs / grab bars / a ramp. What senior repair programs and volunteer groups cover my county?",
     fed: [
       { n: "USDA Section 504 grant (62+)", w: "up to $10,000 in repair grants for older homeowners outside big cities", url: "https://www.rd.usda.gov/programs-services/single-family-housing-programs/single-family-housing-repair-loans-grants" },
@@ -2344,6 +2411,7 @@ const NEEDS = [
     id: "kinship", group: "seniors", tier: 1,
     label: "Grandparents raising grandkids",
     sheetTitle: "Raising your grandkids — money & support",
+    q: "I'm raising my grandchild — what money and support can grandparents like me ask for?",
     say: "I'm raising my grandchild. What financial help exists — child-only TANF, kinship payments, guardianship assistance — and who walks me through applying?",
     fed: [
       { n: "Child-only TANF", w: "monthly cash for the child — in most states YOUR income doesn't count for a child-only grant", url: "https://www.acf.gov/ofa/map/about/help-families" },
@@ -2366,6 +2434,7 @@ const NEEDS = [
     id: "vetcheck", group: "vets", tier: 2,
     label: "Veterans: benefits & claims check",
     sheetTitle: "Veterans: your full benefits & claims check",
+    q: "I'm a veteran — how do I get a full check of the benefits and claims I may be owed?",
     say: "I served in the ____. I'd like a full review of what I may be owed — disability, pension, healthcare, housing — and free help filing the claims.",
     fed: [
       { n: "VA — MyVA411", w: "one number for every VA benefit: disability, pension, healthcare, home loans", tel: "800-698-2411", url: "https://www.va.gov" },
@@ -2387,6 +2456,7 @@ const NEEDS = [
     id: "vethousing", group: "vets", tier: 1,
     label: "Veteran housing & emergency help",
     sheetTitle: "Veterans: housing & emergency help",
+    q: "I'm a veteran and my housing is getting shaky — what veteran housing help can I ask for?",
     say: "I'm a veteran and my housing is getting shaky. I want SSVF or HUD-VASH help before this becomes a crisis — who serves my county?",
     fed: [
       { n: "VA homeless & at-risk line", w: "24/7 — rent help, deposits, and housing before things break", tel: "877-424-3838" },
@@ -2408,6 +2478,7 @@ const NEEDS = [
     id: "vetwork", group: "vets", tier: 3,
     label: "Veteran business & job programs",
     sheetTitle: "Veterans: business & job programs",
+    q: "I'm a veteran looking for work or starting a business — what veteran programs should I ask for?",
     say: "I'm a veteran starting a business / job hunting. What veteran programs apply — Boots to Business, VBOCs, hiring preference — and who mentors me free?",
     fed: [
       { n: "Veterans Business Outreach Centers", w: "free business training and Boots to Business courses for veterans", url: "https://www.sba.gov/local-assistance/resource-partners/veterans-business-outreach-center-vboc-program" },
@@ -2429,6 +2500,7 @@ const NEEDS = [
     id: "disability", group: "disability", tier: 2,
     label: "Disability benefits & services",
     sheetTitle: "Disability benefits & services",
+    q: "I live with a disability — what benefits and services should I be asking for?",
     say: "I have a disability and I want to make sure I'm getting everything I may qualify for — SSI or SSDI, state services, work supports, and any equipment or home changes.",
     fed: [
       { n: "SSI / SSDI", w: "monthly checks — SSDI from your work record, SSI even without one", how: "apply online or call", url: "https://www.ssa.gov/benefits/disability/", tel: "800-772-1213" },
@@ -2450,6 +2522,7 @@ const NEEDS = [
     id: "disequip", group: "disability", tier: 2,
     label: "Equipment, ramps & home changes",
     sheetTitle: "Equipment, ramps & home changes",
+    q: "I need equipment, a ramp or home changes for my disability — what help can I ask for?",
     say: "I need equipment / a ramp / a home modification. What programs lend or pay for this, and who helps me figure out what fits before anyone buys anything?",
     fed: [
       { n: "Your state assistive technology program", w: "free device loans, demos and reuse — every state runs one", url: "https://at3center.net/state-at-programs/" },
@@ -2472,6 +2545,7 @@ const NEEDS = [
     id: "diswork", group: "disability", tier: 2,
     label: "Working with a disability",
     sheetTitle: "Working with a disability — without losing your benefits",
+    q: "I have a disability and want to work without losing my benefits — how do I ask for that safely?",
     say: "I have a disability and I want to work. How do Ticket to Work and VR apply to me — and how do I protect my benefits while I try?",
     fed: [
       { n: "Ticket to Work", w: "try working with protections on your SSI/SSDI", url: "https://choosework.ssa.gov", tel: "866-968-7842" },
@@ -2493,6 +2567,7 @@ const NEEDS = [
     id: "job", group: "work", tier: 2,
     label: "Finding a job or job training",
     sheetTitle: "Free training & real help for a better job",
+    q: "I want a better job or paid training — what programs will pay for my training?",
     say: "I want to train for a better job. What training programs will the government pay for in my case — and can I get help with gas, childcare or a laptop while I train?",
     fed: [
       { n: "American Job Center (WIOA money)", w: "the government pays for training — certificates, CDL, healthcare, trades — plus support costs while you train", how: "find your local center and ask for a \"WIOA eligibility appointment\"", url: "https://www.careeronestop.org/localhelp/americanjobcenters/find-american-job-centers.aspx", tel: "877-872-5627" },
@@ -2513,6 +2588,7 @@ const NEEDS = [
     id: "training", group: "work", tier: 2,
     label: "Free & low-cost training & certificates",
     sheetTitle: "Free & low-cost training that leads somewhere",
+    q: "I want a certificate that leads to real work — what free or funded training can I ask for?",
     say: "I want a certificate that actually pays. Which short programs come with funding — WIOA, the new Workforce Pell — and which employers around here hire from them?",
     fed: [
       { n: "Workforce Pell — new for 2026", w: "Pell Grants now cover short job-training programs (8–15 weeks), not just degrees — ask any community college \"which of your certificates take Workforce Pell?\"", url: "https://studentaid.gov" },
@@ -2533,6 +2609,7 @@ const NEEDS = [
     id: "uihelp", group: "work", tier: 1,
     label: "Unemployment claim problems",
     sheetTitle: "Fixing an unemployment claim",
+    q: "My unemployment claim is denied or stuck — how do I fight it, and who helps me free?",
     say: "My unemployment claim is denied / stuck / says I owe money back. I want to appeal — what's my deadline, and who helps me free?",
     fed: [
       { n: "Your state UI office", w: "file, check status, and start the appeal — the letter's deadline is short and real", url: "https://www.careeronestop.org/localhelp/unemploymentbenefits/unemployment-benefits.aspx" }
@@ -2552,6 +2629,7 @@ const NEEDS = [
     id: "workgear", group: "work", tier: 2,
     label: "Work clothes, tools & fees",
     sheetTitle: "Work clothes, tools & starting costs",
+    q: "I have work lined up but can't cover the boots, tools or fees to start — what help can I ask for?",
     say: "I have a job / interview / training lined up and I need clothes, boots, tools or a license fee covered so I can start. What help exists?",
     fed: [
       { n: "WIOA support services", w: "job centers can pay for boots, tools, gas, even license fees when it keeps you employed — ask \"what support services can you authorize?\"", url: "https://www.careeronestop.org/localhelp/americanjobcenters/find-american-job-centers.aspx", tel: "877-872-5627" }
@@ -2573,6 +2651,7 @@ const NEEDS = [
     id: "business", group: "business", tier: 3,
     label: "Starting a business",
     sheetTitle: "Starting your business — free mentors & first steps",
+    q: "I want to start (or grow) a small business — where do I find free mentors and my first steps?",
     say: "Hi, I'm ____ and I wonder if I can make an appointment to talk with someone about starting (or growing) my business — and about any grants, microloans or free help I should apply for.",
     fed: [
       { n: "SBA free local help — book mentors", w: "government-paid business mentors: SBDC advisors, SCORE, Women's Business Centers. Book as many as you can — each knows different money", how: "put in your zip and start booking", url: "https://www.sba.gov/local-assistance", tel: "800-827-5722" },
@@ -2595,6 +2674,7 @@ const NEEDS = [
     id: "bizgrants", group: "business", tier: 3,
     label: "Business grants & funding",
     sheetTitle: "Business grants & funding — where the real rounds are",
+    q: "I'm looking for grants and funding for my small business — which rounds are open for someone like me?",
     say: "I'm looking for grants and funding for my small business. Which state, city and private grant rounds are open right now, and who helps me apply free?",
     fed: [
       { n: "The truth about \"federal business grants\"", w: "the feds almost never grant cash to regular startups — the real rounds are state, city and private, and your free SBDC advisor tracks all of them", url: "https://www.sba.gov/local-assistance" },
@@ -2616,6 +2696,7 @@ const NEEDS = [
     id: "bizloans", group: "business", tier: 3,
     label: "Business loans & other funding",
     sheetTitle: "Business loans that say yes — micro, CDFI & 0%",
+    q: "I need business money but banks say no — what microloans or community lenders can I ask?",
     say: "I need capital that isn't a bank loan. Do I fit an SBA microloan, a CDFI, or a 0% Kiva loan — and who packages the application with me free?",
     fed: [
       { n: "SBA microloans", w: "up to $50,000 through nonprofit lenders with easier credit rules", url: "https://www.sba.gov/funding-programs/loans/microloans" },
@@ -2637,6 +2718,7 @@ const NEEDS = [
     id: "crowdfund", group: "business", tier: 3,
     label: "Crowdfunding & investors",
     sheetTitle: "Raising money — crowdfunding, accelerators & angels",
+    q: "I want to raise money publicly for my business — which kind of raise fits me?",
     say: "I'm raising money publicly for my business. Which kind of raise fits me — rewards, donations, or investment — and what do the accelerators near me offer?",
     fed: [
       { n: "Pick the right kind of raise", w: "rewards (Kickstarter/Indiegogo), donations (GoFundMe), or real investment from regular people through registered portals (Regulation Crowdfunding)", url: "https://www.investor.gov/introduction-investing/investing-basics/glossary/crowdfunding" }
@@ -2656,6 +2738,7 @@ const NEEDS = [
     id: "govcontract", group: "business", tier: 3,
     label: "Selling to the government (contracts)",
     sheetTitle: "Government contracting for your small business",
+    q: "I want my small business to sell to the government — how do I start, and what help is free?",
     say: "I want to sell to the government. Help me register in SAM.gov, find my first small contracts, and figure out which set-aside certifications I qualify for.",
     fed: [
       { n: "SAM.gov — register free", w: "the one registration behind all federal contracts — free, always; anyone charging for it is a scam", url: "https://sam.gov" },
@@ -2676,6 +2759,7 @@ const NEEDS = [
     id: "minoritybiz", group: "business", tier: 3,
     label: "Grants & support for minority groups",
     sheetTitle: "Minority-owned business — grants, certification & lenders",
+    q: "I own a minority-owned business — what grants, certifications and lenders should I ask about?",
     say: "I own (or I'm starting) a minority-owned business. What certifications, grants and lenders should I line up first?",
     fed: [
       { n: "MBDA Business Centers", w: "free consulting and capital doors for minority-owned businesses (call first — centers are in flux this year)", url: "https://www.mbda.gov/mbda-programs/business-centers" },
@@ -2697,6 +2781,7 @@ const NEEDS = [
     id: "womenbiz", group: "business", tier: 3,
     label: "Grants for women entrepreneurs",
     sheetTitle: "Women entrepreneurs — grants, WBCs & lending doors",
+    q: "I'm a woman building a business — what grants and support for women can I ask for?",
     say: "I'm a woman starting / growing a business. Point me at the Women's Business Center, the grants for women, and the lending doors that actually open.",
     fed: [
       { n: "Women's Business Centers", w: "SBA-funded centers with free training, counseling and lender connections for women", url: "https://www.sba.gov/local-assistance" },
@@ -2718,6 +2803,7 @@ const NEEDS = [
     id: "farmbiz", group: "business", tier: 3,
     label: "Farming & ranching",
     sheetTitle: "Farm, land & rural business money",
+    q: "I want to start or grow a farm or rural business — what USDA help can a beginner ask for?",
     say: "I want to start or grow a farm or rural business. What USDA money and free help applies to a beginner like me?",
     fed: [
       { n: "FSA beginning farmer loans & microloans", w: "the government's own farm bank — built for first-timers", url: "https://www.farmers.gov/your-business/beginning-farmers" },
@@ -2738,6 +2824,7 @@ const NEEDS = [
     id: "bizliving", group: "business", tier: 3,
     label: "Living costs while you launch",
     sheetTitle: "Living costs while you launch the business",
+    q: "I'm building a business and still need to pay the bills — what can I ask for while I launch?",
     say: "I'm starting my business and I need to cover living costs while it grows. What programs let me do that without losing everything?",
     fed: [
       { n: "Self-Employment Assistance", w: "in some states you can keep unemployment checks while building a business full-time — ask your UI office \"do we have SEA?\"", url: "https://www.careeronestop.org/localhelp/unemploymentbenefits/unemployment-benefits.aspx" },
@@ -2759,6 +2846,7 @@ const NEEDS = [
     id: "nonprofit", group: "nonprofit", tier: 3,
     label: "Starting a nonprofit",
     sheetTitle: "Starting a nonprofit",
+    q: "I want to start a nonprofit — what's the cheapest legit way, and who helps me free?",
     say: "I want to start a nonprofit to ____. I'm looking for free help with the paperwork, and for the cheapest legitimate way to get tax-exempt status.",
     fed: [
       { n: "IRS 501(c)(3) basics + Form 1023-EZ", w: "many small nonprofits qualify for the short version of tax-exempt status — the fee is $275, and the state registration is usually cheap too", url: "https://www.irs.gov/charities-non-profits/applying-for-tax-exempt-status" },
@@ -2779,6 +2867,7 @@ const NEEDS = [
     id: "npgrants", group: "nonprofit", tier: 3,
     label: "Grants for your nonprofit",
     sheetTitle: "Funding your nonprofit — foundations & first grants",
+    q: "Our nonprofit needs funding — which foundations and grants should we be asking?",
     say: "Our nonprofit is looking for funders. Which local foundations fund our mission, and how do I get in front of a program officer?",
     fed: [
       { n: "Grants.gov (once you're official)", w: "the federal grant pipeline — for organizations, not individuals; this is where a nonprofit changes the game", url: "https://grants.gov/learn-grants/grant-programs" }
@@ -2800,6 +2889,7 @@ const NEEDS = [
     id: "car", group: "cars", tier: 2,
     label: "Car repair & vehicle help",
     sheetTitle: "Getting your car fixed",
+    q: "My car needs repairs I can't afford and I need it for work — where can I ask for repair help?",
     say: "My car needs repairs I can't afford, and I need it to keep my job. What financial assistance is there for car repair near me?",
     fed: [
       { n: "American Job Center transportation help", w: "some centers give gas cards, bus passes, even repair money so you can keep a job — ask yours", url: "https://www.careeronestop.org/localhelp/americanjobcenters/find-american-job-centers.aspx", tel: "877-872-5627" }
@@ -2820,6 +2910,7 @@ const NEEDS = [
     id: "getcar", group: "cars", tier: 2,
     label: "Getting a car",
     sheetTitle: "Getting a car — donated & low-cost programs",
+    q: "I need a car to get to work and can't buy one — what car programs can I ask for?",
     say: "I need a car to get to work and I can't buy one. Which donated-car and low-cost car-ownership programs cover my county, and what do I need to qualify?",
     fed: [
       { n: "TANF vehicle help", w: "some states buy or repair work cars through TANF — ask your caseworker \"do we have vehicle assistance?\"" }
@@ -2840,6 +2931,7 @@ const NEEDS = [
     id: "modest", group: "cars", tier: 1,
     label: "A one-time emergency grant (Modest Needs)",
     sheetTitle: "One-time emergency grants for working households",
+    q: "I'm working but one bill is about to tip everything over — what one-time emergency grants can I ask for?",
     say: "I'm working, but one bill is about to knock everything over. I'm applying for a Modest Needs Self-Sufficiency Grant — and what similar one-time emergency funds exist near me?",
     fed: [],
     local: [
@@ -2857,8 +2949,9 @@ const NEEDS = [
 
   {
     id: "auctions", group: "cars", tier: 3,
-    label: "Government auctions & surplus",
+    label: "A cheap car from a government auction",
     sheetTitle: "Government auctions & surplus — cars, gear, even houses",
+    q: "I'm looking for a cheap, reliable car — how do the official government auctions and surplus sales work near me?",
     say: "I'm looking at government auctions and surplus — vehicles, equipment, even houses. Where are the real government sales for my area, and how does a first-timer start?",
     fed: [
       { n: "GSA Auctions", w: "the federal government's own auction site — vehicles, equipment, electronics", url: "https://gsaauctions.gov" },
@@ -2880,6 +2973,7 @@ const NEEDS = [
     id: "rides", group: "cars", tier: 2,
     label: "Bus passes & rides",
     sheetTitle: "Getting around without a car",
+    q: "I don't drive right now — what bus pass, ride or transport help can I ask for?",
     say: "I don't drive / my car's down. What rides exist here — bus pass help, medical rides, senior and disability transport, rides to work?",
     fed: [
       { n: "Medicaid rides (NEMT)", w: "if you have Medicaid, rides to medical appointments are a covered benefit — call the number on your card and ask for \"transportation\"" }
@@ -2900,6 +2994,7 @@ const NEEDS = [
     id: "license", group: "cars", tier: 2,
     label: "Driver's license & car insurance problems",
     sheetTitle: "Getting legal to drive again",
+    q: "My license is suspended over fines and insurance is unaffordable — how do I get legal to drive again?",
     say: "My license is suspended over fines / insurance is unaffordable. What legal, low-cost paths get me driving again?",
     fed: [],
     local: [
@@ -2919,6 +3014,7 @@ const NEEDS = [
     id: "college", group: "school", tier: 3,
     label: "Paying for college or trade school",
     sheetTitle: "Money for college or trade school",
+    q: "I want to go (back) to school — what money can I ask for before taking any loans?",
     say: "I'm looking at going back to school. Help me see what I'd actually pay — Pell Grant, state aid, your school's own grants — before any loans.",
     fed: [
       { n: "FAFSA — the one form that opens everything", w: "Pell Grants (thousands per year, no repayment), work-study, state aid — any age, any GPA", url: "https://studentaid.gov/h/apply-for-aid/fafsa", tel: "800-433-3243" },
@@ -2939,6 +3035,7 @@ const NEEDS = [
     id: "scholarships", group: "school", tier: 3,
     label: "Scholarships & grants for school",
     sheetTitle: "Scholarships — the local, winnable kind",
+    q: "I'm hunting scholarships — where are the local ones real people actually win?",
     say: "I'm looking for scholarships. Where are the local, low-competition ones, and who helps me apply free?",
     fed: [
       { n: "CareerOneStop scholarship finder", w: "the Department of Labor's free database of 9,000+ scholarships — no fees, ever", url: "https://www.careeronestop.org/toolkit/training/find-scholarships.aspx" },
@@ -2960,6 +3057,7 @@ const NEEDS = [
     id: "ged", group: "school", tier: 2,
     label: "GED & adult education",
     sheetTitle: "Your GED & adult education, free",
+    q: "I want my GED — where are the free classes, and is the test fee covered?",
     say: "I want my GED / stronger reading and math. Where are the free classes near me, and is there help with the test fees?",
     fed: [
       { n: "Free adult education classes", w: "your school district and community college run free GED prep — by law", how: "call the community college and ask for \"adult education\"" },
@@ -2980,6 +3078,7 @@ const NEEDS = [
     id: "homeschool", group: "school", tier: 3,
     label: "Homeschooling help",
     sheetTitle: "Homeschooling — rules, free curriculum & money",
+    q: "We homeschool (or want to) — what are the rules here, and what free help exists?",
     say: "We homeschool / want to start. What are my state's rules, what's free — curriculum, classes, co-ops — and does any education money apply to us?",
     fed: [
       { n: "Your state's homeschool law", w: "requirements differ a lot by state — HSLDA keeps the plain-English map", url: "https://hslda.org/legal" },
@@ -3001,6 +3100,7 @@ const NEEDS = [
     id: "taxes", group: "taxes", tier: 2,
     label: "Free tax filing & prep",
     sheetTitle: "Free tax filing & prep",
+    q: "I need my taxes done and can't pay a preparer — where is the free, legit tax help?",
     say: "I need free help with my taxes. Do I qualify for free preparation, and can you look at my last few years too?",
     fed: [
       { n: "VITA free tax prep", w: "IRS-certified volunteers do your taxes free and catch credits paid preparers miss", url: "https://irs.treasury.gov/freetaxprep/", tel: "800-906-9887" },
@@ -3021,6 +3121,7 @@ const NEEDS = [
     id: "taxdebt", group: "taxes", tier: 1,
     label: "Tax debt & IRS trouble",
     sheetTitle: "Owing the IRS — your real options",
+    q: "I owe the IRS and can't pay — what are my options, and who defends me free?",
     say: "I owe the IRS and can't pay. Before anything else I want to know my options — a payment plan, hardship status, an Offer in Compromise — and I'd like free legal help dealing with you.",
     fed: [
       { n: "IRS payment plans", w: "set up online in minutes — a payment plan stops the scary letters", url: "https://www.irs.gov/payments" },
@@ -3042,6 +3143,7 @@ const NEEDS = [
     id: "taxcredits", group: "taxes", tier: 2,
     label: "Tax credits you might be missing",
     sheetTitle: "The tax credits you're owed",
+    q: "Am I missing tax credits like the EITC or child credit — and can I still claim past years?",
     say: "Can you check which tax credits I've been missing — the Earned Income Credit, Child Tax Credit, Saver's Credit — and whether I can still file past years to collect them?",
     fed: [
       { n: "EITC — the big one", w: "worth up to about $8,000 with three kids; a fifth of eligible people never claim it", url: "https://www.irs.gov/credits-deductions/individuals/earned-income-tax-credit-eitc" },
@@ -3062,6 +3164,7 @@ const NEEDS = [
     id: "propertytax", group: "taxes", tier: 2,
     label: "Property & state tax relief",
     sheetTitle: "Cutting your property & state taxes",
+    q: "My property taxes are heavy — what exemptions and relief can a homeowner ask for?",
     say: "I want every property tax break my home qualifies for — homestead exemption, senior or disability freeze, veteran exemption — and a payment plan for anything behind.",
     fed: [],
     local: [
@@ -3081,6 +3184,7 @@ const NEEDS = [
     id: "legal", group: "safe", tier: 2,
     label: "Free legal help",
     sheetTitle: "Free legal help",
+    q: "I have a legal problem and can't afford a lawyer — where can I ask for free legal help?",
     say: "I have a legal problem with ____ and I can't afford a lawyer. Does your office handle this, and if not — who does free legal help for my kind of case?",
     fed: [
       { n: "LawHelp.org", w: "every free legal aid program in {STATE}, by topic", url: "https://www.lawhelp.org/find-help" },
@@ -3101,6 +3205,7 @@ const NEEDS = [
     id: "consumer", group: "safe", tier: 2,
     label: "Ripped off? Your consumer rights",
     sheetTitle: "Scammed or ripped off — complaints that actually work",
+    q: "I got scammed or ripped off — where do I complain so it actually counts, and can I get my money back?",
     say: "I got ripped off / scammed / overcharged. I want to file the complaints that actually move — who has power over this company, and how do I get my money back?",
     fed: [
       { n: "CFPB complaint", w: "for banks, lenders, collectors and credit bureaus — companies must respond, usually within 15 days", url: "https://www.consumerfinance.gov/complaint/" },
@@ -3122,6 +3227,7 @@ const NEEDS = [
     id: "dv", group: "safe", tier: 0,
     label: "Safety at home",
     sheetTitle: "Being safe at home",
+    q: "I don't feel safe at home — who can I talk to about my options, quietly?",
     say: "I don't feel safe at home and I want to talk through my options — safety planning, somewhere to go, and what financial help exists so I can make a move.",
     fed: [
       { n: "National Domestic Violence Hotline", w: "24/7, free, confidential — call 800-799-7233 or text START to 88788; they plan for money, kids, pets, everything", tel: "800-799-7233", url: "https://www.thehotline.org" },
@@ -3141,6 +3247,7 @@ const NEEDS = [
     id: "immigration", group: "safe", tier: 2,
     label: "Immigration papers & citizenship",
     sheetTitle: "Immigration papers & citizenship help",
+    q: "I need help with my immigration papers and can't afford a lawyer — where is the safe, legit help?",
     say: "I need help with my papers / citizenship and can't afford a lawyer. Where is the free, DOJ-accredited help near me — and do I qualify for a fee waiver?",
     fed: [
       { n: "USCIS fee waivers (Form I-912)", w: "many application fees can be waived for low income — file the waiver, don't skip the application", url: "https://www.uscis.gov/i-912" },
@@ -3162,6 +3269,7 @@ const NEEDS = [
     id: "expunge", group: "safe", tier: 2,
     label: "Clearing your record (expungement)",
     sheetTitle: "Clearing your record",
+    q: "I want to clear my old record so I can work and rent — do I qualify, and who helps free?",
     say: "I want to clean up my record so I can work and rent. Do I qualify for expungement or sealing in my state, and when is the next free clinic?",
     fed: [],
     local: [
@@ -3180,6 +3288,7 @@ const NEEDS = [
     id: "iddocs", group: "safe", tier: 1,
     label: "ID, birth certificate & lost papers",
     sheetTitle: "Replacing your ID & papers",
+    q: "I lost my ID / birth certificate / Social Security card — what's the fastest, cheapest way to replace them?",
     say: "I lost my ID / birth certificate / Social Security card, and I need them to apply for everything else. What's the cheapest, fastest way to replace them — and who helps with the fees?",
     fed: [
       { n: "Social Security card — free", w: "replacements never cost anything; anyone charging is a scam", url: "https://www.ssa.gov/number-card/replace-card", tel: "800-772-1213" },
@@ -3328,9 +3437,9 @@ const INCOMES = [
 ];
 
 const TIERS = [
-  { badge: "today",  suit: "♥", cls: "t0", label: "Today" },
-  { badge: "week",   suit: "♦", cls: "t1", label: "This week" },
-  { badge: "month",  suit: "♠", cls: "t2", label: "This month" },
+  { badge: "today",  suit: "♥", cls: "t0", label: "Do this first" },
+  { badge: "week",   suit: "♦", cls: "t1", label: "Then work on these" },
+  { badge: "month",  suit: "♠", cls: "t2", label: "After that" },
   { badge: "steady", suit: "♣", cls: "t3", label: "When you're steady" }
 ];
 
@@ -3466,7 +3575,7 @@ function wizFoot(n) {
   return `<div class="qfoot">
       <button class="btn ghost" data-wz="back" ${n === 1 ? "style='visibility:hidden'" : ""}>← Back</button>
       <span class="fine">${n === 1 ? TOTAL + " short pages — check what fits, skip the rest. Private. Not an application." : ""}</span>
-      <button class="btn ${last ? "big" : ""}" data-wz="next">${last ? "Get my results →" : "Next →"}</button>
+      <button class="btn ${last ? "big" : ""}" data-wz="next">${last ? "Make my list →" : "Next →"}</button>
     </div>`;
 }
 
@@ -3493,7 +3602,7 @@ function renderWizard(focusId) {
 
   if (fin === 0) {
     inner = wizHead(n, "Is anything on fire <em>right now?</em>",
-      "Some problems have clocks on them. Anything you check or type here jumps to the top of your call sheet with today-moves.");
+      "Some problems have clocks on them. Anything you check or type here jumps to the top of your list.");
     inner += `<div class="opts" style="flex-direction:column;align-items:flex-start">` +
       URGENTS.map((u) => optPill("check", "urgent", u.id, u.label, S.urgent.includes(u.id))).join("") +
       S.customUrgent.map((t, i) => customPill(t, "data-rmurgent", i)).join("") +
@@ -3706,12 +3815,13 @@ function updateBub() {
 /* ==================================================================
    Building & rendering the list.
    The list is the whole product: the member's problems, named and put
-   in priority order — one problem = one ask. Answers live in the
-   community, so each row links only its quick guide / space, and the
-   navy box routes every problem to the AI Grant Researcher, the
-   Questions Channel, the Thursday Clinic and Call Sheet Classes.
-   (The NEEDS entries still carry say/fed/local/human data — that feeds
-   the later call-sheet step, and is deliberately NOT rendered here.)
+   in order — and for each one, a ready-to-copy question in their own
+   voice (location + who they are baked in). The proposal on every row:
+   paste the question in the Questions Channel, read the quick guide,
+   bring it to a Call Sheet Class. No answers here — one problem = one
+   ask, and the community takes it from there.
+   (NEEDS entries still carry say/fed/local/human data — that feeds the
+   later call-sheet step, and is deliberately NOT rendered here.)
    ================================================================== */
 function buildSheet() {
   // urgency can add problems the member didn't tick
@@ -3721,50 +3831,102 @@ function buildSheet() {
   S.built = true;
   saveS();
   goTab("sheet");
-  toast("Here’s your list — what to ask for, in priority order.");
+  toast("Here’s your list — every problem, with its question ready to copy.");
+}
+
+async function copyText(txt, okMsg) {
+  try {
+    await navigator.clipboard.writeText(txt);
+    toast(okMsg);
+  } catch (e) {
+    const ta = document.createElement("textarea");
+    ta.value = txt; document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); toast(okMsg); }
+    catch (e2) { toast("Couldn't copy automatically — use Print instead."); }
+    ta.remove();
+  }
+}
+
+/* the opening of every question: where they live + who they are */
+function whereAmI() {
+  const parts = [];
+  if (stateName()) parts.push("I'm in " + stateName() + (S.zip ? " (ZIP " + S.zip + ")" : ""));
+  const who = FLAGS.filter((f) => S.flags.includes(f.id)).map((f) => f.label);
+  const other = (S.flagOther || "").trim();
+  if (other) who.push(other);
+  if (who.length) parts.push("About me: " + who.join(" · "));
+  return parts.length ? parts.join(". ") + ". " : "";
+}
+
+function buildQ(nd) { return whereAmI() + (nd.q || nd.label + " — where can I get help?"); }
+
+function buildCustomQ(entry) {
+  return whereAmI() + (entry.urgent ? "This can't wait: " : "") + entry.t +
+    (entry.urgent ? " — where can I get help today?" : " — where can I get help, and what should I ask for?");
 }
 
 /* the one community link for a row: its quick guide if it has one, else its space */
 function rowGo(nd) {
   const links = (nd.comm || []).map(commLink).filter(Boolean);
   const guide = links.find((c) => c.url && c.url.includes("/posts/"));
-  if (guide) return { label: "Quick guide →", url: guide.url, name: guide.n };
-  if (links[0]) return { label: "Community space →", url: links[0].url, name: links[0].n };
+  if (guide) return { kind: "guide", url: guide.url, name: guide.n };
+  if (links[0]) return { kind: "space", url: links[0].url, name: links[0].n };
   return null;
 }
 
-function askRow(nd, num) {
+let QTEXTS = [];
+
+function rowActs(go) {
+  const guideBit = !go ? "" : (go.kind === "guide"
+    ? ` · read the <a href="${esc(go.url)}" target="_blank" rel="noopener" title="${esc(go.name)}">quick guide</a>`
+    : ` · ask in <a href="${esc(go.url)}" target="_blank" rel="noopener">${esc(go.name)}</a>`);
+  return `<p class="row-acts noprint">Copy the question into the
+    <a href="${SPACES.questions.url}" target="_blank" rel="noopener">Questions Channel</a>${guideBit}
+    · bring it to a <a href="${SPACES.callsheets.url}" target="_blank" rel="noopener">Call Sheet Class</a></p>`;
+}
+
+function askRow(nd, num, qi) {
   const tIdx = effectiveTier(nd);
-  const go = rowGo(nd);
   return `<div class="ask-row t${tIdx}">
     <span class="num" aria-hidden="true">${num}</span>
-    <div class="row-main"><span class="row-title">${esc(nd.label)}</span></div>
-    ${go ? `<a class="row-go" href="${esc(go.url)}" target="_blank" rel="noopener" title="${esc(go.name)}">${go.label}</a>` : ""}
+    <div class="row-main">
+      <span class="row-title">${esc(nd.label)}</span>
+      <p class="row-q">“${esc(QTEXTS[qi])}”</p>
+      ${rowActs(rowGo(nd))}
+    </div>
+    <button class="btn ghost row-copy noprint" data-copyq="${qi}" aria-label="Copy this question">⧉ Copy</button>
   </div>`;
 }
 
-function customRow(entry, num) {
+function customRow(entry, num, qi) {
   const tIdx = entry.urgent ? 0 : 2;
-  const sp = GROUP_SPACE[entry.g] ? SPACES[GROUP_SPACE[entry.g]] : SPACES.questions;
+  const sp = GROUP_SPACE[entry.g] ? SPACES[GROUP_SPACE[entry.g]] : null;
   return `<div class="ask-row t${tIdx}">
     <span class="num" aria-hidden="true">${num}</span>
-    <div class="row-main"><span class="row-title">${esc(entry.t)}</span><span class="badge plain">in your words</span></div>
-    <a class="row-go" href="${sp.url}" target="_blank" rel="noopener" title="${esc(sp.n)}">Community space →</a>
+    <div class="row-main">
+      <span class="row-title">${esc(entry.t)}</span><span class="badge plain">in your words</span>
+      <p class="row-q">“${esc(QTEXTS[qi])}”</p>
+      ${rowActs(sp ? { kind: "space", url: sp.url, name: sp.n } : null)}
+    </div>
+    <button class="btn ghost row-copy noprint" data-copyq="${qi}" aria-label="Copy this question">⧉ Copy</button>
   </div>`;
 }
 
-/* who you are — worth mentioning with every ask; no programs listed here */
+document.addEventListener("click", (e) => {
+  const b = e.target.closest("[data-copyq]");
+  if (b) copyText(QTEXTS[+b.dataset.copyq] || "", "Question copied — now paste it in the Questions Channel.");
+});
+
+/* who you are — baked into every question, said once here */
 function boosterMini() {
   const picked = FLAGS.filter((f) => S.flags.includes(f.id)).map((f) => f.label);
   const other = (S.flagOther || "").trim();
   if (!picked.length && !other) return "";
   const who = picked.concat(other ? ["“" + other + "”"] : []);
   return `<div class="mini t-blue" data-suit="♦">
-    <span class="mono-label">Say who you are, every time you ask</span>
-    <p><b>${who.map(esc).join(" · ")}</b> — whole pots of money are set aside for
-    people in these shoes. Mention it with every problem on this list, and tell the
-    <a href="${SPACES.airesearch.url}" target="_blank" rel="noopener">AI Grant Researcher</a>
-    too, so your report covers the set-asides.</p>
+    <span class="mono-label">Who you are opens extra doors</span>
+    <p><b>${who.map(esc).join(" · ")}</b> — we put this into every question below,
+    because set-asides exist for people in your shoes. Keep it in when you ask.</p>
   </div>`;
 }
 
@@ -3787,30 +3949,25 @@ function renderSheet() {
   $("#print-date").textContent = new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
   $("#sheet-lead").innerHTML =
     (stateName() ? `Built for <b>${esc(stateName())}</b>${S.zip ? " · ZIP " + esc(S.zip) : ""}. ` : "") +
-    `Your problems, named and put in order. <em style="color:var(--red)">One problem = one ask</em> — the community takes each one from there.`;
+    `Work it top to bottom — every problem comes with its question, ready to copy and ask.`;
 
-  // one ordered list: picked problems + "Other" problems, sorted by tier (stable)
+  QTEXTS = [];
   const entries = [
-    ...picked.map((nd) => ({ tier: effectiveTier(nd), render: (num) => askRow(nd, num) })),
-    ...customs.map((c) => ({ tier: c.urgent ? 0 : 2, render: (num) => customRow(c, num) }))
+    ...picked.map((nd) => {
+      const qi = QTEXTS.push(buildQ(nd)) - 1;
+      return { tier: effectiveTier(nd), render: (num) => askRow(nd, num, qi) };
+    }),
+    ...customs.map((c) => {
+      const qi = QTEXTS.push(buildCustomQ(c)) - 1;
+      return { tier: c.urgent ? 0 : 2, render: (num) => customRow(c, num, qi) };
+    })
   ].sort((a, b) => a.tier - b.tier);
 
-  let html = `<div class="first-calls">
-    <span class="mono-label">This list is the point</span>
-    <h3>Now take it into the community</h3>
-    <ol>
-      <li><b>Open the quick guide</b> next to each problem — the community’s own page for that exact ask.</li>
-      <li><b>Ask the <a href="${SPACES.airesearch.url}" target="_blank" rel="noopener">AI Grant Researcher</a></b> — give it one problem from this list, and your state, and it researches that ask for you.</li>
-      <li><b>Not sure about one?</b> Post it in the <a href="${SPACES.questions.url}" target="_blank" rel="noopener">Questions Channel</a> or bring it to the <a href="${SPACES.clinic.url}" target="_blank" rel="noopener">Thursday Drop-In Clinic</a>.</li>
-      <li><b>Ready to make calls?</b> That’s what <a href="${SPACES.callsheets.url}" target="_blank" rel="noopener">Call Sheet Classes</a> are for — one problem = one call sheet.</li>
-    </ol>
-  </div>`;
+  let html = boosterMini();
 
   let num = 0;
   let lastTier = -1;
-  let boosterPlaced = false;
   for (const e of entries) {
-    if (!boosterPlaced && e.tier >= 2) { html += boosterMini(); boosterPlaced = true; }
     if (e.tier !== lastTier) {
       const t = TIERS[e.tier];
       html += `<h3 class="tier-head t${e.tier}"><span class="s">${t.suit}</span> ${t.label}</h3>`;
@@ -3819,7 +3976,6 @@ function renderSheet() {
     num += 1;
     html += e.render(num);
   }
-  if (!boosterPlaced) html += boosterMini();
 
   html += `<div class="mini t-green" data-suit="♣">
     <span class="mono-label">When you get a yes</span>
@@ -3857,26 +4013,19 @@ function sheetAsText() {
     num += 1;
     if (e.nd) {
       const go = rowGo(e.nd);
-      L.push("  " + num + ". " + e.nd.label + (go ? "  — guide: " + go.url : ""));
+      L.push("  " + num + ". " + e.nd.label);
+      L.push("     ASK: “" + buildQ(e.nd) + "”");
+      if (go) L.push("     Guide: " + go.url);
     } else {
       const sp = GROUP_SPACE[e.c.g] ? SPACES[GROUP_SPACE[e.c.g]] : SPACES.questions;
-      L.push("  " + num + ". " + e.c.t + " (in your words)  — ask here: " + sp.url);
+      L.push("  " + num + ". " + e.c.t + " (in your words)");
+      L.push("     ASK: “" + buildCustomQ(e.c) + "”");
+      if (sp !== SPACES.questions) L.push("     Ask here: " + sp.url);
     }
-  }
-  L.push("");
-  const flags = FLAGS.filter((f) => S.flags.includes(f.id)).map((f) => f.label);
-  const other = (S.flagOther || "").trim();
-  if (flags.length || other) {
-    L.push("SAY WHO YOU ARE, EVERY TIME: " + flags.concat(other ? ["“" + other + "”"] : []).join(" · "));
     L.push("");
   }
-  L.push("TAKE EACH PROBLEM INTO LESKO HELP:");
-  L.push("  • Its quick guide (linked above)");
-  L.push("  • AI Grant Researcher: " + SPACES.airesearch.url);
-  L.push("  • Questions Channel: " + SPACES.questions.url);
-  L.push("  • Thursday Drop-In Clinic: " + SPACES.clinic.url);
-  L.push("  • Call Sheet Classes (one problem = one call sheet): " + SPACES.callsheets.url);
-  L.push("");
+  L.push("Post each question in the Questions Channel: " + SPACES.questions.url);
+  L.push("Bring your list to a Call Sheet Class (one problem = one call sheet): " + SPACES.callsheets.url);
   L.push("Got a yes? Post it in Success Stories: " + SPACES.success.url);
   L.push("— Lesko Help · One problem = one ask.");
   return L.join("\n");
@@ -3886,22 +4035,9 @@ function sheetAsText() {
 /* ==================================================================
    Buttons: copy, print, edit, wipe
    ================================================================== */
-$("#btn-copy").addEventListener("click", async () => {
-  const txt = sheetAsText();
-  try {
-    await navigator.clipboard.writeText(txt);
-    toast("Copied. Paste it into notes, a text, or an email to yourself.");
-  } catch (e) {
-    const ta = document.createElement("textarea");
-    ta.value = txt; document.body.appendChild(ta); ta.select();
-    try { document.execCommand("copy"); toast("Copied. Paste it anywhere."); }
-    catch (e2) { toast("Couldn't copy automatically — use Print instead."); }
-    ta.remove();
-  }
-});
+$("#btn-copy").addEventListener("click", () => copyText(sheetAsText(), "Copied. Paste it into notes, a text, or an email to yourself."));
 
 $("#btn-print").addEventListener("click", () => window.print());
-$("#btn-edit").addEventListener("click", () => { goTab("situation"); });
 
 $("#btn-wipe").addEventListener("click", () => {
   if (!confirm("Erase your answers, call sheet and progress from this device? There's no undo.")) return;
