@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="A free, private call-sheet builder from the Lesko Help community. Answer a few questions - get a personal list of what to ask for, who to call, and what to say. In the right order.">
+<meta name="description" content="A free, private call-sheet builder from the Lesko Help community. Answer a few questions - get a numbered call sheet for every problem: what to ask for, who to call, and what to say. In the right order.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%232e43c8'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='38' font-weight='bold' fill='white' text-anchor='middle'%3E%3F%3C/text%3E%3C/svg%3E">
 <title>What Should I Ask For?</title>
 <style>
@@ -690,6 +690,23 @@ select {
   margin: 0 auto;
 }
 
+
+/* "Other…" inline add rows + typed custom pills */
+.other-row { display: flex; gap: 8px; margin-top: 10px; max-width: 460px; }
+.other-row input {
+  flex: 1; font: inherit; font-size: 15px; padding: 9px 14px;
+  border: 1px solid var(--hairline); border-radius: 999px;
+  background: var(--paper-2); color: var(--ink);
+}
+.other-row input::placeholder { color: var(--ink-faint); }
+.other-row input:focus { outline: 2px solid var(--gold-2); outline-offset: 1px; }
+.opt.custom { padding-right: 8px; cursor: default; }
+.opt.custom .x {
+  border: 0; background: none; font-size: 16px; line-height: 1;
+  color: var(--ink-soft); cursor: pointer; padding: 2px 5px; border-radius: 50%;
+}
+.opt.custom .x:hover { color: var(--red); }
+
 /* ---------------------------------------------------------- call sheet */
 
 .sheet-top {
@@ -785,6 +802,16 @@ select {
   line-height: 1.1;
   color: var(--tier-color, var(--ink));
   min-width: 34px;
+}
+
+.ask-eyebrow {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tier-color, var(--ink-soft));
+  display: block;
+  margin-bottom: 3px;
 }
 
 .ask-title {
@@ -1059,8 +1086,8 @@ select {
     <div>
       <h1>Stop searching.<br>Start <em>asking.</em></h1>
       <p class="hero-sub">A free call-sheet builder from the Lesko Help community.
-      Answer a few questions about what's going on in your life — get a personal
-      list of what to ask for, who to call, and what to say. In the right order.</p>
+      Answer a few questions about what's going on in your life — get a numbered call sheet
+      for every problem: what to ask for, who to call, and what to say. In the right order.</p>
     </div>
     <aside class="privacy-chip">
       <span class="mono-label">🔒&nbsp; 100% Private</span>
@@ -1072,7 +1099,7 @@ select {
   <!-- ================================================================ tabs -->
   <nav class="tabbar" aria-label="Sections">
     <button class="tab active" data-tab="situation">01 · My Situation</button>
-    <button class="tab" data-tab="sheet">02 · My Call Sheet<span class="bub" id="bub-sheet" hidden>0</span></button>
+    <button class="tab" data-tab="sheet">02 · My Call Sheets<span class="bub" id="bub-sheet" hidden>0</span></button>
     <button class="tab" data-tab="progress">03 · My Progress</button>
     <button class="tab" data-tab="tips">04 · Tips &amp; Scripts</button>
     <button class="tab" data-tab="privacy">05 · Privacy</button>
@@ -1092,7 +1119,7 @@ select {
 
       <aside class="rail">
         <div class="card">
-          <span class="mono-label">Your call sheet so far</span>
+          <span class="mono-label">Your call sheets so far</span>
           <div id="rail-body">
             <div class="rail-empty">
               <div class="q" aria-hidden="true">?</div>
@@ -1110,13 +1137,13 @@ select {
   <!-- ======================================================= 02 CALL SHEET -->
   <section class="panel" id="panel-sheet" hidden>
     <div class="print-head">
-      <span class="mono-label">Lesko Help · My Call Sheet · <span id="print-date"></span></span>
+      <span class="mono-label">Lesko Help · My Call Sheets · <span id="print-date"></span></span>
     </div>
 
     <div class="sheet-top">
       <div>
-        <h2>My call <em>sheet</em></h2>
-        <p class="lead" id="sheet-lead">Your asks, in the order to work them.
+        <h2>My call <em>sheets</em></h2>
+        <p class="lead" id="sheet-lead">One call sheet per problem, numbered and in order.
         Check things off as you call — this page remembers for you.</p>
       </div>
       <div class="sheet-actions noprint">
@@ -1136,9 +1163,9 @@ select {
     <div id="sheet-body">
       <div class="empty-sheet">
         <div class="q" aria-hidden="true">?</div>
-        <h3>No call sheet yet</h3>
+        <h3>No call sheets yet</h3>
         <p>Answer the questions under <b>01 · My Situation</b> and your
-        personal call sheet will be built right here.</p>
+        call sheets will be built right here — one per problem.</p>
         <button class="btn big" data-goto="situation">Start with question 1 →</button>
       </div>
     </div>
@@ -2066,9 +2093,9 @@ const FLAGS = [
 /* ==================================================================
    States, ZIP→state, poverty-line math
    ================================================================== */
-const STATES = [["AL","Alabama"],["AK","Alaska"],["AZ","Arizona"],["AR","Arkansas"],["CA","California"],["CO","Colorado"],["CT","Connecticut"],["DE","Delaware"],["DC","Washington, DC"],["FL","Florida"],["GA","Georgia"],["HI","Hawaii"],["ID","Idaho"],["IL","Illinois"],["IN","Indiana"],["IA","Iowa"],["KS","Kansas"],["KY","Kentucky"],["LA","Louisiana"],["ME","Maine"],["MD","Maryland"],["MA","Massachusetts"],["MI","Michigan"],["MN","Minnesota"],["MS","Mississippi"],["MO","Missouri"],["MT","Montana"],["NE","Nebraska"],["NV","Nevada"],["NH","New Hampshire"],["NJ","New Jersey"],["NM","New Mexico"],["NY","New York"],["NC","North Carolina"],["ND","North Dakota"],["OH","Ohio"],["OK","Oklahoma"],["OR","Oregon"],["PA","Pennsylvania"],["PR","Puerto Rico"],["RI","Rhode Island"],["SC","South Carolina"],["SD","South Dakota"],["TN","Tennessee"],["TX","Texas"],["UT","Utah"],["VT","Vermont"],["VA","Virginia"],["WA","Washington"],["WV","West Virginia"],["WI","Wisconsin"],["WY","Wyoming"]];
+const STATES = [["AL","Alabama"],["AK","Alaska"],["AZ","Arizona"],["AR","Arkansas"],["CA","California"],["CO","Colorado"],["CT","Connecticut"],["DE","Delaware"],["DC","Washington, DC"],["FL","Florida"],["GA","Georgia"],["HI","Hawaii"],["ID","Idaho"],["IL","Illinois"],["IN","Indiana"],["IA","Iowa"],["KS","Kansas"],["KY","Kentucky"],["LA","Louisiana"],["ME","Maine"],["MD","Maryland"],["MA","Massachusetts"],["MI","Michigan"],["MN","Minnesota"],["MS","Mississippi"],["MO","Missouri"],["MT","Montana"],["NE","Nebraska"],["NV","Nevada"],["NH","New Hampshire"],["NJ","New Jersey"],["NM","New Mexico"],["NY","New York"],["NC","North Carolina"],["ND","North Dakota"],["OH","Ohio"],["OK","Oklahoma"],["OR","Oregon"],["PA","Pennsylvania"],["PR","Puerto Rico"],["RI","Rhode Island"],["SC","South Carolina"],["SD","South Dakota"],["TN","Tennessee"],["TX","Texas"],["UT","Utah"],["VT","Vermont"],["VA","Virginia"],["WA","Washington"],["WV","West Virginia"],["WI","Wisconsin"],["WY","Wyoming"],["AS","American Samoa"],["GU","Guam"],["MP","Northern Mariana Islands"],["VI","U.S. Virgin Islands"]];
 
-const ZIP3 = [[5,5,"NY"],[6,9,"PR"],[10,27,"MA"],[28,29,"RI"],[30,38,"NH"],[39,49,"ME"],[50,59,"VT"],[60,69,"CT"],[70,89,"NJ"],[100,149,"NY"],[150,196,"PA"],[197,199,"DE"],[200,200,"DC"],[201,201,"VA"],[202,205,"DC"],[206,219,"MD"],[220,246,"VA"],[247,268,"WV"],[270,289,"NC"],[290,299,"SC"],[300,319,"GA"],[320,349,"FL"],[350,369,"AL"],[370,385,"TN"],[386,397,"MS"],[398,399,"GA"],[400,427,"KY"],[430,459,"OH"],[460,479,"IN"],[480,499,"MI"],[500,528,"IA"],[530,549,"WI"],[550,567,"MN"],[570,577,"SD"],[580,588,"ND"],[590,599,"MT"],[600,629,"IL"],[630,658,"MO"],[660,679,"KS"],[680,693,"NE"],[700,714,"LA"],[716,729,"AR"],[730,732,"OK"],[733,733,"TX"],[734,749,"OK"],[750,799,"TX"],[800,816,"CO"],[820,831,"WY"],[832,838,"ID"],[840,847,"UT"],[850,865,"AZ"],[870,884,"NM"],[885,885,"TX"],[889,898,"NV"],[900,961,"CA"],[967,968,"HI"],[970,979,"OR"],[980,994,"WA"],[995,999,"AK"]];
+const ZIP3 = [[5,5,"NY"],[6,7,"PR"],[8,8,"VI"],[9,9,"PR"],[10,27,"MA"],[28,29,"RI"],[30,38,"NH"],[39,49,"ME"],[50,59,"VT"],[60,69,"CT"],[70,89,"NJ"],[100,149,"NY"],[150,196,"PA"],[197,199,"DE"],[200,200,"DC"],[201,201,"VA"],[202,205,"DC"],[206,219,"MD"],[220,246,"VA"],[247,268,"WV"],[270,289,"NC"],[290,299,"SC"],[300,319,"GA"],[320,349,"FL"],[350,369,"AL"],[370,385,"TN"],[386,397,"MS"],[398,399,"GA"],[400,427,"KY"],[430,459,"OH"],[460,479,"IN"],[480,499,"MI"],[500,528,"IA"],[530,549,"WI"],[550,567,"MN"],[570,577,"SD"],[580,588,"ND"],[590,599,"MT"],[600,629,"IL"],[630,658,"MO"],[660,679,"KS"],[680,693,"NE"],[700,714,"LA"],[716,729,"AR"],[730,732,"OK"],[733,733,"TX"],[734,749,"OK"],[750,799,"TX"],[800,816,"CO"],[820,831,"WY"],[832,838,"ID"],[840,847,"UT"],[850,865,"AZ"],[870,884,"NM"],[885,885,"TX"],[889,898,"NV"],[900,961,"CA"],[967,968,"HI"],[969,969,"GU"],[970,979,"OR"],[980,994,"WA"],[995,999,"AK"]];
 
 function zipToState(zip) {
   const p = parseInt(String(zip).slice(0, 3), 10);
@@ -2098,11 +2125,14 @@ const INCOMES = [
 ];
 
 const TIERS = [
-  { badge: "today",  suit: "♥", cls: "t0", label: "Today",        why: "This has a clock on it. Make these calls first — crisis doors open fastest." },
-  { badge: "week",   suit: "♦", cls: "t1", label: "This week",    why: "Steady the ship: bills, food, income. These calls take pressure off everything else." },
-  { badge: "month",  suit: "♠", cls: "t2", label: "This month",   why: "Fixes that stick: appointments to book and applications to start this month." },
-  { badge: "steady", suit: "♣", cls: "t3", label: "When you're steady", why: "The build-your-future money. Start booking free mentors now — apply when you're ready." }
+  { badge: "today",  suit: "♥", cls: "t0", label: "Today" },
+  { badge: "week",   suit: "♦", cls: "t1", label: "This week" },
+  { badge: "month",  suit: "♠", cls: "t2", label: "This month" },
+  { badge: "steady", suit: "♣", cls: "t3", label: "When you're steady" }
 ];
+
+/* which community space backs an "Other" problem from each group */
+const GROUP_SPACE = { home: "housing", money: "bills", work: "business", family: "families", health: "health", moving: "cars", school: "career", safe: "legal" };
 
 /* ==================================================================
    App state
@@ -2112,6 +2142,7 @@ const LS_KEY = "lh-ask-v1";
 let S = {
   step: 0,
   needs: [], urgent: [], flags: [], custom: "",
+  customNeeds: [], customUrgent: [], flagOther: "",
   zip: "", state: "", hh: "", inc: "",
   built: false,
   done: {}
@@ -2122,6 +2153,9 @@ function loadS() {
     const raw = localStorage.getItem(LS_KEY);
     if (raw) S = Object.assign(S, JSON.parse(raw));
   } catch (e) {}
+  if (!Array.isArray(S.customNeeds)) S.customNeeds = [];
+  if (!Array.isArray(S.customUrgent)) S.customUrgent = [];
+  if (typeof S.flagOther !== "string") S.flagOther = "";
 }
 function saveS() {
   try { localStorage.setItem(LS_KEY, JSON.stringify(S)); } catch (e) {}
@@ -2194,6 +2228,23 @@ function optPill(kind, name, value, label, checked, sub) {
   </label>`;
 }
 
+/* an already-added "Other" item, shown as an active pill with a remove × */
+function customPill(text, rmAttr, idx) {
+  return `<span class="opt sq on custom">
+    <span class="dot" aria-hidden="true"></span>
+    <span>${esc(text)}</span>
+    <button class="x" ${rmAttr}="${idx}" aria-label="Remove ${esc(text)}">×</button>
+  </span>`;
+}
+
+/* the inline "Other…" add box */
+function otherRow(g, placeholder) {
+  return `<div class="other-row">
+    <input id="other-in-${g}" maxlength="120" placeholder="${esc(placeholder)}" aria-label="${esc(placeholder)}">
+    <button class="btn ghost" data-addother="${g}">＋ Add</button>
+  </div>`;
+}
+
 function wizHead(n, title, help) {
   return `<div class="qhead">
       <span class="mono-label">Step ${n} of ${STEPS}</span>
@@ -2212,30 +2263,35 @@ function wizFoot(n) {
     </div>`;
 }
 
-function renderWizard() {
+function renderWizard(focusId) {
   const q = $("#qcard");
   const n = S.step + 1;
   let inner = "";
 
   if (S.step === 0) {
     inner = wizHead(1, "Which of these do you need <em>help</em> with?",
-      "Pick everything that's true — each one becomes its own problem on your list, with its own calls. Nobody sees your picks.");
+      "Pick everything that's true — each one becomes its own problem on your list, with its own calls. Don't see yours? Type it under “Other” in any group. Nobody sees your picks.");
     inner += GROUPS.map((g) => {
       const needs = NEEDS.filter((nd) => nd.group === g.id);
       if (!needs.length) return "";
+      const customs = S.customNeeds.map((c, i) => ({ ...c, i })).filter((c) => c.g === g.id);
       return `<div class="optgroup">
         <span class="mono-label"><span class="g-suit" aria-hidden="true">${g.suit}</span>${g.label}</span>
-        <div class="opts">${needs.map((nd) => optPill("check", "needs", nd.id, nd.label, S.needs.includes(nd.id))).join("")}</div>
+        <div class="opts">${needs.map((nd) => optPill("check", "needs", nd.id, nd.label, S.needs.includes(nd.id))).join("")}
+        ${customs.map((c) => customPill(c.t, "data-rmother", c.i)).join("")}</div>
+        ${otherRow(g.id, "Other — something else with " + g.label.toLowerCase() + "…")}
       </div>`;
     }).join("");
   }
 
   if (S.step === 1) {
     inner = wizHead(2, "Is anything on fire <em>right now?</em>",
-      "Some problems have clocks on them. Anything you check here jumps to the top of your call sheet with today-moves.");
+      "Some problems have clocks on them. Anything you check or type here jumps to the top of your call sheet with today-moves.");
     inner += `<div class="opts" style="flex-direction:column;align-items:flex-start">` +
       URGENTS.map((u) => optPill("check", "urgent", u.id, u.label, S.urgent.includes(u.id))).join("") +
+      S.customUrgent.map((t, i) => customPill(t, "data-rmurgent", i)).join("") +
       `</div>
+      ${otherRow("__urgent", "Other — something else urgent…")}
       <p class="fine" style="margin-top:14px">Nothing burning? Skip ahead — that's a good week.</p>`;
   }
 
@@ -2249,9 +2305,9 @@ function renderWizard() {
           <input id="wz-zip" inputmode="numeric" autocomplete="postal-code" maxlength="5" placeholder="e.g. 21201" value="${esc(S.zip)}">
         </div>
         <div class="field">
-          <label for="wz-state">State</label>
+          <label for="wz-state">State or territory</label>
           <select id="wz-state">
-            <option value="">Choose your state…</option>
+            <option value="">Choose…</option>
             ${STATES.map(([c, nm]) => `<option value="${c}" ${S.state === c ? "selected" : ""}>${nm}</option>`).join("")}
           </select>
           <p class="hint" id="wz-state-hint"></p>
@@ -2266,7 +2322,12 @@ function renderWizard() {
     inner += `<div class="opts">` +
       FLAGS.map((f) => optPill("check", "flags", f.id, f.label, S.flags.includes(f.id))).join("") +
       `</div>
-      <p class="fine" style="margin-top:14px">Check only what you're comfortable with. It stays on this device.</p>`;
+      <div class="field" style="margin-top:16px">
+        <label for="wz-flagother">Other — something about your situation we didn't list</label>
+        <input id="wz-flagother" maxlength="140" placeholder="e.g. foster parent, widowed, recently laid off from a plant closing…" value="${esc(S.flagOther)}">
+        <p class="hint">It goes on your sheet with the words to use so offices check for programs that fit it.</p>
+      </div>
+      <p class="fine">Check only what you're comfortable with. It stays on this device.</p>`;
   }
 
   if (S.step === 4) {
@@ -2299,6 +2360,18 @@ function renderWizard() {
   q.innerHTML = inner + wizFoot(n);
   wireWizard();
   renderRail();
+  if (focusId) { const f = document.getElementById(focusId); if (f) f.focus(); }
+}
+
+function addOther(g) {
+  const input = document.getElementById("other-in-" + g);
+  if (!input) return;
+  const t = input.value.trim().slice(0, 120);
+  if (!t) { input.focus(); return; }
+  if (g === "__urgent") S.customUrgent.push(t);
+  else S.customNeeds.push({ t, g });
+  saveS();
+  renderWizard("other-in-" + g);
 }
 
 function wireWizard() {
@@ -2328,6 +2401,20 @@ function wireWizard() {
     saveS(); fplHint(); renderRail();
   }));
 
+  // "Other…" add boxes
+  q.querySelectorAll("[data-addother]").forEach((b) => b.addEventListener("click", () => addOther(b.dataset.addother)));
+  q.querySelectorAll(".other-row input").forEach((inp) => inp.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") { e.preventDefault(); addOther(inp.id.replace("other-in-", "")); }
+  }));
+  q.querySelectorAll("[data-rmother]").forEach((b) => b.addEventListener("click", () => {
+    S.customNeeds.splice(parseInt(b.dataset.rmother, 10), 1);
+    saveS(); renderWizard();
+  }));
+  q.querySelectorAll("[data-rmurgent]").forEach((b) => b.addEventListener("click", () => {
+    S.customUrgent.splice(parseInt(b.dataset.rmurgent, 10), 1);
+    saveS(); renderWizard();
+  }));
+
   const zip = $("#wz-zip");
   if (zip) {
     zip.addEventListener("input", () => {
@@ -2347,6 +2434,9 @@ function wireWizard() {
       S.state = e.target.value; $("#wz-state-hint").textContent = ""; saveS(); renderRail();
     });
   }
+
+  const fo = $("#wz-flagother");
+  if (fo) fo.addEventListener("input", () => { S.flagOther = fo.value.slice(0, 140); saveS(); });
 
   const cust = $("#wz-custom");
   if (cust) cust.addEventListener("input", () => { S.custom = cust.value; saveS(); });
@@ -2375,6 +2465,19 @@ function fplHint() {
 }
 
 /* ==================================================================
+   Custom "Other" problems — unified view
+   g: the wizard group it came from · urgent: true = Today tier
+   ================================================================== */
+function customEntries() {
+  const out = [];
+  S.customUrgent.forEach((t, i) => out.push({ t, g: "safe", urgent: true, key: "cu" + i }));
+  S.customNeeds.forEach((c, i) => out.push({ t: c.t, g: c.g, urgent: false, key: "cn" + i }));
+  (S.custom || "").split("\n").map((s) => s.trim()).filter(Boolean).slice(0, 10)
+    .forEach((t, i) => out.push({ t, g: "", urgent: false, key: "cx" + i }));
+  return out.slice(0, 16);
+}
+
+/* ==================================================================
    The rail — the list building itself while they answer
    ================================================================== */
 function doorCount() {
@@ -2387,12 +2490,8 @@ function doorCount() {
     const fl = FLAGS.find((x) => x.id === f);
     if (fl) n += fl.doors.length;
   }
-  n += customList().length * 4;
+  n += customEntries().length * 4;
   return n;
-}
-
-function customList() {
-  return (S.custom || "").split("\n").map((s) => s.trim()).filter(Boolean).slice(0, 10);
 }
 
 function effectiveTier(nd) {
@@ -2404,9 +2503,11 @@ function renderRail() {
   const el = $("#rail-body");
   const picked = NEEDS.filter((nd) => S.needs.includes(nd.id) ||
     URGENTS.some((u) => S.urgent.includes(u.id) && u.need === nd.id));
+  const customs = customEntries();
+  const total = picked.length + customs.length;
   const doors = doorCount();
 
-  if (!picked.length && !customList().length) {
+  if (!total) {
     el.innerHTML = `<div class="rail-empty"><div class="q" aria-hidden="true">?</div>
       <p>Answer the questions and watch your list build itself.</p></div>`;
   } else {
@@ -2416,14 +2517,13 @@ function renderRail() {
         const t = TIERS[effectiveTier(nd)];
         return `<li><span class="s" style="color:var(--${t.cls === "t0" ? "red" : t.cls === "t1" ? "gold-2" : t.cls === "t2" ? "blue" : "green"})">${t.suit}</span>${esc(nd.label)}</li>`;
       }).join("") +
-      customList().map((c) => `<li><span class="s" style="color:var(--ink-faint)">?</span>${esc(c)}</li>`).join("");
+      customs.map((c) => `<li><span class="s" style="color:var(--${c.urgent ? "red" : "ink-faint"})">${c.urgent ? "♥" : "?"}</span>${esc(c.t)}</li>`).join("");
     el.innerHTML = `
-      <div class="rail-count">${picked.length + customList().length}<small> problem${picked.length + customList().length === 1 ? "" : "s"} → <b>${doors}</b> doors to knock on</small></div>
+      <div class="rail-count">${total}<small> call sheet${total === 1 ? "" : "s"} → <b>${doors}</b> doors to knock on</small></div>
       <ul class="rail-list">${rows}</ul>
       ${S.built ? `<p style="margin:14px 0 0"><button class="btn" data-goto="sheet">See my call sheet →</button></p>` : ""}`;
   }
   const bub = $("#bub-sheet");
-  const total = picked.length + customList().length;
   bub.hidden = !S.built || !total;
   bub.textContent = total;
 }
@@ -2439,12 +2539,12 @@ function buildSheet() {
   S.built = true;
   saveS();
   goTab("sheet");
-  toast("Your call sheet is ready. Don't say grants — say financial assistance.");
+  toast("Your call sheets are ready — one per problem. Say financial assistance, never grants.");
 }
 
-function resItem(nd, sec, i, r) {
+function resItem(ndId, sec, i, r) {
   if (r.only && r.only !== S.state) return "";
-  const key = nd + "|" + sec + "|" + i;
+  const key = ndId + "|" + sec + "|" + i;
   const done = !!S.done[key];
   const bits = [];
   if (r.url) bits.push(`<a href="${esc(fillUrl(r.url))}" target="_blank" rel="noopener">${esc(fillUrl(r.url).replace(/^https?:\/\/(www\.)?/, "").split("/")[0])}</a>`);
@@ -2457,8 +2557,8 @@ function resItem(nd, sec, i, r) {
   </li>`;
 }
 
-function sectionHtml(nd, tag, cls, title, items) {
-  const rows = (items || []).map((r, i) => resItem(nd.id, tag, i, r)).join("");
+function sectionHtml(ndId, tag, cls, title, items) {
+  const rows = (items || []).map((r, i) => resItem(ndId, tag, i, r)).join("");
   if (!rows) return "";
   return `<h4><span class="tag ${cls}">${tag}</span>${title}</h4><ul class="res">${rows}</ul>`;
 }
@@ -2470,6 +2570,7 @@ function askCard(nd, num) {
     <div class="ask-head">
       <div class="ask-num" aria-hidden="true">${num}</div>
       <div>
+        <span class="ask-eyebrow">Call sheet ${String(num).padStart(2, "0")}</span>
         <div class="badges"><span class="badge ${t.badge}">${t.suit} ${t.label}</span></div>
         <h3 class="ask-title">${esc(nd.sheetTitle)}</h3>
       </div>
@@ -2479,9 +2580,9 @@ function askCard(nd, num) {
         <span class="mono-label">Say this on the phone</span>
         <p class="said">“${esc(fill(nd.say))}”</p>
       </div>
-      ${sectionHtml(nd, "fed", "fed", "Federal help", nd.fed)}
-      ${sectionHtml(nd, "local", "local", "State & local help" + (stateName() ? " · " + esc(stateName()) : ""), nd.local)}
-      ${sectionHtml(nd, "human", "human", "Go talk to a human", nd.human)}
+      ${sectionHtml(nd.id, "fed", "fed", "Federal help", nd.fed)}
+      ${sectionHtml(nd.id, "local", "local", "State & local help" + (stateName() ? " · " + esc(stateName()) : ""), nd.local)}
+      ${sectionHtml(nd.id, "human", "human", "Go talk to a human", nd.human)}
       ${comm.length ? `<h4><span class="tag comm">community</span>In Lesko Help</h4><ul class="res">${comm.map((c) =>
         `<li><div><span class="r-name"><a href="${c.url}" target="_blank" rel="noopener">${esc(c.n)}</a></span></div></li>`).join("")}</ul>` : ""}
     </div>
@@ -2489,31 +2590,36 @@ function askCard(nd, num) {
   </article>`;
 }
 
-function customCard(text, num, idx) {
-  const t = TIERS[2];
+function customCard(entry, num) {
+  const t = entry.urgent ? TIERS[0] : TIERS[2];
   const items = [
-    { n: "211 — describe it in your own words", w: "they hear everything, and they know who handles yours", tel: "211", url: "https://www.211.org" },
+    { n: "211 — describe it in your own words", w: entry.urgent ? "tell them it's urgent — they route emergencies all day and they know who handles yours" : "they hear everything, and they know who handles yours", tel: "211", url: "https://www.211.org" },
     { n: "FindHelp near {ZIP}", w: "type a few words of your problem into the search box", url: "https://www.findhelp.org/search_results/{ZIP}" },
     { n: "Your reference librarian", w: "a free professional researcher — bring this exact problem to the library desk" },
     { n: "Your Congressperson's caseworker", w: "if any government office is involved, their staff untangles it free", url: "https://www.commoncause.org/find-your-representative/" }
   ];
-  const nd = { id: "custom" + idx };
-  return `<article class="ask t2" data-suit="♠">
+  const groupSpace = GROUP_SPACE[entry.g] ? SPACES[GROUP_SPACE[entry.g]] : null;
+  const say = entry.urgent
+    ? `This can't wait — I'm dealing with ${entry.t.toLowerCase()} and I need emergency help today. Am I in the right place, and if not, who handles this?`
+    : `Hi, I'm dealing with ${entry.t.toLowerCase()} and I'm looking for any financial assistance or free services for my situation. Am I in the right place — and if not, who should I call?`;
+  return `<article class="ask ${t.cls}" data-suit="${t.suit}">
     <div class="ask-head">
       <div class="ask-num" aria-hidden="true">${num}</div>
       <div>
-        <div class="badges"><span class="badge month">♠ This month</span><span class="badge plain">in your words</span></div>
-        <h3 class="ask-title">${esc(text)}</h3>
+        <span class="ask-eyebrow">Call sheet ${String(num).padStart(2, "0")}</span>
+        <div class="badges"><span class="badge ${t.badge}">${t.suit} ${t.label}</span><span class="badge plain">in your words</span></div>
+        <h3 class="ask-title">${esc(entry.t)}</h3>
       </div>
     </div>
     <div class="ask-body">
       <div class="say">
         <span class="mono-label">Say this on the phone</span>
-        <p class="said">“Hi, I'm dealing with ${esc(text.toLowerCase())} and I'm looking for any financial assistance or free services for my situation. Am I in the right place — and if not, who should I call?”</p>
+        <p class="said">“${esc(say)}”</p>
       </div>
-      ${sectionHtml({ id: "custom" + idx }, "local", "local", "Start with these", items)}
+      ${sectionHtml("custom-" + entry.key, "local", "local", "Start with these", items)}
       <h4><span class="tag comm">community</span>In Lesko Help</h4>
       <ul class="res">
+        ${groupSpace ? `<li><div><span class="r-name"><a href="${groupSpace.url}" target="_blank" rel="noopener">${esc(groupSpace.n)}</a></span> <span class="r-what">— the guide space for this kind of problem</span></div></li>` : ""}
         <li><div><span class="r-name"><a href="${SPACES.questions.url}" target="_blank" rel="noopener">Questions Channel</a></span> <span class="r-what">— post this exact problem; the staff answers</span></div></li>
         <li><div><span class="r-name"><a href="${SPACES.airesearch.url}" target="_blank" rel="noopener">AI Grant Researcher</a></span> <span class="r-what">— request a research report on it for your ZIP</span></div></li>
       </ul>
@@ -2523,18 +2629,26 @@ function customCard(text, num, idx) {
 
 function boosterCard() {
   const picked = FLAGS.filter((f) => S.flags.includes(f.id));
-  if (!picked.length) return "";
+  const other = (S.flagOther || "").trim();
+  if (!picked.length && !other) return "";
+  const otherItems = other ? [
+    { n: "Use it on every call", w: `say "is there anything for someone who is ${other.toLowerCase()}?" — set-asides exist that no list has` },
+    { n: "Questions Channel", w: "post it — the Lesko Help staff will research programs for exactly this", url: SPACES.questions.url },
+    { n: "AI Grant Researcher", w: "request a report on programs for your situation and ZIP", url: SPACES.airesearch.url }
+  ] : [];
   return `<article class="ask t1" data-suit="♦">
     <div class="ask-head">
       <div class="ask-num" aria-hidden="true">★</div>
       <div>
+        <span class="ask-eyebrow">Bonus sheet</span>
         <div class="badges"><span class="badge week">♦ Extra doors</span></div>
         <h3 class="ask-title">Because of who you are</h3>
       </div>
     </div>
     <div class="ask-body">
       <p style="margin:4px 0 6px;color:var(--ink-soft);max-width:70ch">Programs set aside for people in your shoes. Mention these words on every call — they unlock things.</p>
-      ${picked.map((f) => sectionHtml({ id: "flag-" + f.id }, "unlock", "human", f.label, f.doors)).join("")}
+      ${picked.map((f) => sectionHtml("flag-" + f.id, "unlock", "human", f.label, f.doors)).join("")}
+      ${other ? sectionHtml("flag-other", "unlock", "human", "In your words: “" + esc(other) + "”", otherItems) : ""}
     </div>
   </article>`;
 }
@@ -2542,13 +2656,13 @@ function boosterCard() {
 function renderSheet() {
   const el = $("#sheet-body");
   const picked = NEEDS.filter((nd) => S.needs.includes(nd.id));
-  const customs = customList();
+  const customs = customEntries();
 
   if (!S.built || (!picked.length && !customs.length)) {
     el.innerHTML = `<div class="empty-sheet">
       <div class="q" aria-hidden="true">?</div>
-      <h3>No call sheet yet</h3>
-      <p>Answer the questions under <b>01 · My Situation</b> and your personal call sheet will be built right here.</p>
+      <h3>No call sheets yet</h3>
+      <p>Answer the questions under <b>01 · My Situation</b> and your call sheets will be built right here — one per problem.</p>
       <button class="btn big" data-goto="situation">Start with question 1 →</button>
     </div>`;
     $("#sheet-legend").hidden = true;
@@ -2559,9 +2673,14 @@ function renderSheet() {
   $("#print-date").textContent = new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
   $("#sheet-lead").innerHTML =
     (stateName() ? `Built for <b>${esc(stateName())}</b>${S.zip ? " · ZIP " + esc(S.zip) : ""}. ` : "") +
-    `Work it top to bottom — <em style="color:var(--red)">and never say “grants” on the phone; say “financial assistance.”</em>`;
+    `One numbered call sheet per problem — work them top to bottom, <em style="color:var(--red)">and never say “grants” on the phone; say “financial assistance.”</em>`;
 
-  const sorted = picked.slice().sort((a, b) => effectiveTier(a) - effectiveTier(b));
+  // one ordered list: real needs + "Other" problems, sorted by tier (stable)
+  const entries = [
+    ...picked.map((nd) => ({ tier: effectiveTier(nd), render: (num) => askCard(nd, num) })),
+    ...customs.map((c) => ({ tier: c.urgent ? 0 : 2, render: (num) => customCard(c, num) }))
+  ].sort((a, b) => a.tier - b.tier);
+
   let html = "";
 
   html += `<div class="first-calls">
@@ -2581,12 +2700,11 @@ function renderSheet() {
 
   let num = 0;
   let boosterPlaced = false;
-  for (const nd of sorted) {
-    if (!boosterPlaced && effectiveTier(nd) >= 2) { html += boosterCard(); boosterPlaced = true; }
+  for (const e of entries) {
+    if (!boosterPlaced && e.tier >= 2) { html += boosterCard(); boosterPlaced = true; }
     num += 1;
-    html += askCard(nd, num);
+    html += e.render(num);
   }
-  customs.forEach((c, i) => { num += 1; html += customCard(c, num, i); });
   if (!boosterPlaced) html += boosterCard();
 
   html += `<div class="mini t-green" data-suit="♣">
@@ -2604,7 +2722,7 @@ function renderSheet() {
     if (!S.done[k]) delete S.done[k];
     saveS();
     renderSheet();
-    if (Object.keys(S.done).length && S.done[k] !== undefined) toast("Checked off. Keep dialing — the next yes is out there.");
+    if (S.done[k] !== undefined) toast("Checked off. Keep dialing — the next yes is out there.");
   }));
 }
 
@@ -2612,10 +2730,15 @@ function renderSheet() {
    Copy as text
    ================================================================== */
 function sheetAsText() {
-  const picked = NEEDS.filter((nd) => S.needs.includes(nd.id)).sort((a, b) => effectiveTier(a) - effectiveTier(b));
-  const customs = customList();
+  const picked = NEEDS.filter((nd) => S.needs.includes(nd.id));
+  const customs = customEntries();
+  const entries = [
+    ...picked.map((nd) => ({ tier: effectiveTier(nd), nd })),
+    ...customs.map((c) => ({ tier: c.urgent ? 0 : 2, c }))
+  ].sort((a, b) => a.tier - b.tier);
+
   const L = [];
-  L.push("MY CALL SHEET — Lesko Help");
+  L.push("MY CALL SHEETS — Lesko Help");
   L.push((stateName() ? stateName() + (S.zip ? " · " + S.zip : "") + " · " : "") + new Date().toLocaleDateString("en-US"));
   L.push("Rule: never say “grants” — say “financial assistance.”");
   L.push("");
@@ -2632,32 +2755,35 @@ function sheetAsText() {
     if (r.tel) bits.push("· " + r.tel);
     L.push("   • " + bits.join(" "));
   };
-  for (const nd of picked) {
+  for (const e of entries) {
     num += 1;
-    const t = TIERS[effectiveTier(nd)];
-    L.push(num + ") " + nd.sheetTitle.toUpperCase() + "  [" + t.label + "]");
-    L.push("   SAY: “" + fill(nd.say) + "”");
-    (nd.fed || []).forEach(item);
-    (nd.local || []).forEach(item);
-    (nd.human || []).forEach(item);
-    (nd.comm || []).forEach((k) => { const c = SPACES[k]; if (c) L.push("   • Lesko Help: " + c.n + " · " + c.url); });
-    if (nd.tip) L.push("   TIP: " + fill(nd.tip));
+    if (e.nd) {
+      const nd = e.nd;
+      const t = TIERS[effectiveTier(nd)];
+      L.push("CALL SHEET " + num + " — " + nd.sheetTitle.toUpperCase() + "  [" + t.label + "]");
+      L.push("   SAY: “" + fill(nd.say) + "”");
+      (nd.fed || []).forEach(item);
+      (nd.local || []).forEach(item);
+      (nd.human || []).forEach(item);
+      (nd.comm || []).forEach((k) => { const c = SPACES[k]; if (c) L.push("   • Lesko Help: " + c.n + " · " + c.url); });
+      if (nd.tip) L.push("   TIP: " + fill(nd.tip));
+    } else {
+      const c = e.c;
+      L.push("CALL SHEET " + num + " — " + c.t.toUpperCase() + "  [" + (c.urgent ? "Today" : "This month") + "]");
+      L.push("   SAY: “I'm dealing with " + c.t.toLowerCase() + " and I'm looking for any financial assistance or free services for my situation.”");
+      L.push("   • 211 · FindHelp.org · your librarian · your Congressperson's caseworker");
+    }
     L.push("");
   }
-  customs.forEach((c) => {
-    num += 1;
-    L.push(num + ") " + c.toUpperCase() + "  [This month]");
-    L.push("   SAY: “I'm dealing with " + c.toLowerCase() + " and I'm looking for any financial assistance or free services for my situation.”");
-    L.push("   • 211 · FindHelp.org · your librarian · your Congressperson's caseworker");
-    L.push("");
-  });
   const flags = FLAGS.filter((f) => S.flags.includes(f.id));
-  if (flags.length) {
+  const other = (S.flagOther || "").trim();
+  if (flags.length || other) {
     L.push("EXTRA DOORS — because of who you are:");
     flags.forEach((f) => {
       L.push("  " + f.label + ":");
       f.doors.forEach((r) => L.push("   • " + fill(r.n) + " — " + fill(r.w) + (r.url ? " · " + fillUrl(r.url) : "") + (r.tel ? " · " + r.tel : "")));
     });
+    if (other) L.push("  In your words: “" + other + "” — ask on every call: “is there anything for someone in my situation?”");
     L.push("");
   }
   L.push("Stuck? Questions Channel: " + SPACES.questions.url);
@@ -2671,8 +2797,9 @@ function sheetAsText() {
    ================================================================== */
 function totalDoors() {
   let n = 0;
-  const count = (nd, sec, items) => (items || []).forEach((r) => { if (!r.only || r.only === S.state) n += 1; });
-  NEEDS.filter((nd) => S.needs.includes(nd.id)).forEach((nd) => { count(nd, "fed", nd.fed); count(nd, "local", nd.local); count(nd, "human", nd.human); });
+  const count = (items) => (items || []).forEach((r) => { if (!r.only || r.only === S.state) n += 1; });
+  NEEDS.filter((nd) => S.needs.includes(nd.id)).forEach((nd) => { count(nd.fed); count(nd.local); count(nd.human); });
+  n += customEntries().length * 4;
   return n;
 }
 
@@ -2695,10 +2822,12 @@ function renderProgress() {
     done < 3 ? "You've started — that already puts you ahead of most people. Keep the streak." :
     done < 8 ? "This is real research. Every call teaches you who to call next." :
     "You're working this list like a pro. Matthew would wear his best question-mark suit for you.";
+  const sheets = NEEDS.filter((nd) => S.needs.includes(nd.id)).length + customEntries().length;
   el.innerHTML = `
     <div class="stat-row">
+      <div class="stat"><b>${sheets}</b><span>call sheets</span></div>
       <div class="stat"><b>${done}</b><span>doors knocked</span></div>
-      <div class="stat"><b>${total - done}</b><span>doors left</span></div>
+      <div class="stat"><b>${Math.max(0, total - done)}</b><span>doors left</span></div>
       <div class="stat"><b>${pct}%</b><span>of your sheet</span></div>
     </div>
     <div class="qtrack" style="height:10px;margin-bottom:18px"><i style="width:${pct}%"></i></div>

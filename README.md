@@ -1,8 +1,8 @@
 # What Should I Ask For? — the Lesko Help call-sheet builder
 
 A free, private needs-assessment tool for Lesko Help members. Members answer six
-short questions about what's going on in their life, and the tool builds a
-personal **call sheet**: a priority-ordered list of problems, each with
+short questions about what's going on in their life, and the tool builds their
+**call sheets — one numbered call sheet per problem**, in priority order, each with
 
 - **Say this on the phone** — the exact ask, in Matthew's
   "financial assistance, never grants" language
@@ -14,8 +14,10 @@ personal **call sheet**: a priority-ordered list of problems, each with
   Agencies on Aging, legal aid…)
 - **In Lesko Help** — the community spaces and classes for that topic
 
-Plus: an urgency triage (eviction notice, shutoff, no food → jumps to
-**Today**), personal-situation boosters ("Because of who you are" — veteran,
+Plus: an **"Other" box on every choice screen** (needs groups, urgency, and
+about-you) so problems we didn't list still get their own call sheet — typed
+urgent items jump straight to the Today tier. Also: urgency triage (eviction
+notice, shutoff, no food → **Today**), personal-situation boosters ("Because of who you are" — veteran,
 single parent, 60+, tribal, rural, already-on-SNAP, etc.), free-text problems
 in the member's own words, progress tracking, print, and copy-as-text.
 
