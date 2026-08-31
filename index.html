@@ -1276,15 +1276,22 @@ const SPACES = {
   clinic:    { n: "Thursday Drop-In Clinic",         url: "https://lesko-help-2.mn.co/spaces/23328015" }
 };
 
-const GROUPS = [
-  { id: "home",   label: "Home & housing",   suit: "♠" },
-  { id: "money",  label: "Bills & money",    suit: "♦" },
-  { id: "work",   label: "Work & business",  suit: "♣" },
-  { id: "family", label: "Family & care",    suit: "♥" },
-  { id: "health", label: "Health",           suit: "♥" },
-  { id: "moving", label: "Getting around",   suit: "♠" },
-  { id: "school", label: "School & training",suit: "♦" },
-  { id: "safe",   label: "Safety & legal",   suit: "♣" }
+const PAGES = [
+  { id: "home",       title: "Home & housing",                suit: "♠" },
+  { id: "bills",      title: "Bills, debt & taxes",           suit: "♦" },
+  { id: "food",       title: "Food & everyday needs",         suit: "♥" },
+  { id: "health",     title: "Health, dental & medicine",     suit: "♣" },
+  { id: "family",     title: "Family & children",             suit: "♥" },
+  { id: "seniors",    title: "Seniors (60+)",                 suit: "♦" },
+  { id: "vets",       title: "Veterans & military families",  suit: "♠" },
+  { id: "disability", title: "Living with a disability",      suit: "♣" },
+  { id: "work",       title: "Work & income",                 suit: "♦" },
+  { id: "business",   title: "Your business",                 suit: "♠" },
+  { id: "nonprofit",  title: "Starting a nonprofit",          suit: "♣" },
+  { id: "cars",       title: "Cars & getting around",         suit: "♥" },
+  { id: "school",     title: "School & education",            suit: "♦" },
+  { id: "safe",       title: "Legal help & safety",           suit: "♠" },
+  { id: "pets",       title: "Your pets",                     suit: "♥" }
 ];
 
 const NEEDS = [
@@ -1333,7 +1340,7 @@ const NEEDS = [
   },
 
   {
-    id: "utilities", group: "home", tier: 1,
+    id: "utilities", group: "bills", tier: 1,
     label: "Utility bills (heat, electric, water)",
     sheetTitle: "Help with utility bills",
     say: "I need help with my utility bill. I'd like to apply for energy assistance, and I'd also like to know about your hardship fund and a payment plan so my service stays on.",
@@ -1417,7 +1424,7 @@ const NEEDS = [
 
   /* ------------------------------------------------------- bills & money */
   {
-    id: "food", group: "money", tier: 1,
+    id: "food", group: "food", tier: 1,
     label: "Food for the house",
     sheetTitle: "Food for the house",
     say: "I need help with food for my household. I'd like to apply for SNAP, and while that processes I need the nearest food pantries and any produce or senior food programs.",
@@ -1438,7 +1445,7 @@ const NEEDS = [
   },
 
   {
-    id: "medical", group: "money", tier: 1,
+    id: "medical", group: "health", tier: 1,
     label: "Medical bills & health coverage",
     sheetTitle: "Medical bills & health coverage",
     say: "I can't afford this medical bill. I'd like to apply for your financial assistance (charity care) program, and please don't send this to collections while my application is open.",
@@ -1459,28 +1466,27 @@ const NEEDS = [
   },
 
   {
-    id: "rx", group: "money", tier: 2,
-    label: "Prescriptions, dental, glasses & hearing",
-    sheetTitle: "Prescriptions, dental, glasses & hearing aids",
-    say: "I can't afford my prescriptions / dental work. What patient assistance programs, sliding-scale clinics, or copay funds do you have for my situation?",
+    id: "rx", group: "health", tier: 2,
+    label: "Prescription costs",
+    sheetTitle: "Help paying for prescriptions",
+    say: "I can't afford my prescriptions. What patient assistance programs or discounts are there for my medicines?",
     fed: [
-      { n: "NeedyMeds", w: "the master directory of drug-maker assistance programs, copay cards, and free clinics", url: "https://www.needymeds.org", tel: "800-503-6897" },
-      { n: "Community health centers (dental too)", w: "sliding-scale dental chairs most people don't know exist", url: "https://findahealthcenter.hrsa.gov" }
+      { n: "NeedyMeds", w: "the master directory of drug-maker free-medicine programs, copay cards and discounts", url: "https://www.needymeds.org", tel: "800-503-6897" },
+      { n: "Cost Plus Drugs", w: "generics at cost plus a small fee — often a fraction of pharmacy prices", url: "https://costplusdrugs.com" }
     ],
     local: [
-      { n: "Dental Lifeline in {STATE}", w: "free dental care for people who are 65+, disabled, or medically fragile", url: "https://dentallifeline.org/state-programs/" },
-      { n: "Dental school clinics", w: "deep-discount cleanings, fillings and dentures done under professor supervision — search \"dental school clinic near me\"" },
-      { n: "PAN Foundation & copay charities", w: "funds that pay copays for specific conditions", url: "https://www.panfoundation.org" }
+      { n: "PAN Foundation & copay charities", w: "funds that pay copays for specific conditions", url: "https://www.panfoundation.org" },
+      { n: "The drug maker's own program", w: "every big drug company ships free medicine to people who can't pay — NeedyMeds lists how to apply" }
     ],
     human: [
       { n: "Your pharmacist", w: "ask: \"is there a discount card, a generic, or a manufacturer program that makes this cheaper?\" They know." }
     ],
     comm: ["health", "reports"],
-    tip: "Beware \"$10,000 dental grant\" ads — that's a marketing funnel, not a grant. The real free dental care is at health centers, dental schools and Dental Lifeline."
+    tip: "Never skip doses to stretch a bottle before you've called NeedyMeds — free-medicine programs exist for most brand-name drugs."
   },
 
   {
-    id: "debt", group: "money", tier: 2,
+    id: "debt", group: "bills", tier: 2,
     label: "Debt & credit repair",
     sheetTitle: "Debt & fixing your credit",
     say: "I want to deal with my debt with free, legitimate help. I'm looking for a nonprofit credit counselor — not a debt settlement company — to review my situation and my options.",
@@ -1500,7 +1506,7 @@ const NEEDS = [
   },
 
   {
-    id: "taxes", group: "money", tier: 2,
+    id: "taxes", group: "bills", tier: 2,
     label: "Tax trouble & unclaimed tax credits",
     sheetTitle: "Tax help & the credits you're owed",
     say: "I need free help with my taxes. Do I qualify for free preparation, and can you check whether I'm owed the Earned Income Credit or Child Tax Credit — even for past years?",
@@ -1521,7 +1527,7 @@ const NEEDS = [
   },
 
   {
-    id: "phone", group: "money", tier: 2,
+    id: "phone", group: "bills", tier: 2,
     label: "Phone, internet & a computer",
     sheetTitle: "Phone, internet & a computer",
     say: "I'm looking for the low-income phone and internet programs — Lifeline, your cheapest fixed plan, and any local program that gives out free or cheap computers.",
@@ -1542,7 +1548,7 @@ const NEEDS = [
 
   /* ------------------------------------------------------ work & business */
   {
-    id: "business", group: "work", tier: 3,
+    id: "business", group: "business", tier: 3,
     label: "Starting or growing a business",
     sheetTitle: "Free money & help for your business",
     say: "Hi, I'm ____ and I wonder if I can make an appointment to talk with someone about starting (or growing) my business — and about any grants, microloans or free help I should apply for.",
@@ -1565,7 +1571,7 @@ const NEEDS = [
   },
 
   {
-    id: "nonprofit", group: "work", tier: 3,
+    id: "nonprofit", group: "nonprofit", tier: 3,
     label: "Starting a nonprofit",
     sheetTitle: "Starting a nonprofit",
     say: "I want to start a nonprofit to ____. I'm looking for free help with the paperwork, and for the foundations and government programs that fund new organizations like mine.",
@@ -1691,7 +1697,7 @@ const NEEDS = [
   },
 
   {
-    id: "pets", group: "family", tier: 3,
+    id: "pets", group: "pets", tier: 3,
     label: "Vet bills & pet food",
     sheetTitle: "Help with vet bills & pet food",
     say: "My pet needs care I can't afford right now. Do you have a low-cost clinic, a payment plan, or a fund that helps with this kind of treatment?",
@@ -1733,7 +1739,7 @@ const NEEDS = [
   },
 
   {
-    id: "disability", group: "health", tier: 2,
+    id: "disability", group: "disability", tier: 2,
     label: "Disability benefits & services",
     sheetTitle: "Disability benefits & services",
     say: "I have a disability and I want to make sure I'm getting everything I may qualify for — SSI or SSDI, state services, work supports, and any equipment or home changes.",
@@ -1744,7 +1750,8 @@ const NEEDS = [
     ],
     local: [
       { n: "Center for Independent Living", w: "run by people with disabilities, for people with disabilities — ramps, advocacy, benefits help", url: "https://www.ilru.org/projects/cil-net/cil-center-and-association-directory" },
-      { n: "National Disability Institute", w: "financial help and small-business support for people with disabilities", url: "https://www.nationaldisabilityinstitute.org" }
+      { n: "National Disability Institute", w: "financial help and small-business support for people with disabilities", url: "https://www.nationaldisabilityinstitute.org" },
+      { n: "Your state assistive technology program", w: "free and loaner equipment — mobility, hearing, communication devices; every state runs one", url: "https://at3center.net/state-at-programs/" }
     ],
     human: [
       { n: "A benefits counselor (WIPA)", w: "free experts who show how work and benefits fit together without nasty surprises", url: "https://choosework.ssa.gov/findhelp/" }
@@ -1755,7 +1762,7 @@ const NEEDS = [
 
   /* -------------------------------------------------------- getting around */
   {
-    id: "car", group: "moving", tier: 2,
+    id: "car", group: "cars", tier: 2,
     label: "Car repair, or getting a car",
     sheetTitle: "Car repair, or getting a car",
     say: "My car needs repairs I can't afford / I need a car to get to work. What financial assistance is there for car repair or transportation to work near me?",
@@ -1874,7 +1881,154 @@ const NEEDS = [
     ],
     comm: ["questions", "reports"],
     tip: "Register with FEMA even if you think you won't qualify, and appeal every denial — first denials are routine and appeals work. Photograph everything before you clean up."
-  }
+  },
+
+  /* -------------------------------------------------- everyday needs */
+  {
+    id: "goods", group: "food", tier: 2,
+    label: "Clothes, furniture & household goods",
+    sheetTitle: "Clothes, furniture & household goods",
+    say: "We need basic household things — clothes, a bed, furniture. Do you give vouchers or referrals, and which programs near me help with this?",
+    fed: [],
+    local: [
+      { n: "211 — say \"furniture assistance\" or \"clothing\"", w: "voucher programs, furniture banks and clothing closets near you", tel: "211", url: "https://www.211.org" },
+      { n: "St. Vincent de Paul", w: "beds, furniture and clothes for families in a tight spot — call the local conference", url: "https://ssvpusa.org/find-a-location/" },
+      { n: "Salvation Army family services", w: "clothing and furniture vouchers for their stores", url: "https://www.salvationarmyusa.org/usn/plugins/gdosCenterSearch" },
+      { n: "FindHelp — search \"furniture\" near {ZIP}", w: "every goods program in your area", url: "https://www.findhelp.org/search_results/{ZIP}" }
+    ],
+    human: [
+      { n: "A Community Action caseworker", w: "they hand out goods referrals alongside rent and utility help", url: "https://communityactionpartnership.com/find-a-cap/" }
+    ],
+    comm: ["bills", "families"],
+    tip: "Ask for a \"voucher\" by name — many thrift stores give furniture and clothes free with a 211 or church referral, but only if you're referred first."
+  },
+
+  {
+    id: "holiday", group: "food", tier: 2,
+    label: "Holiday help (toys, food baskets, gifts)",
+    sheetTitle: "Holiday help — toys, food baskets, gifts",
+    say: "We could use help this holiday season — toys for the kids and a holiday food basket. When do sign-ups open, and what do I need to bring?",
+    fed: [],
+    local: [
+      { n: "Toys for Tots", w: "free toys through your local campaign — request online in the fall", url: "https://www.toysfortots.org" },
+      { n: "Salvation Army Angel Tree", w: "gifts for kids and seniors — register early through the local corps", url: "https://www.salvationarmyusa.org" },
+      { n: "211 — \"holiday assistance\"", w: "every toy drive, coat drive and food basket sign-up in your county", tel: "211", url: "https://www.211.org" }
+    ],
+    human: [
+      { n: "A 211 navigator", w: "ask for this year's holiday sign-up dates — they keep the list", tel: "211" }
+    ],
+    comm: ["reports", "families"],
+    tip: "Holiday sign-ups open in October and close fast. Matthew's Holiday Report in the Lesko Grant Reports space lists dozens more — toys, bills, cars, gift cards."
+  },
+
+  /* ------------------------------------------------------ dental & vision */
+  {
+    id: "dental", group: "health", tier: 2,
+    label: "Dental care",
+    sheetTitle: "Free & low-cost dental care",
+    say: "I need dental work I can't afford. Where are the free or sliding-scale dental clinics near me, and do I qualify for Dental Lifeline?",
+    fed: [
+      { n: "Community health center dental chairs", w: "sliding-scale cleanings, fillings and extractions most people don't know exist", url: "https://findahealthcenter.hrsa.gov" },
+      { n: "Medicaid dental", w: "many states now cover adult dental — worth one call to check yours", url: "https://www.medicaid.gov/medicaid/benefits/dental-care" }
+    ],
+    local: [
+      { n: "Dental Lifeline in {STATE}", w: "free full dental care for people 65+, disabled, or medically fragile", url: "https://dentallifeline.org/state-programs/" },
+      { n: "Dental school clinics", w: "deep-discount work done under professor supervision — call the nearest dental school" },
+      { n: "Mission of Mercy free dental days", w: "free clinics that treat hundreds in a weekend — search \"{STATE} mission of mercy dental\"" }
+    ],
+    human: [
+      { n: "The health center front desk", w: "say \"I need the sliding-scale dental application\" — that one sentence starts everything" }
+    ],
+    comm: ["health", "reports"],
+    tip: "Beware \"$10,000 dental grant\" ads — that's a sales funnel, not a grant. The real free care is at health centers, dental schools and Dental Lifeline."
+  },
+
+  {
+    id: "vision", group: "health", tier: 2,
+    label: "Glasses & hearing aids",
+    sheetTitle: "Glasses & hearing aids",
+    say: "I need glasses / a hearing aid and can't afford them. What free or low-cost programs are there for someone in my situation?",
+    fed: [
+      { n: "Vocational Rehabilitation", w: "if you work or want to work, the state can pay for glasses and hearing aids as job equipment", url: "https://rsa.ed.gov/about/states" }
+    ],
+    local: [
+      { n: "Your local Lions Club", w: "the Lions have given free glasses (and often hearing help) for 100 years — call your town's club", url: "https://www.lionsclubs.org/en/start-our-approach/club-locator" },
+      { n: "New Eyes", w: "free prescription glasses by mail for people who can't afford them", url: "https://new-eyes.org" },
+      { n: "University audiology & speech clinics", w: "hearing tests and aids at student-clinic prices — call the nearest university" },
+      { n: "Hearing Aid Project", w: "donated, refurbished hearing aids", url: "https://www.hearingcharities.org/hearing-aid-project/" }
+    ],
+    human: [
+      { n: "Area Agency on Aging (60+)", w: "many run their own glasses and hearing-aid funds", tel: "800-677-1116" }
+    ],
+    comm: ["health", "seniors"],
+    tip: "Matthew's report on hearing aids, eye care and glasses lives in the Lesko Grant Reports space — grab your state's version."
+  },
+
+  /* -------------------------------------------------------------- seniors */
+  {
+    id: "seniorcheck", group: "seniors", tier: 2,
+    label: "A full senior benefits check-up",
+    sheetTitle: "Seniors: your full benefits check-up",
+    say: "I'm a senior on a fixed income. Can you run a full benefits check for me — food, Medicare savings, utility help, property tax relief — everything someone my age in my county may qualify for?",
+    fed: [
+      { n: "BenefitsCheckUp", w: "NCOA's free screener — the average senior finds thousands per year in missed benefits", url: "https://benefitscheckup.org" },
+      { n: "Medicare Savings Programs", w: "your state can pay your Medicare premium and cut drug costs — millions qualify and never apply", url: "https://www.medicare.gov/basics/costs/help/medicare-savings-programs" },
+      { n: "Extra Help with drug costs", w: "slashes Part D prescription costs", url: "https://www.ssa.gov/medicare/part-d-extra-help", tel: "800-772-1213" }
+    ],
+    local: [
+      { n: "Eldercare Locator", w: "one call opens every senior program in your county", tel: "800-677-1116", url: "https://eldercare.acl.gov" },
+      { n: "A free SHIP counselor", w: "reviews your Medicare and finds the savings in 20 minutes", url: "https://www.shiphelp.org", tel: "877-839-2675" },
+      { n: "County assessor — senior property tax relief", w: "freezes, exemptions and deferrals most seniors never claim — call and ask" }
+    ],
+    human: [
+      { n: "An Area Agency on Aging benefits counselor", w: "free, local, and paid to find you money", tel: "800-677-1116" }
+    ],
+    comm: ["seniors", "reports"],
+    tip: "Matthew keeps a state-by-state seniors report in the Lesko Grant Reports space — pair it with one BenefitsCheckUp run."
+  },
+
+  {
+    id: "seniorhome", group: "seniors", tier: 1,
+    label: "Meals, rides & help at home (60+)",
+    sheetTitle: "Meals, rides & help at home",
+    say: "I'm over 60 and I could use [meals / rides / help around the house]. What programs are there for someone my age, and how do I sign up?",
+    fed: [
+      { n: "Meals on Wheels", w: "hot meals delivered, plus a friendly check-in", url: "https://www.mealsonwheelsamerica.org/find-meals" },
+      { n: "Senior food box (CSFP)", w: "a free monthly grocery box for lower-income seniors", url: "https://www.fns.usda.gov/csfp/applicant-participant" }
+    ],
+    local: [
+      { n: "Your senior center", w: "cheap hot lunches, rides, activities — and staff who know every other program" },
+      { n: "Area Agency on Aging rides & homemaker help", w: "medical rides, light housekeeping, minor repairs", tel: "800-677-1116", url: "https://eldercare.acl.gov" }
+    ],
+    human: [
+      { n: "The Eldercare Locator", w: "one friendly phone call sorts all of this", tel: "800-677-1116" }
+    ],
+    comm: ["seniors", "families"],
+    tip: "These services are your tax money coming home — using them is the point, not a favor."
+  },
+
+  /* ------------------------------------------------------------- veterans */
+  {
+    id: "vetcheck", group: "vets", tier: 2,
+    label: "Veterans: benefits & claims check",
+    sheetTitle: "Veterans: your full benefits & claims check",
+    say: "I served in the ____. I'd like a full review of what I may be owed — disability, pension, healthcare, housing — and free help filing the claims.",
+    fed: [
+      { n: "VA — MyVA411", w: "one number for every VA benefit: disability, pension, healthcare, home loans", tel: "800-698-2411", url: "https://www.va.gov" },
+      { n: "Vet Centers", w: "free counseling for combat vets and families — no VA enrollment needed", tel: "877-927-8387", url: "https://www.vetcenter.va.gov" },
+      { n: "VA homeless & at-risk line", w: "housing help before things break — call early", tel: "877-424-3838" }
+    ],
+    local: [
+      { n: "Your County Veterans Service Officer", w: "free claims experts who get more money out of the VA than anyone — first-timers call 888-777-4443", url: "https://nvf.org/veteran-service-officers/", tel: "888-777-4443" },
+      { n: "DAV / VFW / American Legion service officers", w: "accredited, free, and on your side for any claim or appeal" }
+    ],
+    human: [
+      { n: "A County VSO", w: "make this appointment even if you were told \"no\" years ago — rules changed (PACT Act) and old no's are worth re-asking", tel: "888-777-4443" }
+    ],
+    comm: ["vets", "reports"],
+    tip: "Never pay a \"claims consultant.\" Accredited VSOs do the same work free — and they're better at it."
+  },
+
 ];
 
 /* ==================================================================
@@ -2015,7 +2169,7 @@ const TIERS = [
 ];
 
 /* which community space backs an "Other" problem from each group */
-const GROUP_SPACE = { home: "housing", money: "bills", work: "business", family: "families", health: "health", moving: "cars", school: "career", safe: "legal" };
+const GROUP_SPACE = { home: "housing", bills: "bills", food: "bills", health: "health", family: "families", seniors: "seniors", vets: "vets", disability: "seniors", work: "career", business: "business", nonprofit: "nonprofit", cars: "cars", school: "career", safe: "legal", pets: "families" };
 
 /* ==================================================================
    App state
@@ -2039,6 +2193,8 @@ function loadS() {
   if (!Array.isArray(S.customNeeds)) S.customNeeds = [];
   if (!Array.isArray(S.customUrgent)) S.customUrgent = [];
   if (typeof S.flagOther !== "string") S.flagOther = "";
+  if (typeof S.step !== "number" || S.step < 0) S.step = 0;
+  S.step = Math.min(S.step, PAGES.length + 4);
 }
 function saveS() {
   try { localStorage.setItem(LS_KEY, JSON.stringify(S)); } catch (e) {}
@@ -2100,7 +2256,7 @@ document.addEventListener("click", (e) => {
 /* ==================================================================
    Wizard
    ================================================================== */
-const STEPS = 6;
+const TOTAL = PAGES.length + 5; /* 15 topic pages + urgent, location, about you, household, own words */
 
 function optPill(kind, name, value, label, checked, sub) {
   return `<label class="opt ${kind === "check" ? "sq" : ""} ${checked ? "on" : ""}">
@@ -2129,18 +2285,18 @@ function otherRow(g, placeholder) {
 
 function wizHead(n, title, help) {
   return `<div class="qhead">
-      <span class="mono-label">Step ${n} of ${STEPS}</span>
-      <div class="qtrack"><i style="width:${Math.round(((n - 1) / STEPS) * 100)}%"></i></div>
+      <span class="mono-label">Page ${n} of ${TOTAL}</span>
+      <div class="qtrack"><i style="width:${Math.round(((n - 1) / TOTAL) * 100)}%"></i></div>
     </div>
     <h3 class="qtitle">${title}</h3>
     <p class="qhelp">${help}</p>`;
 }
 
 function wizFoot(n) {
-  const last = n === STEPS;
+  const last = n === TOTAL;
   return `<div class="qfoot">
       <button class="btn ghost" data-wz="back" ${n === 1 ? "style='visibility:hidden'" : ""}>← Back</button>
-      <span class="fine">${n === 1 ? "6 short steps · about 3 minutes · not an application — nothing is sent anywhere" : ""}</span>
+      <span class="fine">${n === 1 ? TOTAL + " short pages — check what fits, skip the rest. Private. Not an application." : ""}</span>
       <button class="btn ${last ? "big" : ""}" data-wz="next">${last ? "Get my results →" : "Next →"}</button>
     </div>`;
 }
@@ -2150,24 +2306,24 @@ function renderWizard(focusId) {
   const n = S.step + 1;
   let inner = "";
 
-  if (S.step === 0) {
-    inner = wizHead(1, "Which of these do you need <em>help</em> with?",
-      "Pick everything that's true — each one becomes its own problem on your list, with its own calls. Don't see yours? Type it under “Other” in any group. Nobody sees your picks.");
-    inner += GROUPS.map((g) => {
-      const needs = NEEDS.filter((nd) => nd.group === g.id);
-      if (!needs.length) return "";
-      const customs = S.customNeeds.map((c, i) => ({ ...c, i })).filter((c) => c.g === g.id);
-      return `<div class="optgroup">
-        <span class="mono-label"><span class="g-suit" aria-hidden="true">${g.suit}</span>${g.label}</span>
-        <div class="opts">${needs.map((nd) => optPill("check", "needs", nd.id, nd.label, S.needs.includes(nd.id))).join("")}
-        ${customs.map((c) => customPill(c.t, "data-rmother", c.i)).join("")}</div>
-        ${otherRow(g.id, "Other — something else with " + g.label.toLowerCase() + "…")}
-      </div>`;
-    }).join("");
+  const fin = S.step - PAGES.length;
+
+  if (S.step < PAGES.length) {
+    const pg = PAGES[S.step];
+    const pageNeeds = NEEDS.filter((nd) => nd.group === pg.id);
+    const customs = S.customNeeds.map((c, i) => ({ ...c, i })).filter((c) => c.g === pg.id);
+    inner = wizHead(n,
+      `<span style="font-family:var(--suit-font);font-size:0.62em;vertical-align:3px;color:var(--ink-faint)">${pg.suit}</span> ${pg.title}`,
+      "Check anything you need help with. Nothing here for you? Skip to the next page — every topic gets its own page so nothing is missed.");
+    inner += `<div class="opts">
+      ${pageNeeds.map((nd) => optPill("check", "needs", nd.id, nd.label, S.needs.includes(nd.id))).join("")}
+      ${customs.map((c) => customPill(c.t, "data-rmother", c.i)).join("")}
+    </div>
+    ${otherRow(pg.id, "Other — anything else with " + pg.title.toLowerCase().replace(" (60+)", "") + "…")}`;
   }
 
-  if (S.step === 1) {
-    inner = wizHead(2, "Is anything on fire <em>right now?</em>",
+  if (fin === 0) {
+    inner = wizHead(n, "Is anything on fire <em>right now?</em>",
       "Some problems have clocks on them. Anything you check or type here jumps to the top of your call sheet with today-moves.");
     inner += `<div class="opts" style="flex-direction:column;align-items:flex-start">` +
       URGENTS.map((u) => optPill("check", "urgent", u.id, u.label, S.urgent.includes(u.id))).join("") +
@@ -2177,8 +2333,8 @@ function renderWizard(focusId) {
       <p class="fine" style="margin-top:14px">Nothing burning? Skip ahead — that's a good week.</p>`;
   }
 
-  if (S.step === 2) {
-    inner = wizHead(3, "Where do you live?",
+  if (fin === 1) {
+    inner = wizHead(n, "Where do you live?",
       "Matthew's rule #3: the money isn't in Washington — it's handed out where you live. Your ZIP points every link on your sheet at your county's money.");
     inner += `
       <div class="field-row">
@@ -2198,8 +2354,8 @@ function renderWizard(focusId) {
       <p class="fine">Optional, but it makes the sheet much sharper. Your ZIP never leaves this page.</p>`;
   }
 
-  if (S.step === 3) {
-    inner = wizHead(4, "Does any of this describe you?",
+  if (fin === 2) {
+    inner = wizHead(n, "Does any of this describe you?",
       "This isn't nosiness — whole pots of money are set aside for people in these shoes. Each one you check opens extra doors on your sheet.");
     inner += `<div class="opts">` +
       FLAGS.map((f) => optPill("check", "flags", f.id, f.label, S.flags.includes(f.id))).join("") +
@@ -2212,8 +2368,8 @@ function renderWizard(focusId) {
       <p class="fine">Check only what you're comfortable with. It stays on this device.</p>`;
   }
 
-  if (S.step === 4) {
-    inner = wizHead(5, "Your household, roughly",
+  if (fin === 3) {
+    inner = wizHead(n, "Your household, roughly",
       "A rough range is plenty — this only helps us point out which programs you likely fit. We never hide programs based on income: Matthew's rule is that 80% of the money has no income test at all.");
     inner += `
       <div class="field">
@@ -2228,8 +2384,8 @@ function renderWizard(focusId) {
       </div>`;
   }
 
-  if (S.step === 5) {
-    inner = wizHead(6, "Anything else, in your own words?",
+  if (fin === 4) {
+    inner = wizHead(n, "Anything else, in your own words?",
       "One problem per line — “my roof leaks”, “I owe the dentist $900”. Each line gets its own card with the exact places to call about it.");
     inner += `
       <div class="field">
@@ -2261,7 +2417,9 @@ function wireWizard() {
 
   q.querySelectorAll("input[name=needs]").forEach((el) => el.addEventListener("change", () => {
     el.closest(".opt").classList.toggle("on", el.checked);
-    S.needs = [...q.querySelectorAll("input[name=needs]:checked")].map((i) => i.value);
+    // each topic page only shows its own boxes — merge, never rebuild from this page
+    if (el.checked) { if (!S.needs.includes(el.value)) S.needs.push(el.value); }
+    else S.needs = S.needs.filter((v) => v !== el.value);
     saveS(); updateBub();
   }));
 
@@ -2325,8 +2483,8 @@ function wireWizard() {
 
   q.querySelectorAll("[data-wz]").forEach((b) => b.addEventListener("click", () => {
     if (b.dataset.wz === "back") { S.step = Math.max(0, S.step - 1); saveS(); renderWizard(); return; }
-    if (S.step === STEPS - 1) { buildSheet(); return; }
-    S.step = Math.min(STEPS - 1, S.step + 1);
+    if (S.step === TOTAL - 1) { buildSheet(); return; }
+    S.step = Math.min(TOTAL - 1, S.step + 1);
     saveS(); renderWizard();
   }));
 

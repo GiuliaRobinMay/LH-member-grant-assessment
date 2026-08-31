@@ -19,10 +19,13 @@ about-you) so problems we didn't list still get their own numbered ask — typed
 urgent items jump straight to the Today tier. Also: urgency triage (eviction
 notice, shutoff, no food → **Today**), personal-situation boosters ("Because of who you are" — veteran,
 single parent, 60+, tribal, rural, already-on-SNAP, etc.), free-text problems
-in the member's own words, print, and copy-as-text. (Deliberately lean: three tabs —
-The Quiz / My Results / Privacy. No call-sheet, progress, or tips features;
-this tool is the quiz and the result. A 3px dashed frame in the four brand
-colors runs around the whole app.)
+in the member's own words, print, and copy-as-text. (Three tabs — The Quiz / My Results
+/ Privacy. The quiz is one small page per topic — 15 topic pages drawn from
+the community's Quick Guide spaces and Matthew's reports (home, bills, food &
+everyday needs, health/dental/vision, family, seniors, veterans, disability,
+work, business, nonprofit, cars, school, legal & safety, pets) plus 5
+finishing pages, with a progress bar over all 20. A solid frame in the four
+brand colors runs around the whole app.)
 
 Priority tiers ride on the card suits:
 **♥ Today · ♦ This week · ♠ This month · ♣ When you're steady.**
