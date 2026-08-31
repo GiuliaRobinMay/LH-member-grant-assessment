@@ -1,0 +1,2751 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="A free, private call-sheet builder from the Lesko Help community. Answer a few questions - get a personal list of what to ask for, who to call, and what to say. In the right order.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%232e43c8'/%3E%3Ctext x='32' y='45' font-family='Georgia,serif' font-size='38' font-weight='bold' fill='white' text-anchor='middle'%3E%3F%3C/text%3E%3C/svg%3E">
+<title>What Should I Ask For?</title>
+<style>
+/* ==================================================================
+   Lesko Help — What Should I Ask For?
+   The call-sheet builder. Same visual language as the other Lesko
+   App Lab tools (Credit Score Coach, My Lesko Zone): cream paper,
+   navy ink, red italic accents, yellow pills, card suits, hairline
+   borders. System fonts only — nothing to load, nothing to break
+   inside a Mighty Networks embed.
+
+   The four suits carry the priority system on the call sheet:
+   ♥ red = today · ♦ gold = this week · ♠ blue = this month ·
+   ♣ green = when you're steady.
+   ================================================================== */
+
+:root {
+  --paper: #faf6ec;
+  --paper-2: #fffefa;
+  --ink: #16223f;
+  --ink-soft: #4a5570;
+  --ink-faint: #8a93a8;
+  --hairline: rgba(22, 34, 63, 0.22);
+  --hairline-soft: rgba(22, 34, 63, 0.12);
+
+  --red: #e8453c;
+  --yellow: #f6c544;
+  --blue: #2e43c8;
+  --green: #2e9e5b;
+  --gold-2: #e9a725;
+
+  --tint-yellow: #fdf1d4;
+  --tint-red: #fce7e5;
+  --tint-blue: #e9edfc;
+  --tint-green: #e3f3e9;
+
+  --radius: 16px;
+  --radius-sm: 10px;
+
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia,
+    "Times New Roman", serif;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --suit-font: "DejaVu Sans", "Segoe UI Symbol", "Apple Symbols", var(--sans);
+
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+
+[hidden] { display: none !important; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  /* members skew older and read on phones — keep the base generous */
+  font-size: 16.5px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  width: min(1080px, 94vw);
+  margin: 0 auto;
+  padding-bottom: 40px;
+}
+
+a { color: var(--red); }
+
+.mono-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.fine {
+  font-size: 13px;
+  color: var(--ink-faint);
+  margin: 10px 0 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html { scroll-behavior: auto; }
+}
+
+/* ---------------------------------------------------------------- header */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 0 6px;
+}
+
+.brand { display: flex; align-items: center; gap: 11px; }
+
+.brand-mark {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--blue);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 700;
+  user-select: none;
+  transition: transform 0.18s ease;
+  flex: 0 0 auto;
+}
+
+.brand-mark:hover { transform: rotate(-12deg) scale(1.08); }
+
+.brand-name { font-family: var(--serif); line-height: 1.05; }
+
+.brand-name i {
+  display: block;
+  color: var(--red);
+  font-size: 19px;
+  font-style: italic;
+}
+
+.brand-name b {
+  display: block;
+  font-size: 19px;
+  font-weight: 400;
+}
+
+.suits {
+  display: flex;
+  gap: 10px;
+  font-size: 18px;
+  font-family: var(--suit-font);
+}
+
+.suits span { animation: bob 3.4s ease-in-out infinite; }
+.suits span:nth-child(1) { color: var(--blue); }
+.suits span:nth-child(2) { color: var(--red); animation-delay: 0.25s; }
+.suits span:nth-child(3) { color: var(--yellow); animation-delay: 0.5s; }
+.suits span:nth-child(4) { color: var(--green); animation-delay: 0.75s; }
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-5px) rotate(8deg); }
+}
+
+/* ------------------------------------------------------------------ hero */
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(260px, 1fr);
+  gap: 28px;
+  align-items: start;
+  padding: 18px 0 8px;
+}
+
+h1 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(34px, 5vw, 52px);
+  line-height: 1.08;
+  margin: 0 0 14px;
+  text-wrap: balance;
+}
+
+h1 em, h2 em, h3 em { color: var(--red); font-style: italic; }
+
+.hero-sub {
+  font-size: 17.5px;
+  color: var(--ink-soft);
+  max-width: 54ch;
+  margin: 0;
+}
+
+.privacy-chip {
+  border: 1px solid rgba(46, 158, 91, 0.4);
+  border-radius: var(--radius);
+  background: var(--tint-green);
+  padding: 14px 18px;
+  font-size: 14.5px;
+}
+
+.privacy-chip .mono-label { color: var(--ink); }
+
+.privacy-chip p { margin: 6px 0 0; }
+
+@media (max-width: 760px) {
+  .hero { grid-template-columns: 1fr; gap: 16px; }
+}
+
+/* ------------------------------------------------------------- tab pills */
+
+.tabbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  padding: 18px 0 16px;
+  border-bottom: 1px solid var(--hairline-soft);
+  margin-bottom: 26px;
+}
+
+.tab {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 10px 18px;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  background: var(--paper-2);
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.12s ease;
+  white-space: nowrap;
+}
+
+.tab:hover { transform: translateY(-1px); background: var(--tint-yellow); }
+
+.tab.active {
+  background: var(--yellow);
+  border-color: var(--ink);
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.tab .bub {
+  display: inline-grid;
+  place-items: center;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  margin-left: 6px;
+  border-radius: 999px;
+  background: var(--red);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  vertical-align: -3px;
+}
+
+/* --------------------------------------------------------------- panels */
+
+.panel { animation: panel-in 0.28s ease; }
+
+@keyframes panel-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+.panel h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(26px, 3.4vw, 34px);
+  line-height: 1.12;
+  margin: 0 0 8px;
+  text-wrap: balance;
+}
+
+.panel .lead {
+  color: var(--ink-soft);
+  max-width: 62ch;
+  margin: 0 0 22px;
+  font-size: 16px;
+}
+
+/* ---------------------------------------------------------------- cards */
+
+.card {
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  background: var(--paper-2);
+  box-shadow: 0 1px 2px rgba(22, 34, 63, 0.05),
+    0 14px 30px -20px rgba(22, 34, 63, 0.5);
+  padding: 20px 22px;
+  margin-bottom: 16px;
+}
+
+/* Soft-tinted callout cards with the big ghost suit in the corner. */
+.mini {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--card-line, var(--hairline));
+  border-radius: var(--radius);
+  background: var(--card-bg, var(--paper-2));
+  padding: 14px 17px;
+  margin-bottom: 12px;
+  font-size: 15px;
+}
+
+.mini p { margin: 5px 0 0; position: relative; z-index: 1; max-width: 68ch; }
+.mini .mono-label { position: relative; z-index: 1; }
+
+.mini::after {
+  content: attr(data-suit);
+  position: absolute;
+  right: -8px;
+  bottom: -26px;
+  font-family: var(--suit-font);
+  font-size: 84px;
+  line-height: 1;
+  color: var(--card-accent, var(--ink));
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+.mini.t-yellow { --card-bg: var(--tint-yellow); --card-line: rgba(203,150,20,0.4);  --card-accent: #b8860b; }
+.mini.t-red    { --card-bg: var(--tint-red);    --card-line: rgba(232,69,60,0.34);  --card-accent: var(--red); }
+.mini.t-blue   { --card-bg: var(--tint-blue);   --card-line: rgba(46,67,200,0.34);  --card-accent: var(--blue); }
+.mini.t-green  { --card-bg: var(--tint-green);  --card-line: rgba(46,158,91,0.36);  --card-accent: var(--green); }
+
+/* Blue-edged aside for quoted words and small guidance. */
+.note {
+  border-left: 2px solid var(--blue);
+  padding: 3px 0 3px 14px;
+  font-size: 14.5px;
+  color: var(--ink-soft);
+  margin: 14px 0;
+  max-width: 70ch;
+}
+
+.note .mono-label { font-size: 9.5px; }
+
+.note .said {
+  margin: 3px 0 0;
+  font-style: italic;
+  font-family: var(--serif);
+  font-size: 16.5px;
+  color: var(--ink);
+}
+
+/* --------------------------------------------------------------- badges */
+
+.badge {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid rgba(22, 34, 63, 0.3);
+  border-radius: 999px;
+  padding: 4px 10px;
+  background: rgba(255, 253, 247, 0.75);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+
+.badge.today   { background: var(--red);        color: #fff;         border-color: var(--red); }
+.badge.week    { background: var(--yellow);     color: var(--ink);   border-color: rgba(203,150,20,0.7); }
+.badge.month   { background: var(--tint-blue);  color: var(--blue);  border-color: rgba(46,67,200,0.4); }
+.badge.steady  { background: var(--tint-green); color: var(--green); border-color: rgba(46,158,91,0.5); }
+.badge.plain   { color: var(--ink-soft); }
+
+/* -------------------------------------------------------------- buttons */
+
+.btn {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 10px 16px;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  background: var(--yellow);
+  color: var(--ink);
+  cursor: pointer;
+  transition: transform 0.12s ease, filter 0.12s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn:hover { transform: translateY(-1px); filter: brightness(1.04); }
+.btn:active { transform: translateY(1px); }
+.btn.ghost { background: var(--paper-2); }
+.btn.red { background: var(--red); border-color: var(--red); color: #fff; }
+
+.btn.big {
+  font-size: 12.5px;
+  padding: 13px 24px;
+  font-weight: 700;
+}
+
+.btn[disabled] { opacity: 0.35; cursor: default; transform: none; }
+
+.linklike {
+  background: none;
+  border: 0;
+  padding: 4px 0;
+  font: inherit;
+  font-size: 14.5px;
+  color: var(--red);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+/* ---------------------------------------------------------- wizard grid */
+
+.wizgrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(280px, 1fr);
+  gap: 22px;
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .wizgrid { grid-template-columns: 1fr; }
+  .rail { order: 2; }
+}
+
+.qcard {
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  background: var(--paper-2);
+  box-shadow: 0 1px 2px rgba(22, 34, 63, 0.05),
+    0 18px 36px -24px rgba(22, 34, 63, 0.5);
+  padding: 22px 24px 18px;
+}
+
+.qhead {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.qhead .mono-label { flex: 0 0 auto; }
+
+.qtrack {
+  flex: 1;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--hairline-soft);
+  overflow: hidden;
+}
+
+.qtrack i {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: 999px;
+  background: var(--yellow);
+  border-right: 1px solid rgba(203, 150, 20, 0.8);
+  transition: width 0.3s ease;
+}
+
+.qtitle {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(23px, 3vw, 29px);
+  line-height: 1.15;
+  margin: 0 0 6px;
+  text-wrap: balance;
+}
+
+.qhelp {
+  font-size: 15px;
+  color: var(--ink-soft);
+  margin: 0 0 18px;
+  max-width: 62ch;
+}
+
+.qfoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-top: 1px solid var(--hairline-soft);
+  margin-top: 20px;
+  padding-top: 15px;
+}
+
+.qfoot .fine { margin: 0; }
+
+/* option pills — check and radio share the look */
+.opts { display: flex; flex-wrap: wrap; gap: 9px; }
+
+.opt {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  background: var(--paper);
+  padding: 10px 16px 10px 12px;
+  font-size: 15.5px;
+  cursor: pointer;
+  transition: transform 0.1s ease, background 0.12s ease, border-color 0.12s ease;
+  user-select: none;
+}
+
+.opt:hover { transform: translateY(-1px); background: var(--tint-yellow); }
+
+.opt input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.opt .dot {
+  flex: 0 0 auto;
+  width: 19px; height: 19px;
+  border-radius: 50%;
+  border: 1.5px solid var(--hairline);
+  background: var(--paper-2);
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  line-height: 1;
+  color: transparent;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+
+.opt.sq .dot { border-radius: 6px; }
+
+.opt.on {
+  background: var(--tint-yellow);
+  border-color: var(--gold-2);
+}
+
+.opt.on .dot {
+  background: var(--yellow);
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.opt.on .dot::before { content: "✓"; font-weight: 700; }
+
+.opt:has(input:focus-visible) {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+.optgroup { margin: 0 0 18px; }
+
+.optgroup .mono-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 9px;
+}
+
+.optgroup .mono-label .g-suit {
+  font-family: var(--suit-font);
+  font-size: 13px;
+}
+
+/* fields (state / zip / free text) */
+.field { margin-bottom: 15px; }
+
+.field > label {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 5px;
+}
+
+.field input, .field select, .field textarea {
+  width: 100%;
+  font: inherit;
+  font-size: 16px;
+  padding: 11px 13px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-sm);
+  background: var(--paper-2);
+  color: var(--ink);
+}
+
+.field textarea { min-height: 96px; resize: vertical; line-height: 1.5; }
+
+.field input:focus, .field select:focus, .field textarea:focus {
+  outline: 2px solid var(--gold-2);
+  outline-offset: 1px;
+}
+
+.field input::placeholder, .field textarea::placeholder { color: var(--ink-faint); }
+
+.field .hint { font-size: 13px; color: var(--ink-soft); margin: 5px 0 0; }
+
+.field-row {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 560px) {
+  .field-row { grid-template-columns: 1fr; }
+}
+
+select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%2316223f' stroke-width='1.8' stroke-linecap='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 34px;
+}
+
+/* ------------------------------------------------------------- the rail */
+
+.rail .card { position: sticky; top: 14px; }
+
+.rail-count {
+  font-family: var(--serif);
+  font-size: 56px;
+  line-height: 1;
+  margin: 10px 0 2px;
+}
+
+.rail-count small {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.rail-list { list-style: none; margin: 12px 0 0; padding: 0; }
+
+.rail-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14.5px;
+  padding: 6px 0;
+  border-top: 1px solid var(--hairline-soft);
+}
+
+.rail-list li .s {
+  font-family: var(--suit-font);
+  font-size: 13px;
+  flex: 0 0 16px;
+  text-align: center;
+}
+
+.rail-empty {
+  text-align: center;
+  padding: 18px 8px 12px;
+}
+
+.rail-empty .q {
+  font-family: var(--serif);
+  font-size: 46px;
+  color: var(--gold-2);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.rail-empty p {
+  color: var(--ink-soft);
+  font-size: 14px;
+  max-width: 30ch;
+  margin: 0 auto;
+}
+
+/* ---------------------------------------------------------- call sheet */
+
+.sheet-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.sheet-actions { display: flex; gap: 9px; flex-wrap: wrap; }
+
+.first-calls {
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  background: var(--ink);
+  color: #fdfbf4;
+  padding: 18px 20px;
+  margin-bottom: 20px;
+}
+
+.first-calls .mono-label { color: var(--yellow); }
+
+.first-calls h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 21px;
+  margin: 6px 0 10px;
+  color: #fff;
+}
+
+.first-calls ol {
+  margin: 0;
+  padding-left: 22px;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.first-calls li { margin-bottom: 7px; }
+.first-calls li:last-child { margin-bottom: 0; }
+.first-calls a { color: var(--yellow); }
+.first-calls b { color: #fff; }
+
+/* one ask = one numbered card, tinted by its priority tier */
+.ask {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--tier-line, var(--hairline));
+  border-radius: var(--radius);
+  background: var(--paper-2);
+  box-shadow: 0 1px 2px rgba(22, 34, 63, 0.05),
+    0 14px 30px -20px rgba(22, 34, 63, 0.5);
+  margin-bottom: 18px;
+}
+
+.ask::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 5px;
+  background: var(--tier-color, var(--ink));
+}
+
+.ask::after {
+  content: attr(data-suit);
+  position: absolute;
+  right: -10px;
+  top: -22px;
+  font-family: var(--suit-font);
+  font-size: 96px;
+  line-height: 1;
+  color: var(--tier-color, var(--ink));
+  opacity: 0.07;
+  pointer-events: none;
+}
+
+.ask.t0 { --tier-color: var(--red);   --tier-line: rgba(232,69,60,0.4); }
+.ask.t1 { --tier-color: var(--gold-2); --tier-line: rgba(203,150,20,0.45); }
+.ask.t2 { --tier-color: var(--blue);  --tier-line: rgba(46,67,200,0.35); }
+.ask.t3 { --tier-color: var(--green); --tier-line: rgba(46,158,91,0.4); }
+
+.ask-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 18px 20px 4px 22px;
+}
+
+.ask-num {
+  font-family: var(--serif);
+  font-size: 30px;
+  line-height: 1.1;
+  color: var(--tier-color, var(--ink));
+  min-width: 34px;
+}
+
+.ask-title {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 23px;
+  line-height: 1.15;
+  margin: 2px 0 4px;
+}
+
+.ask-head .badges { margin: 0 0 4px; display: flex; gap: 7px; flex-wrap: wrap; }
+
+.ask-body { padding: 6px 20px 16px 22px; }
+
+.say {
+  border-left: 2px solid var(--tier-color, var(--blue));
+  padding: 4px 0 4px 14px;
+  margin: 8px 0 14px;
+  max-width: 72ch;
+}
+
+.say .said {
+  margin: 3px 0 0;
+  font-style: italic;
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.45;
+}
+
+.ask h4 {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 16px 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ask h4 .tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+}
+
+.ask h4 .tag.fed   { background: var(--tint-blue);  color: var(--blue); }
+.ask h4 .tag.local { background: var(--tint-yellow); color: #8a6508; }
+.ask h4 .tag.human { background: var(--tint-green); color: var(--green); }
+.ask h4 .tag.comm  { background: var(--tint-red);   color: var(--red); }
+
+.res { list-style: none; margin: 0; padding: 0; }
+
+.res li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 0;
+  border-top: 1px solid var(--hairline-soft);
+  font-size: 15px;
+  max-width: 76ch;
+}
+
+.res li:first-child { border-top: 0; }
+
+.res .ck {
+  flex: 0 0 auto;
+  width: 21px; height: 21px;
+  margin-top: 1px;
+  border: 1.5px solid var(--hairline);
+  border-radius: 6px;
+  background: var(--paper-2);
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  color: transparent;
+  cursor: pointer;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+
+.res .ck.done {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+}
+
+.res .ck.done::before { content: "✓"; font-weight: 700; }
+.res .ck:not(.done)::before { content: "✓"; }
+
+.res li.done-row .r-name, .res li.done-row .r-what { opacity: 0.5; }
+.res li.done-row .r-name { text-decoration: line-through; }
+
+.res .r-name { font-weight: 600; }
+.res .r-what { color: var(--ink-soft); }
+.res .r-how { display: block; font-size: 13.5px; color: var(--ink-soft); margin-top: 2px; }
+.res .r-how a { word-break: break-word; }
+
+.ask-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--hairline-soft);
+  padding: 10px 20px 12px 22px;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+/* boosters + tier legend */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  align-items: center;
+  margin: 0 0 18px;
+  font-size: 13.5px;
+  color: var(--ink-soft);
+}
+
+.legend .s { font-family: var(--suit-font); margin-right: 4px; }
+.legend .l0 .s { color: var(--red); }
+.legend .l1 .s { color: var(--gold-2); }
+.legend .l2 .s { color: var(--blue); }
+.legend .l3 .s { color: var(--green); }
+
+.empty-sheet { text-align: center; padding: 40px 18px; }
+
+.empty-sheet .q {
+  font-family: var(--serif);
+  font-size: 54px;
+  color: var(--gold-2);
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.empty-sheet h3 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 24px;
+  margin: 0 0 8px;
+}
+
+.empty-sheet p {
+  color: var(--ink-soft);
+  font-size: 15px;
+  max-width: 46ch;
+  margin: 0 auto 16px;
+}
+
+/* ------------------------------------------------------------ progress */
+
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.stat {
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  background: var(--paper-2);
+  padding: 14px 16px;
+  text-align: center;
+}
+
+.stat b {
+  display: block;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 38px;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat span {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+/* ---------------------------------------------------------------- foot */
+
+.foot {
+  border-top: 1px solid var(--hairline-soft);
+  margin-top: 34px;
+  padding: 18px 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.foot .mono-label { font-size: 10px; }
+
+.foot-suit {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: var(--blue);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-family: var(--serif);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--ink);
+  color: #fdfbf4;
+  font-size: 14.5px;
+  padding: 11px 20px;
+  border-radius: 999px;
+  box-shadow: 0 10px 30px rgba(22, 34, 63, 0.35);
+  opacity: 0;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+  pointer-events: none;
+  z-index: 60;
+  max-width: 88vw;
+  text-align: center;
+}
+
+.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+/* ---------------------------------------------------------------- print */
+
+@media print {
+  body { background: #fff; font-size: 12.5px; }
+  .topbar .suits, .tabbar, .foot, .toast, .sheet-actions,
+  .hero, .res .ck, .ask-foot .linklike, .noprint { display: none !important; }
+  .wrap { width: 100%; }
+  .panel { display: block !important; }
+  #panel-situation, #panel-progress, #panel-tips, #panel-privacy { display: none !important; }
+  .ask, .card, .first-calls { box-shadow: none; break-inside: avoid; }
+  .first-calls { background: #fff; color: var(--ink); border: 1.5px solid var(--ink); }
+  .first-calls h3, .first-calls b { color: var(--ink); }
+  .first-calls a, .first-calls .mono-label { color: var(--ink); }
+  a { color: var(--ink); }
+  .print-head { display: block !important; }
+}
+
+.print-head { display: none; margin: 0 0 14px; }
+.print-head .mono-label { font-size: 10px; }
+</style>
+
+<div class="wrap">
+
+  <!-- ============================================================ masthead -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">?</div>
+      <div class="brand-name"><i>Lesko</i><b>Help</b></div>
+    </div>
+    <div class="suits" aria-hidden="true">
+      <span>&spades;</span><span>&hearts;</span><span>&diams;</span><span>&clubs;</span>
+    </div>
+  </header>
+
+  <!-- ================================================================ hero -->
+  <section class="hero">
+    <div>
+      <h1>Stop searching.<br>Start <em>asking.</em></h1>
+      <p class="hero-sub">A free call-sheet builder from the Lesko Help community.
+      Answer a few questions about what's going on in your life — get a personal
+      list of what to ask for, who to call, and what to say. In the right order.</p>
+    </div>
+    <aside class="privacy-chip">
+      <span class="mono-label">🔒&nbsp; 100% Private</span>
+      <p>No sign-up. No SSN — ever. Everything stays on your device.
+      <a href="#" data-goto="privacy">Details</a></p>
+    </aside>
+  </section>
+
+  <!-- ================================================================ tabs -->
+  <nav class="tabbar" aria-label="Sections">
+    <button class="tab active" data-tab="situation">01 · My Situation</button>
+    <button class="tab" data-tab="sheet">02 · My Call Sheet<span class="bub" id="bub-sheet" hidden>0</span></button>
+    <button class="tab" data-tab="progress">03 · My Progress</button>
+    <button class="tab" data-tab="tips">04 · Tips &amp; Scripts</button>
+    <button class="tab" data-tab="privacy">05 · Privacy</button>
+  </nav>
+
+  <!-- ======================================================== 01 SITUATION -->
+  <section class="panel" id="panel-situation">
+    <h2>What's going on <em>right now?</em></h2>
+    <p class="lead">One step at a time — honest answers are fine, and nothing you
+    pick here leaves this page. Every answer unlocks programs for your list.
+    You can come back and change anything.</p>
+
+    <div class="wizgrid">
+      <div class="qcard" id="qcard">
+        <!-- wizard screens are rendered here by script -->
+      </div>
+
+      <aside class="rail">
+        <div class="card">
+          <span class="mono-label">Your call sheet so far</span>
+          <div id="rail-body">
+            <div class="rail-empty">
+              <div class="q" aria-hidden="true">?</div>
+              <p>Answer the questions and watch your list build itself.</p>
+            </div>
+          </div>
+          <p class="fine">Matthew's rule: don't say "grants" on the phone — say
+          <b>"financial assistance."</b> Over 80% of the free money isn't called
+          a grant.</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ======================================================= 02 CALL SHEET -->
+  <section class="panel" id="panel-sheet" hidden>
+    <div class="print-head">
+      <span class="mono-label">Lesko Help · My Call Sheet · <span id="print-date"></span></span>
+    </div>
+
+    <div class="sheet-top">
+      <div>
+        <h2>My call <em>sheet</em></h2>
+        <p class="lead" id="sheet-lead">Your asks, in the order to work them.
+        Check things off as you call — this page remembers for you.</p>
+      </div>
+      <div class="sheet-actions noprint">
+        <button class="btn ghost" id="btn-copy">⧉ Copy as text</button>
+        <button class="btn ghost" id="btn-print">⎙ Print</button>
+        <button class="btn" id="btn-edit">✎ Change my answers</button>
+      </div>
+    </div>
+
+    <div class="legend noprint" id="sheet-legend" hidden>
+      <span class="l0"><span class="s">&hearts;</span>Today</span>
+      <span class="l1"><span class="s">&diams;</span>This week</span>
+      <span class="l2"><span class="s">&spades;</span>This month</span>
+      <span class="l3"><span class="s">&clubs;</span>When you're steady</span>
+    </div>
+
+    <div id="sheet-body">
+      <div class="empty-sheet">
+        <div class="q" aria-hidden="true">?</div>
+        <h3>No call sheet yet</h3>
+        <p>Answer the questions under <b>01 · My Situation</b> and your
+        personal call sheet will be built right here.</p>
+        <button class="btn big" data-goto="situation">Start with question 1 →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================= 03 PROGRESS -->
+  <section class="panel" id="panel-progress" hidden>
+    <h2>My <em>progress</em></h2>
+    <p class="lead">Getting free money is phone work. Every box you check on your
+    call sheet shows up here — proof that you're working the list.</p>
+    <div id="progress-body"></div>
+  </section>
+
+  <!-- ============================================================= 04 TIPS -->
+  <section class="panel" id="panel-tips" hidden>
+    <h2>How to ask like <em>Lesko</em></h2>
+    <p class="lead">48 years of Matthew's rules for getting free money, boiled
+    down. Read this once before your first call — it changes everything.</p>
+
+    <div class="mini t-yellow" data-suit="♦">
+      <span class="mono-label">Rule 1 · Never say "grants"</span>
+      <p>Over 80% of the government's free money is not called a grant — it's
+      "direct payments," "forgiveness," and "loans you don't pay back." On every
+      call, say you're looking for <b>"financial assistance."</b> That way you
+      won't miss anything.</p>
+    </div>
+
+    <div class="mini t-blue" data-suit="♠">
+      <span class="mono-label">Rule 2 · The money isn't in Washington</span>
+      <p>The money starts in Washington, but it's handed out by your state
+      capital, your county, your city, and local nonprofits. That's why your
+      call sheet is full of <b>local</b> offices — they're the ones writing
+      checks.</p>
+    </div>
+
+    <div class="mini t-green" data-suit="♣">
+      <span class="mono-label">Rule 3 · You don't have to be poor</span>
+      <p>Only about 12% of the money goes to the poor. Some programs call
+      $80,000 a year "low income," and roughly 80% of programs have <b>no income
+      requirement at all</b>. Never screen yourself out — let them tell you.</p>
+    </div>
+
+    <div class="mini t-red" data-suit="♥">
+      <span class="mono-label">Rule 4 · Don't hire a grant writer</span>
+      <p>Most applications are 2–4 pages of fill-in-the-blanks. See the actual
+      application first. Hiring a grant writer before you've seen it is like
+      buying a prom dress before you're invited to the prom.</p>
+    </div>
+
+    <div class="card">
+      <span class="mono-label">The magic script — what to say on every call</span>
+      <div class="note">
+        <span class="mono-label">Opening line</span>
+        <p class="said">"Hi, I'm ____. I'm dealing with ____ and I'm looking for
+        any financial assistance or free services that could help with my
+        situation. Am I in the right place?"</p>
+      </div>
+      <div class="note">
+        <span class="mono-label">Before you hang up — always</span>
+        <p class="said">"Is there anything else you have that I might qualify
+        for? And if you can't help me — who do you know who can?"</p>
+      </div>
+      <p style="max-width:70ch">You don't need a speech. You don't need to sound
+      smart. These people are paid to help you — one honest sentence about your
+      situation is enough to start. Write down every name and number they give
+      you, and call those too.</p>
+    </div>
+
+    <div class="card">
+      <span class="mono-label">When they say "no" — the Lesko ladder</span>
+      <ol style="margin:10px 0 4px;padding-left:22px;font-size:15.5px;line-height:1.65;max-width:70ch">
+        <li><b>Ask the person who said no:</b> "Can you suggest another place
+        that might help?" They almost always know one.</li>
+        <li><b>Call 211</b> (or 311 in some cities) and search
+        <a href="https://www.findhelp.org" target="_blank" rel="noopener">FindHelp.org</a>
+        — free hotlines to every local service.</li>
+        <li><b>Ask your reference librarian.</b> Free professional researchers
+        sit in your public library, waiting for you.</li>
+        <li><b>Call your Congressperson and Senators.</b> Their staff caseworkers
+        untangle government problems for free — your vote is their paycheck.
+        Find yours at
+        <a href="https://www.commoncause.org/find-your-representative/" target="_blank" rel="noopener">commoncause.org</a>.</li>
+      </ol>
+      <p class="fine">There are over 500,000 programs. No one person knows them
+      all — a "no" just means you asked someone who doesn't know yours yet.</p>
+    </div>
+
+    <div class="mini t-red" data-suit="♥">
+      <span class="mono-label">⚠ Scam warning — read this twice</span>
+      <p><b>Never pay anyone who promises you a grant.</b> Only the agency
+      giving out the money can say yes, and the government never charges you to
+      apply. Watch out for "$10,000 dental grants," paid "debt relief" companies,
+      and credit-repair outfits that charge $1,000 to make your credit worse.
+      When in doubt, post it in the
+      <a href="https://lesko-help-2.mn.co/spaces/11031186" target="_blank" rel="noopener">Safety Warnings</a>
+      space before you pay anyone a dime.</p>
+    </div>
+
+    <div class="card">
+      <span class="mono-label">Expect real work — and get help doing it</span>
+      <p style="max-width:70ch;margin-top:8px">One phone call won't get you all
+      the money. Plan on hours, sometimes weeks, of calls and follow-ups. But
+      where else do you get $20,000 for a problem that's been nagging you for
+      years? Talk to as many people as you have energy for — every call teaches
+      you who to call next. <em>This is real research.</em></p>
+      <div class="note">
+        <span class="mono-label">Matthew says</span>
+        <p class="said">"Don't prepare yourself for easy, because it may be
+        hard. You may have to deal with the run-around until you find the right
+        place for you."</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="mono-label">You're not doing this alone — use the community</span>
+      <ul class="res" style="margin-top:8px">
+        <li><div><span class="r-name"><a href="https://lesko-help-2.mn.co/spaces/11054387" target="_blank" rel="noopener">Questions Channel</a></span>
+          <span class="r-what">— stuck? Ask the Lesko Help staff. Use the "Ask Questions Here" button so the whole team sees it.</span></div></li>
+        <li><div><span class="r-name"><a href="https://lesko-help-2.mn.co/spaces/24461105" target="_blank" rel="noopener">AI Grant Researcher</a></span>
+          <span class="r-what">— get a research report on programs for your exact situation and zip code.</span></div></li>
+        <li><div><span class="r-name"><a href="https://lesko-help-2.mn.co/spaces/24440881" target="_blank" rel="noopener">Call Sheet Classes</a></span>
+          <span class="r-what">— live classes on building and working a call sheet like this one.</span></div></li>
+        <li><div><span class="r-name"><a href="https://lesko-help-2.mn.co/spaces/24366189" target="_blank" rel="noopener">Application Classes</a></span>
+          <span class="r-what">— get walked through the actual applications.</span></div></li>
+        <li><div><span class="r-name"><a href="https://lesko-help-2.mn.co/spaces/23328015" target="_blank" rel="noopener">Thursday Drop-In Clinic</a></span>
+          <span class="r-what">— bring your list, leave with next steps.</span></div></li>
+        <li><div><span class="r-name"><a href="https://lesko-help-2.mn.co/spaces/21948411" target="_blank" rel="noopener">Ask Matthew Live</a></span>
+          <span class="r-what">— he pops up a few times a week to answer questions himself.</span></div></li>
+        <li><div><span class="r-name"><a href="https://lesko-help-2.mn.co/spaces/18681282" target="_blank" rel="noopener">Lesko Grant Reports</a></span>
+          <span class="r-what">— the state-by-state mini-grant reports with hundreds of local programs.</span></div></li>
+        <li><div><span class="r-name"><a href="https://lesko-help-2.mn.co/spaces/10351370" target="_blank" rel="noopener">Success Stories</a></span>
+          <span class="r-what">— when you get a yes, post it here and light the way for the next member.</span></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ========================================================== 05 PRIVACY -->
+  <section class="panel" id="panel-privacy" hidden>
+    <h2>Your business stays <em>your business</em></h2>
+    <p class="lead">This tool was built the Lesko Help way: free, private, and
+    on your side.</p>
+
+    <div class="mini t-green" data-suit="♣">
+      <span class="mono-label">Everything stays on your device</span>
+      <p>Your answers and your call sheet are saved only in this browser, on
+      this device — like notes on your own refrigerator. Nothing is sent to us,
+      to Lesko Help, or to anyone else. There is no account, no email, no
+      tracking of what you pick.</p>
+    </div>
+
+    <div class="mini t-red" data-suit="♥">
+      <span class="mono-label">Never type these anywhere in this tool</span>
+      <p>Your Social Security number, bank or card numbers, or passwords.
+      This tool never asks for them — and neither does any honest government
+      program at the "first phone call" stage. Anyone who demands your SSN plus
+      a fee before they'll "release your grant" is a scammer.</p>
+    </div>
+
+    <div class="card">
+      <span class="mono-label">Good to know</span>
+      <ul style="margin:10px 0 4px;padding-left:22px;font-size:15px;line-height:1.6;max-width:70ch">
+        <li>Clearing your browser data, or switching devices or browsers, means
+        your saved call sheet won't follow you — print it or copy it somewhere
+        safe if you want a backup.</li>
+        <li>The links on your call sheet go to official government and nonprofit
+        websites. Once you leave this page, their privacy rules apply.</li>
+        <li>This tool is education and research help from the Lesko Help
+        community — it can show you where the programs are, but only the agency
+        giving out money can decide if you qualify.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <span class="mono-label">Start over</span>
+      <p style="margin:8px 0 12px;max-width:66ch">This wipes your answers, your
+      call sheet, and your progress from this device. There's no undo.</p>
+      <button class="btn red" id="btn-wipe">🗑 Erase everything &amp; start fresh</button>
+    </div>
+  </section>
+
+  <!-- ================================================================ foot -->
+  <footer class="foot">
+    <span class="mono-label">Lesko Help · What Should I Ask For? · Free. Like it should be.</span>
+    <div class="foot-suit" title="?">?</div>
+  </footer>
+
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ==================================================================
+   DATA — the needs catalog.
+   Every need renders as one "ask" card on the call sheet:
+   say   → the sentence to use on the phone
+   fed   → federal programs (n=name, w=what you get, how=apply, url, tel)
+   local → how to find the state & local version (the money lives here)
+   human → the free person whose job is to help with this
+   comm  → Lesko Help spaces for this topic
+   tier  → 0 today · 1 this week · 2 this month · 3 when you're steady
+   Items with only:"XX" render only for that state.
+   {ZIP} and {STATE} in urls/text are filled from the member's answers.
+   ================================================================== */
+
+const SPACES = {
+  housing:   { n: "Home & Housing Help",             url: "https://lesko-help-2.mn.co/spaces/17886022" },
+  bills:     { n: "Bills · Debt · Homes & Cars",     url: "https://lesko-help-2.mn.co/spaces/18392931" },
+  business:  { n: "Business · Nonprofits & Career",  url: "https://lesko-help-2.mn.co/spaces/18083958" },
+  nonprofit: { n: "Launch A Nonprofit",              url: "https://lesko-help-2.mn.co/spaces/18453827" },
+  health:    { n: "Healthcare Assistance",           url: "https://lesko-help-2.mn.co/spaces/18453836" },
+  career:    { n: "Boost Your Career",               url: "https://lesko-help-2.mn.co/spaces/19924758" },
+  taxlegal:  { n: "Taxes & Legal Help",              url: "https://lesko-help-2.mn.co/spaces/20982255" },
+  families:  { n: "Families · Seniors & Disabilities", url: "https://lesko-help-2.mn.co/spaces/20982263" },
+  legal:     { n: "Find Legal Help",                 url: "https://lesko-help-2.mn.co/spaces/21021897" },
+  cars:      { n: "Cars & Car Repairs",              url: "https://lesko-help-2.mn.co/spaces/21731257" },
+  seniors:   { n: "Seniors & Disabilities",          url: "https://lesko-help-2.mn.co/spaces/22214030" },
+  vets:      { n: "Programs for Veterans",           url: "https://lesko-help-2.mn.co/spaces/22214038" },
+  safety:    { n: "Safety Warnings",                 url: "https://lesko-help-2.mn.co/spaces/11031186" },
+  questions: { n: "Questions Channel",               url: "https://lesko-help-2.mn.co/spaces/11054387" },
+  airesearch:{ n: "AI Grant Researcher",             url: "https://lesko-help-2.mn.co/spaces/24461105" },
+  callsheets:{ n: "Call Sheet Classes",              url: "https://lesko-help-2.mn.co/spaces/24440881" },
+  reports:   { n: "Lesko Grant Reports",             url: "https://lesko-help-2.mn.co/spaces/18681282" },
+  success:   { n: "Success Stories",                 url: "https://lesko-help-2.mn.co/spaces/10351370" },
+  basics:    { n: "Grant Basics",                    url: "https://lesko-help-2.mn.co/spaces/16590945" },
+  clinic:    { n: "Thursday Drop-In Clinic",         url: "https://lesko-help-2.mn.co/spaces/23328015" }
+};
+
+const GROUPS = [
+  { id: "home",   label: "Home & housing",   suit: "♠" },
+  { id: "money",  label: "Bills & money",    suit: "♦" },
+  { id: "work",   label: "Work & business",  suit: "♣" },
+  { id: "family", label: "Family & care",    suit: "♥" },
+  { id: "health", label: "Health",           suit: "♥" },
+  { id: "moving", label: "Getting around",   suit: "♠" },
+  { id: "school", label: "School & training",suit: "♦" },
+  { id: "safe",   label: "Safety & legal",   suit: "♣" }
+];
+
+const NEEDS = [
+
+  /* ------------------------------------------------------ home & housing */
+  {
+    id: "rent", group: "home", tier: 1,
+    label: "Rent, eviction or moving costs",
+    sheetTitle: "Help with rent, eviction or moving costs",
+    say: "I'm behind on my rent and I'm looking for any financial assistance with rent or an eviction — emergency rental assistance, one-time help, or a payment plan. What do you have, and what else should I call?",
+    fed: [
+      { n: "HUD rental help, state by state", w: "the official list of every rent-help door in {STATE} — subsidized apartments, vouchers, and emergency programs", how: "pick your state and start calling", url: "https://www.hud.gov/topics/rental_assistance/local" },
+      { n: "CFPB rent-help hub", w: "the government's maintained map of what rent help still exists near you, plus your rights if eviction papers come", url: "https://www.consumerfinance.gov/housing/housing-insecurity/help-for-renters/" }
+    ],
+    local: [
+      { n: "211 — say \"rent assistance\"", w: "your county's emergency rent funds, church funds and township trustees, all in one call", how: "dial 211 from any phone", url: "https://www.211.org", tel: "211" },
+      { n: "FindHelp — rent programs near {ZIP}", w: "every nonprofit rent fund in your area", url: "https://www.findhelp.org/search_results/{ZIP}" },
+      { n: "Your Community Action Agency", w: "these local offices hand out federal emergency money for rent and deposits", how: "find yours and ask for \"emergency assistance\"", url: "https://communityactionpartnership.com/find-a-cap/" }
+    ],
+    human: [
+      { n: "A HUD-approved housing counselor", w: "free expert who knows every rent program in your area and can talk to your landlord", how: "call 800-569-4287 or search online", url: "https://www.hud.gov/counseling", tel: "800-569-4287" },
+      { n: "A free eviction lawyer", w: "if you got court papers, legal aid may take your case at no cost — many evictions get stopped or delayed", url: "https://www.lawhelp.org/find-help", urgent: true }
+    ],
+    comm: ["housing", "reports"],
+    tip: "Ask about deposit and moving-cost help too — many rent programs also pay first month, deposit and moving costs into a cheaper place."
+  },
+
+  {
+    id: "mortgage", group: "home", tier: 1,
+    label: "Mortgage or property taxes",
+    sheetTitle: "Help with the mortgage or property taxes",
+    say: "I'm worried about falling behind on my mortgage and I'm looking for financial assistance or free counseling before it becomes a foreclosure. What programs does my state have?",
+    fed: [
+      { n: "State Homeowner Assistance / hardship programs", w: "the big pandemic-era fund has mostly closed, but some states still have hardship help — your state housing finance agency knows what's open today", how: "find your state agency and ask: \"what homeowner help is still open?\"", url: "https://www.ncsha.org/housing-help/" },
+      { n: "FHA / servicer loss-mitigation options", w: "payment pauses and loan changes your mortgage company must consider — you have to ask", how: "call your servicer and say \"I want to apply for loss mitigation\"" }
+    ],
+    local: [
+      { n: "Your county assessor — property tax relief", w: "homestead exemptions, senior and disability freezes, and hardship payment plans most people never claim", how: "call the assessor's office and ask \"what property tax relief programs do you have?\"" },
+      { n: "211 — mortgage & foreclosure help", w: "local foreclosure-prevention funds", url: "https://www.211.org", tel: "211" }
+    ],
+    human: [
+      { n: "A HUD-approved housing counselor", w: "free, legally legit foreclosure counselor — never pay a \"foreclosure rescue\" company", how: "call 800-569-4287", url: "https://www.hud.gov/counseling", tel: "800-569-4287" }
+    ],
+    comm: ["housing", "bills"],
+    tip: "Never pay a company to \"save your home.\" The free HUD counselor does the same work, and the scam version takes the house."
+  },
+
+  {
+    id: "utilities", group: "home", tier: 1,
+    label: "Utility bills (heat, electric, water)",
+    sheetTitle: "Help with utility bills",
+    say: "I need help with my utility bill. I'd like to apply for energy assistance, and I'd also like to know about your hardship fund and a payment plan so my service stays on.",
+    fed: [
+      { n: "LIHEAP — energy bill help", w: "hundreds of dollars toward heating/cooling bills, and crisis help if you have a shutoff notice", how: "apply through your state LIHEAP office — apply early, offices are stretched this year", url: "https://www.acf.gov/ocs/map/liheap-map-state-and-territory-contact-listing", tel: "866-674-6327" },
+      { n: "Weatherization Assistance Program", w: "free home fixes (insulation, furnace work) that cut your bill permanently — average value in the thousands", how: "apply through your state weatherization agency", url: "https://www.energy.gov/scep/wap/how-apply-weatherization-assistance" }
+    ],
+    local: [
+      { n: "Your utility company's own hardship fund", w: "almost every utility runs one, plus budget billing and shutoff protections — but only if you call and ask by name", how: "call the number on your bill: \"what hardship or assistance programs do you have?\"" },
+      { n: "211 — utility help near you", w: "church funds, township funds, water-bill help", url: "https://www.211.org", tel: "211" },
+      { n: "Your Community Action Agency", w: "most run LIHEAP locally and know every other fund in the county", url: "https://communityactionpartnership.com/find-a-cap/" }
+    ],
+    human: [
+      { n: "A Community Action caseworker", w: "they can bundle energy help with rent, food and weatherization in one visit", url: "https://communityactionpartnership.com/find-a-cap/" }
+    ],
+    comm: ["bills", "housing"],
+    tip: "A shutoff notice is a key that unlocks \"crisis\" funds — say the words \"I have a disconnect notice\" and doors open faster."
+  },
+
+  {
+    id: "repairs", group: "home", tier: 2,
+    label: "Home repairs",
+    sheetTitle: "Money for home repairs",
+    say: "I own my home and it needs repairs I can't afford. I'm looking for home repair grants or forgivable loans for homeowners — what do you have, and who else in the county gives repair help?",
+    fed: [
+      { n: "USDA Section 504 repair grants & loans", w: "up to $10,000 in grants (62+) and up to $40,000 in 1% loans for homes outside big cities", how: "call your USDA Rural Development office", url: "https://www.rd.usda.gov/programs-services/single-family-housing-programs/single-family-housing-repair-loans-grants" },
+      { n: "Weatherization Assistance Program", w: "free energy-related repairs: furnace, insulation, sometimes windows", url: "https://www.energy.gov/scep/wap/how-apply-weatherization-assistance" },
+      { n: "USAGov home repair list", w: "the master list of federal repair programs", url: "https://www.usa.gov/home-repair-programs" }
+    ],
+    local: [
+      { n: "Your city/county Community Development office", w: "CDBG money flows to every county for owner-occupied repair grants — this is Matthew's favorite hidden pot", how: "call city hall and ask for \"community development — housing rehab\"" },
+      { n: "Rebuilding Together near you", w: "volunteers repair homes free for low-income owners, seniors and veterans", url: "https://rebuildingtogether.org/get-help" },
+      { n: "State energy-incentive database (DSIRE)", w: "every rebate and grant in {STATE} for energy-saving fixes", url: "https://www.dsireusa.org" }
+    ],
+    human: [
+      { n: "A HUD housing counselor", w: "knows which local rehab programs are open and helps with the paperwork", url: "https://www.hud.gov/counseling", tel: "800-569-4287" }
+    ],
+    comm: ["housing", "reports"],
+    tip: "Seniors: also call the Area Agency on Aging (800-677-1116) — many run their own minor-repair and grab-bar programs."
+  },
+
+  {
+    id: "buyhome", group: "home", tier: 3,
+    label: "Buying a home",
+    sheetTitle: "Down-payment help to buy a home",
+    say: "I want to buy a home and I'm looking for first-time buyer programs — down payment assistance, closing cost grants, and any homebuyer classes I should take to qualify.",
+    fed: [
+      { n: "Your state Housing Finance Agency", w: "down-payment grants and cheap first mortgages — this is where the big buyer money lives", how: "find your state's agency and ask for \"homebuyer programs\"", url: "https://www.ncsha.org/membership/hfa-members/" },
+      { n: "USDA zero-down loans (small towns)", w: "buy with $0 down outside big cities", url: "https://www.rd.usda.gov/programs-services/single-family-housing-programs" }
+    ],
+    local: [
+      { n: "NeighborWorks organization near you", w: "local nonprofits with their own grants and first-shot home deals", url: "https://www.neighborworks.org/our-network/network-directory" },
+      { n: "Habitat for Humanity", w: "a decent home with an affordable mortgage, built partly with your own hours", url: "https://www.habitat.org/housing-help/apply" },
+      { n: "City/county down-payment programs", w: "many cities quietly give $5,000–$50,000+ to buyers — ask \"community development\" at city hall" }
+    ],
+    human: [
+      { n: "A HUD homebuyer counselor", w: "the free class + counselor combo that most down-payment grants require anyway — start here", url: "https://www.hud.gov/counseling", tel: "800-569-4287" }
+    ],
+    comm: ["housing", "bills"],
+    tip: "These folks have nothing to sell you — the most honest people in real estate. Talk to them before any agent or lender."
+  },
+
+  {
+    id: "shelter", group: "home", tier: 0,
+    label: "Somewhere to stay",
+    sheetTitle: "A safe place to stay",
+    say: "I'm about to lose my housing / I have nowhere to stay. I need emergency shelter or rapid re-housing help. Where do I go today, and what should I bring?",
+    fed: [
+      { n: "HUD homeless help in {STATE}", w: "every official door for shelter and rehousing in your state", url: "https://www.hud.gov/states" }
+    ],
+    local: [
+      { n: "211 — say \"shelter\" or \"homeless services\"", w: "tonight's beds, plus rapid re-housing programs that pay deposits and first months", url: "https://www.211.org", tel: "211" },
+      { n: "FindHelp — housing near {ZIP}", w: "shelters, transitional housing, housing navigators", url: "https://www.findhelp.org/search_results/{ZIP}" }
+    ],
+    human: [
+      { n: "A homeless services outreach worker / coordinated entry", w: "one assessment puts you in line for every housing program in the county — 211 can book it", tel: "211" }
+    ],
+    comm: ["housing", "questions"],
+    tip: "Call 211 first, today. Ask for \"coordinated entry\" — that's the front door to all the housing money in your county."
+  },
+
+  /* ------------------------------------------------------- bills & money */
+  {
+    id: "food", group: "money", tier: 1,
+    label: "Food for the house",
+    sheetTitle: "Food for the house",
+    say: "I need help with food for my household. I'd like to apply for SNAP, and while that processes I need the nearest food pantries and any produce or senior food programs.",
+    fed: [
+      { n: "SNAP (food stamps)", w: "monthly grocery money on a card — the average household gets thousands a year", how: "apply through your state SNAP office", url: "https://www.fns.usda.gov/snap/state-directory" },
+      { n: "WIC (pregnant, new moms, kids under 5)", w: "free healthy groceries, formula, and a nutritionist in your corner", how: "the easy front door is SignUpWIC", url: "https://www.signupwic.com" },
+      { n: "School meals + summer EBT", w: "free breakfast/lunch and summer grocery money for school kids — ask the school office" }
+    ],
+    local: [
+      { n: "Your Feeding America food bank", w: "free groceries this week, no long forms", url: "https://www.feedingamerica.org/find-your-local-foodbank" },
+      { n: "211 — food help near you", w: "pantries, hot meals, home-delivered meals", url: "https://www.211.org", tel: "211" }
+    ],
+    human: [
+      { n: "A SNAP outreach worker at your food bank", w: "they fill out the SNAP application with you and chase it for you — ask the pantry \"who helps with SNAP?\"" }
+    ],
+    comm: ["bills", "families"],
+    tip: "Apply for SNAP even if you think you make too much — the deductions surprise people. Seniors: ask about the Senior Food Box (CSFP) and Meals on Wheels (800-677-1116)."
+  },
+
+  {
+    id: "medical", group: "money", tier: 1,
+    label: "Medical bills & health coverage",
+    sheetTitle: "Medical bills & health coverage",
+    say: "I can't afford this medical bill. I'd like to apply for your financial assistance (charity care) program, and please don't send this to collections while my application is open.",
+    fed: [
+      { n: "Medicaid / CHIP", w: "free or nearly-free health coverage — and in many states it can pay bills from the last 3 months", how: "apply any time of year", url: "https://www.healthcare.gov/medicaid-chip/" },
+      { n: "HealthCare.gov marketplace + free navigators", w: "subsidy rules changed for 2026 and prices moved a lot — never auto-renew; a free navigator re-shops your plan with you", url: "https://localhelp.healthcare.gov", tel: "800-318-2596" },
+      { n: "Community health centers", w: "doctor, dental and mental health visits billed on a sliding scale, insurance or not", url: "https://findahealthcenter.hrsa.gov" }
+    ],
+    local: [
+      { n: "The hospital's own charity care", w: "by law, nonprofit hospitals must have a financial assistance policy — most bills under it get cut or erased, but you have to ask", how: "call billing: \"send me your financial assistance application\"" },
+      { n: "Dollar For", w: "free service that files hospital charity-care applications for you and fights denials", url: "https://dollarfor.org" }
+    ],
+    human: [
+      { n: "A hospital financial counselor / patient advocate", w: "their whole job is enrolling you in programs — ask for one at any hospital", url: "https://www.patientadvocate.org", tel: "800-532-5274" }
+    ],
+    comm: ["health", "bills"],
+    tip: "Matthew's rule: never pay the first bill. Ask for an itemized bill, then the charity-care application. Most nonprofit hospitals must forgive bills for regular-income families — it's the law, and it works even after collections start."
+  },
+
+  {
+    id: "rx", group: "money", tier: 2,
+    label: "Prescriptions, dental, glasses & hearing",
+    sheetTitle: "Prescriptions, dental, glasses & hearing aids",
+    say: "I can't afford my prescriptions / dental work. What patient assistance programs, sliding-scale clinics, or copay funds do you have for my situation?",
+    fed: [
+      { n: "NeedyMeds", w: "the master directory of drug-maker assistance programs, copay cards, and free clinics", url: "https://www.needymeds.org", tel: "800-503-6897" },
+      { n: "Community health centers (dental too)", w: "sliding-scale dental chairs most people don't know exist", url: "https://findahealthcenter.hrsa.gov" }
+    ],
+    local: [
+      { n: "Dental Lifeline in {STATE}", w: "free dental care for people who are 65+, disabled, or medically fragile", url: "https://dentallifeline.org/state-programs/" },
+      { n: "Dental school clinics", w: "deep-discount cleanings, fillings and dentures done under professor supervision — search \"dental school clinic near me\"" },
+      { n: "PAN Foundation & copay charities", w: "funds that pay copays for specific conditions", url: "https://www.panfoundation.org" }
+    ],
+    human: [
+      { n: "Your pharmacist", w: "ask: \"is there a discount card, a generic, or a manufacturer program that makes this cheaper?\" They know." }
+    ],
+    comm: ["health", "reports"],
+    tip: "Beware \"$10,000 dental grant\" ads — that's a marketing funnel, not a grant. The real free dental care is at health centers, dental schools and Dental Lifeline."
+  },
+
+  {
+    id: "debt", group: "money", tier: 2,
+    label: "Debt & credit repair",
+    sheetTitle: "Debt & fixing your credit",
+    say: "I want to deal with my debt with free, legitimate help. I'm looking for a nonprofit credit counselor — not a debt settlement company — to review my situation and my options.",
+    fed: [
+      { n: "CFPB complaint line", w: "file a complaint against any bank, lender or collector — companies must respond, usually within 15 days; billions have been returned this way", url: "https://www.consumerfinance.gov/complaint/" },
+      { n: "Your free credit reports", w: "weekly, from the only official site — dispute every error; errors are common and disputes are free", url: "https://www.annualcreditreport.com" }
+    ],
+    local: [
+      { n: "NFCC nonprofit credit counseling", w: "a full money review and a debt plan from a certified counselor, free or nearly free", url: "https://www.nfcc.org", tel: "800-388-2227" },
+      { n: "Financial Empowerment Centers", w: "some cities pay professional money counselors to help residents one-on-one, free", url: "https://fecpublic.org" }
+    ],
+    human: [
+      { n: "A nonprofit credit counselor", w: "start every debt journey here — they've seen worse and they don't judge", tel: "800-388-2227" }
+    ],
+    comm: ["bills", "safety"],
+    tip: "The #1-ranked \"debt relief\" companies on Google have paid millions in scam settlements. Free nonprofit counseling first, always. And use the free Credit Score Coach in the Lesko Toolbox to see what moves your number."
+  },
+
+  {
+    id: "taxes", group: "money", tier: 2,
+    label: "Tax trouble & unclaimed tax credits",
+    sheetTitle: "Tax help & the credits you're owed",
+    say: "I need free help with my taxes. Do I qualify for free preparation, and can you check whether I'm owed the Earned Income Credit or Child Tax Credit — even for past years?",
+    fed: [
+      { n: "VITA free tax prep", w: "IRS-certified volunteers do your taxes free and catch credits paid preparers miss", url: "https://irs.treasury.gov/freetaxprep/", tel: "800-906-9887" },
+      { n: "EITC + Child Tax Credit", w: "worth thousands; millions of eligible people never claim — you can still file for past years", url: "https://www.irs.gov/credits-deductions/individuals/earned-income-tax-credit-eitc" },
+      { n: "IRS Free File", w: "file free online (the old Direct File pilot is gone for 2026 — Free File is the real one now)", url: "https://www.irs.gov/filing/irs-free-file-do-your-taxes-for-free" }
+    ],
+    local: [
+      { n: "Taxpayer Advocate Service", w: "free IRS insiders who untangle hardship cases (garnishments, frozen refunds)", url: "https://www.taxpayeradvocate.irs.gov/contact-us/", tel: "877-777-4778" },
+      { n: "Low Income Taxpayer Clinic", w: "free lawyers to fight the IRS about what you owe", url: "https://www.taxpayeradvocate.irs.gov/about-us/low-income-taxpayer-clinics-litc/" }
+    ],
+    human: [
+      { n: "A VITA volunteer preparer", w: "free, certified, and on your side — skip the big-box tax stores", tel: "800-906-9887" }
+    ],
+    comm: ["taxlegal", "bills"],
+    tip: "Owe back taxes? Ask about an \"Offer in Compromise\" — some people legally settle for a fraction of the bill. Never pay a TV \"tax relief\" firm to do what the Taxpayer Advocate does free."
+  },
+
+  {
+    id: "phone", group: "money", tier: 2,
+    label: "Phone, internet & a computer",
+    sheetTitle: "Phone, internet & a computer",
+    say: "I'm looking for the low-income phone and internet programs — Lifeline, your cheapest fixed plan, and any local program that gives out free or cheap computers.",
+    fed: [
+      { n: "Lifeline", w: "a monthly discount on phone or internet service for lower-income households", url: "https://www.lifelinesupport.org", tel: "800-234-9473" }
+    ],
+    local: [
+      { n: "Your internet provider's low-income plan", w: "most big providers sell a ~$10–$30 basic plan they don't advertise — call and ask for it by name" },
+      { n: "Digital inclusion programs / free computers", w: "nonprofits refurbish computers for families — search \"free computer\" on FindHelp", url: "https://www.findhelp.org/search_results/{ZIP}" },
+      { n: "Your public library", w: "free wifi, computers, printing, and often hotspot lending — plus the reference librarian, your free researcher" }
+    ],
+    human: [
+      { n: "A librarian", w: "will help you apply for Lifeline and find local computer programs — just ask at the desk" }
+    ],
+    comm: ["bills", "reports"],
+    tip: "The old ACP internet credit ended — anyone charging you to \"apply\" for it is a scammer. Lifeline is the one that's real today."
+  },
+
+  /* ------------------------------------------------------ work & business */
+  {
+    id: "business", group: "work", tier: 3,
+    label: "Starting or growing a business",
+    sheetTitle: "Free money & help for your business",
+    say: "Hi, I'm ____ and I wonder if I can make an appointment to talk with someone about starting (or growing) my business — and about any grants, microloans or free help I should apply for.",
+    fed: [
+      { n: "SBA free local help — book mentors", w: "government-paid business mentors: SBDC advisors, SCORE, Women's Business Centers. Book as many as you can — each knows different money", how: "put in your zip and start booking", url: "https://www.sba.gov/local-assistance", tel: "800-827-5722" },
+      { n: "SBA microloans & Community Advantage", w: "up to $50,000 with easier credit rules — built for people banks turn down, including after incarceration", url: "https://www.sba.gov/funding-programs/loans/microloans" },
+      { n: "SBA Lender Match", w: "a 5-minute questionnaire that brings vetted lenders to you within days", url: "https://www.sba.gov/funding-programs/loans/lender-match" }
+    ],
+    local: [
+      { n: "Your state's small business office", w: "state grant rounds open and close all year — your SBDC advisor tracks them so you don't have to" },
+      { n: "Local economic development office", w: "cities and counties give facade grants, startup grants and cheap space — call city hall, ask for \"economic development\"" },
+      { n: "Private grants (Amber, Verizon Digital Ready, chambers)", w: "small-business grants worth $2,000–$25,000 — Verizon's free Digital Ready course unlocks a $10,000 grant round; apply in batches, treat it like fishing", url: "https://www.verizon.com/about/responsibility/digital-inclusion/small-business-training" }
+    ],
+    human: [
+      { n: "A SCORE mentor", w: "a retired exec who's done it before, free, forever", url: "https://www.score.org/find-mentor" },
+      { n: "An SBDC business advisor", w: "free help with the plan, the numbers and the applications", url: "https://americassbdc.org" }
+    ],
+    comm: ["business", "airesearch"],
+    tip: "Matthew's exact script works: \"Hi, I'm ____ and I wonder if I can make an appointment to talk with someone to help me start my business.\" You don't need a plan to make the first call — that's what the free mentors are for. Talk to more than one."
+  },
+
+  {
+    id: "nonprofit", group: "work", tier: 3,
+    label: "Starting a nonprofit",
+    sheetTitle: "Starting a nonprofit",
+    say: "I want to start a nonprofit to ____. I'm looking for free help with the paperwork, and for the foundations and government programs that fund new organizations like mine.",
+    fed: [
+      { n: "IRS 501(c)(3) basics + Form 1023-EZ", w: "many small nonprofits qualify for the short, cheap version of tax-exempt status", url: "https://www.irs.gov/charities-non-profits/applying-for-tax-exempt-status" },
+      { n: "Grants.gov (once you're official)", w: "the federal grant pipeline — for organizations, not individuals; this is where a nonprofit changes the game", url: "https://grants.gov/learn-grants/grant-programs" }
+    ],
+    local: [
+      { n: "Your state nonprofit association", w: "cheap trainings, template bylaws, and the local funder scene", url: "https://www.councilofnonprofits.org/connect-with-your-state-association" },
+      { n: "Community foundation in your county", w: "local money for local causes — ask for the program officer and describe your idea" },
+      { n: "Candid / Foundation Directory at the library", w: "the big funder database, free at many libraries — ask the librarian" }
+    ],
+    human: [
+      { n: "An SBDC or SCORE mentor", w: "yes, they help nonprofits too — plans, budgets, boards", url: "https://www.sba.gov/local-assistance" }
+    ],
+    comm: ["nonprofit", "business"],
+    tip: "Individuals rarely get big federal grants — organizations do. If your dream needs real grant money, a simple nonprofit (or a fiscal sponsor) is often the move. Ask about \"fiscal sponsorship\" to start fast without paperwork."
+  },
+
+  {
+    id: "job", group: "work", tier: 2,
+    label: "Job training or a better job",
+    sheetTitle: "Free training for a better-paying job",
+    say: "I want to train for a better job. What training programs will the government pay for in my case — and can I get help with gas, childcare or a laptop while I train?",
+    fed: [
+      { n: "American Job Center (WIOA money)", w: "the government pays for training — certificates, CDL, healthcare, trades — plus support costs while you train", how: "find your local center and ask for a \"WIOA eligibility appointment\"", url: "https://www.careeronestop.org/localhelp/americanjobcenters/find-american-job-centers.aspx", tel: "877-872-5627" },
+      { n: "Registered apprenticeships", w: "earn a paycheck while you learn a trade", url: "https://www.apprenticeship.gov/apprenticeship-job-finder" }
+    ],
+    local: [
+      { n: "Community college workforce office", w: "short certificate programs now take Pell money (new for 2026) — ask \"which certificates come with Workforce Pell or other funding?\"" },
+      { n: "FindHelp — job training near {ZIP}", w: "nonprofit training programs, many with stipends", url: "https://www.findhelp.org/search_results/{ZIP}" }
+    ],
+    human: [
+      { n: "An American Job Center career counselor", w: "free coach who controls real training dollars — make the appointment", tel: "877-872-5627" }
+    ],
+    comm: ["career", "business"],
+    tip: "Ask every program: \"what support services come with this?\" Training money often travels with gas cards, childcare help, tools and interview clothes — but only for people who ask."
+  },
+
+  {
+    id: "income", group: "work", tier: 1,
+    label: "Quick income right now",
+    sheetTitle: "Quick income while you work the list",
+    say: "While I apply for programs, I need income now. What same-week work do you have, and do I qualify for unemployment or any cash assistance in the meantime?",
+    fed: [
+      { n: "Unemployment insurance", w: "if you lost hours or a job — apply the week it happens, not later", url: "https://www.careeronestop.org/localhelp/unemploymentbenefits/unemployment-benefits.aspx" },
+      { n: "TANF cash assistance", w: "monthly cash for families with kids, through your state", url: "https://www.acf.gov/ofa/map/about/help-families" }
+    ],
+    local: [
+      { n: "Same-week gig platforms", w: "legit, $0 to join: Indeed Gigs, Snagajob, part-time gig boards — an extra $150 by the weekend is real", url: "https://gigs.indeed.com" },
+      { n: "Get paid to care for a loved one", w: "many states pay family caregivers $16–$25/hr through Medicaid self-directed care — ask your Area Agency on Aging", tel: "800-677-1116" }
+    ],
+    human: [
+      { n: "An American Job Center counselor", w: "fastest route to work-now leads plus training money for later", url: "https://www.careeronestop.org/localhelp/americanjobcenters/find-american-job-centers.aspx" }
+    ],
+    comm: ["career", "bills"],
+    tip: "Never pay to get a job, and never \"buy a starter kit.\" If it costs money to start earning, it's not a job — it's their income, not yours."
+  },
+
+
+  /* -------------------------------------------------------- family & care */
+  {
+    id: "childcare", group: "family", tier: 1,
+    label: "Childcare & raising kids",
+    sheetTitle: "Childcare & money for raising kids",
+    say: "I need help affording childcare so I can work. How do I apply for the childcare subsidy in my state, and is there a waitlist I should get on today?",
+    fed: [
+      { n: "State childcare assistance (CCDF)", w: "the government pays most of your childcare bill while you work or train", how: "find your state's program", url: "https://childcare.gov/state-resources" },
+      { n: "Head Start / Early Head Start", w: "free preschool and infant care with meals, for lower-income families", url: "https://headstart.gov/center-locator", tel: "866-763-6481" },
+      { n: "Child Tax Credit + Child & Dependent Care Credit", w: "thousands back at tax time — a VITA volunteer files it free", url: "https://irs.treasury.gov/freetaxprep/", tel: "800-906-9887" }
+    ],
+    local: [
+      { n: "Child Care Resource & Referral agency", w: "free navigators who know every subsidized seat in the county", url: "https://www.childcareaware.org/resources/ccrr-search-form/", tel: "800-424-2246" },
+      { n: "211 — family services", w: "diapers, school supplies, youth programs, holiday help", url: "https://www.211.org", tel: "211" }
+    ],
+    human: [
+      { n: "A CCR&R childcare navigator", w: "call 800-424-2246 — they walk you into the subsidy and onto the right lists", tel: "800-424-2246" }
+    ],
+    comm: ["families", "reports"],
+    tip: "Get on waitlists the same day you call — you can always say no later. And ask your school's family liaison what they can unlock: backpacks, coats, fee waivers, summer programs."
+  },
+
+  {
+    id: "baby", group: "family", tier: 1,
+    label: "Pregnancy & new baby",
+    sheetTitle: "Help through pregnancy & a new baby",
+    say: "I'm pregnant / just had a baby. I'd like to sign up for WIC, and I'm looking for any programs for new parents — home visits, diapers, cribs, and help with medical costs.",
+    fed: [
+      { n: "WIC", w: "free groceries, formula, breastfeeding help and a nutritionist — through pregnancy and until kids turn 5", url: "https://www.fns.usda.gov/wic/applicant-participant/apply" },
+      { n: "Medicaid for pregnancy", w: "covers prenatal care and birth with higher income limits than regular Medicaid — many states cover you a full year after birth", url: "https://www.healthcare.gov/medicaid-chip/" },
+      { n: "Healthy Start & home visiting programs", w: "a free nurse or family coach who visits, answers 2am questions, and connects you to everything else", url: "https://mchb.hrsa.gov/programs-impact/healthy-start" }
+    ],
+    local: [
+      { n: "Your nearest diaper bank", w: "free diapers monthly — no shame, that's what they're for", url: "https://nationaldiaperbanknetwork.org/find-a-diaper-bank/" },
+      { n: "211 — say \"new baby programs\"", w: "cribs, car seats, baby pantries, parenting classes with free gear", tel: "211", url: "https://www.211.org" }
+    ],
+    human: [
+      { n: "A WIC nutritionist", w: "your first appointment signs you up and plugs you into the whole local baby-help network" }
+    ],
+    comm: ["families", "health"],
+    tip: "Say yes to the home-visiting program if offered — families in them get first crack at everything from free cribs to preschool slots."
+  },
+
+  {
+    id: "caregiver", group: "family", tier: 2,
+    label: "Caring for a parent, spouse or friend",
+    sheetTitle: "Support (and pay) for caregiving",
+    say: "I take care of my ____ at home. Are there programs that pay family caregivers in my state, and what respite or support services can we get?",
+    fed: [
+      { n: "Medicaid self-directed care", w: "many states let the person you care for hire YOU — $16–$25/hr in some states", how: "ask their Medicaid caseworker about \"self-directed\" or \"consumer-directed\" care", url: "https://www.medicaid.gov/medicaid/long-term-services-supports/self-directed-services" },
+      { n: "National Family Caregiver Support Program", w: "respite breaks, counseling, supplies — through your Area Agency on Aging", url: "https://eldercare.acl.gov", tel: "800-677-1116" },
+      { n: "VA caregiver programs", w: "if they're a veteran, the VA pays and supports family caregivers", url: "https://www.caregiver.va.gov" }
+    ],
+    local: [
+      { n: "Area Agency on Aging", w: "one call opens every senior-care door in the county", tel: "800-677-1116", url: "https://eldercare.acl.gov" },
+      { n: "ARCH respite locator", w: "someone trustworthy takes over so you can breathe", url: "https://archrespite.org/respitelocator/" }
+    ],
+    human: [
+      { n: "An Area Agency on Aging care manager", w: "free planning session for the whole situation — money, safety, paperwork", tel: "800-677-1116" }
+    ],
+    comm: ["seniors", "families"],
+    tip: "Ask the exact words \"self-directed care\" and \"structured family caregiving\" — offices don't volunteer the programs that pay you."
+  },
+
+  {
+    id: "pets", group: "family", tier: 3,
+    label: "Vet bills & pet food",
+    sheetTitle: "Help with vet bills & pet food",
+    say: "My pet needs care I can't afford right now. Do you have a low-cost clinic, a payment plan, or a fund that helps with this kind of treatment?",
+    fed: [
+      { n: "RedRover urgent care grants", w: "small grants for urgent, life-saving vet care", url: "https://redrover.org/relief" }
+    ],
+    local: [
+      { n: "Your local humane society / SPCA", w: "low-cost clinics, vaccine days, spay/neuter, and pet food pantries", how: "call and ask \"what help do you have for owners in a tight spot?\"" },
+      { n: "FindHelp — search \"pet\" near {ZIP}", w: "pet food banks and vet-bill funds", url: "https://www.findhelp.org/search_results/{ZIP}" },
+      { n: "Veterinary school clinics", w: "teaching hospitals often treat for much less — search \"veterinary school clinic {STATE}\"" }
+    ],
+    human: [
+      { n: "Your vet's front desk", w: "ask about CareCredit alternatives, angel funds, and which local rescue helps with bills — they know the quiet routes" }
+    ],
+    comm: ["families", "reports"],
+    tip: "Matthew's state mini-grant reports have a pet care section — grab yours in the Lesko Grant Reports space."
+  },
+
+  /* --------------------------------------------------------------- health */
+  {
+    id: "mental", group: "health", tier: 1,
+    label: "Mental health & addiction help",
+    sheetTitle: "Mental health & addiction help",
+    say: "I'm looking for counseling / addiction treatment I can afford. Do you offer sliding-scale rates, and what free support programs are there near me?",
+    fed: [
+      { n: "988 Lifeline", w: "free 24/7 call or text support for any rough moment — not only emergencies", tel: "988", url: "https://988lifeline.org" },
+      { n: "SAMHSA treatment finder", w: "every licensed mental health & addiction program, searchable by \"sliding scale\"", url: "https://findtreatment.gov", tel: "800-662-4357" },
+      { n: "Community health centers", w: "therapy and psychiatry billed on a sliding scale", url: "https://findahealthcenter.hrsa.gov" }
+    ],
+    local: [
+      { n: "Your county behavioral health department", w: "free/cheap counseling, case managers, and crisis teams — every county has one" },
+      { n: "NAMI local chapter", w: "free support groups and family classes", url: "https://www.nami.org/findsupport", tel: "800-950-6264" }
+    ],
+    human: [
+      { n: "A peer support specialist", w: "someone who's been there, paid to walk with you — ask the county or NAMI for \"peer support\"" }
+    ],
+    comm: ["health", "questions"],
+    tip: "If money is the barrier, say so out loud — \"what do you have for someone who can't pay right now?\" Sliding scales and grant-funded slots exist at most agencies."
+  },
+
+  {
+    id: "disability", group: "health", tier: 2,
+    label: "Disability benefits & services",
+    sheetTitle: "Disability benefits & services",
+    say: "I have a disability and I want to make sure I'm getting everything I may qualify for — SSI or SSDI, state services, work supports, and any equipment or home changes.",
+    fed: [
+      { n: "SSI / SSDI", w: "monthly checks — SSDI from your work record, SSI even without one", how: "apply online or call", url: "https://www.ssa.gov/benefits/disability/", tel: "800-772-1213" },
+      { n: "Vocational Rehabilitation", w: "your state pays for training, equipment and job support so you can work your way", url: "https://rsa.ed.gov/about/states" },
+      { n: "ABLE account", w: "save money without losing benefits", url: "https://www.ablenrc.org" }
+    ],
+    local: [
+      { n: "Center for Independent Living", w: "run by people with disabilities, for people with disabilities — ramps, advocacy, benefits help", url: "https://www.ilru.org/projects/cil-net/cil-center-and-association-directory" },
+      { n: "National Disability Institute", w: "financial help and small-business support for people with disabilities", url: "https://www.nationaldisabilityinstitute.org" }
+    ],
+    human: [
+      { n: "A benefits counselor (WIPA)", w: "free experts who show how work and benefits fit together without nasty surprises", url: "https://choosework.ssa.gov/findhelp/" }
+    ],
+    comm: ["seniors", "families"],
+    tip: "Denied SSI/SSDI once? That's normal, not final — most wins happen on appeal, and disability lawyers only get paid if you win."
+  },
+
+  /* -------------------------------------------------------- getting around */
+  {
+    id: "car", group: "moving", tier: 2,
+    label: "Car repair, or getting a car",
+    sheetTitle: "Car repair, or getting a car",
+    say: "My car needs repairs I can't afford / I need a car to get to work. What financial assistance is there for car repair or transportation to work near me?",
+    fed: [
+      { n: "American Job Center transportation help", w: "some centers give gas cards, bus passes, even repair money so you can keep a job — ask yours", url: "https://www.careeronestop.org/localhelp/americanjobcenters/find-american-job-centers.aspx", tel: "877-872-5627" }
+    ],
+    local: [
+      { n: "211 + FindHelp — the magic keywords", w: "search \"car repair\", \"transportation\", and \"pay for a car\" — nonprofit repair funds and donated-car programs hide under all three", url: "https://www.findhelp.org/search_results/{ZIP}", tel: "211" },
+      { n: "Church car ministries", w: "congregations quietly fix and give away cars — call the big churches near you and ask if anyone runs a car ministry" },
+      { n: "Working Cars for Working Families", w: "the national list of legit low-cost car-ownership programs — start here before any \"free car\" ad", url: "https://www.workingcarsforworkingfamilies.org" },
+      { n: "1-800-Charity Cars", w: "donated vehicles for families getting back on their feet", url: "https://www.800charitycars.org" },
+      { n: "Smog/emissions repair fund", w: "California pays up to $1,200 toward repairs to pass smog check", url: "https://www.bar.ca.gov/consumer/consumer-assistance-program", only: "CA" }
+    ],
+    human: [
+      { n: "A Community Action caseworker", w: "car trouble is a work-and-income problem — they treat it that way and know the local funds", url: "https://communityactionpartnership.com/find-a-cap/" }
+    ],
+    comm: ["cars", "reports"],
+    tip: "Say why the car matters: \"I need this car to keep my job / get my kids to school.\" Funds that ignore \"car trouble\" open up for \"I'll lose my job without it.\""
+  },
+
+  /* ------------------------------------------------------ school & training */
+  {
+    id: "college", group: "school", tier: 3,
+    label: "Money for college or trade school",
+    sheetTitle: "Money for college or trade school",
+    say: "I'm looking at going back to school. Help me see what I'd actually pay — Pell Grant, state aid, your school's own grants — before any loans.",
+    fed: [
+      { n: "FAFSA — the one form that opens everything", w: "Pell Grants (thousands per year, no repayment), work-study, state aid — any age, any GPA", url: "https://studentaid.gov/h/apply-for-aid/fafsa", tel: "800-433-3243" },
+      { n: "State grant programs", w: "most states add their own grants on top of Pell — some cover full community-college tuition", url: "https://www.nasfaa.org/State_Financial_Aid_Programs" }
+    ],
+    local: [
+      { n: "The financial aid office itself", w: "ask: \"what grants and scholarships does this school give, and what's the deadline?\" — schools hold money nobody claims" },
+      { n: "Local scholarships at the library", w: "community foundations and clubs give small scholarships with tiny applicant pools — the librarian keeps the list" }
+    ],
+    human: [
+      { n: "A financial aid counselor", w: "free at every school, even before you enroll — bring your FAFSA and ask what's possible" }
+    ],
+    comm: ["career", "reports"],
+    tip: "Never pay a scholarship search service. If a \"scholarship\" charges a fee, it's a scam funding someone else's education."
+  },
+
+  {
+    id: "loans", group: "school", tier: 2,
+    label: "Student loan relief",
+    sheetTitle: "Shrinking your student loans",
+    say: "I want to check every forgiveness and lower-payment option for my student loans — income-driven repayment, Public Service Loan Forgiveness, and anything for my situation.",
+    fed: [
+      { n: "Income-driven repayment (rules changed in 2026)", w: "payments tied to your income — a new plan (RAP) started July 2026 and the old SAVE plan is ending, so if you were on SAVE you must pick a new plan now", url: "https://studentaid.gov/idr/", tel: "800-433-3243" },
+      { n: "Forgiveness programs (PSLF & more)", w: "government/nonprofit workers, teachers, disability discharge — worth a careful look, rules keep shifting", url: "https://studentaid.gov/manage-loans/forgiveness-cancellation" }
+    ],
+    local: [
+      { n: "State repayment-help programs", w: "many states repay loans for nurses, teachers and others who work where they're needed — search your state's \"loan repayment program\"" }
+    ],
+    human: [
+      { n: "A nonprofit credit counselor (student loan review)", w: "free walk-through of your real options — never pay a \"student loan relief\" company", tel: "800-388-2227", url: "https://www.nfcc.org" }
+    ],
+    comm: ["bills", "career"],
+    tip: "Only use StudentAid.gov (the real .gov). Companies charging to \"process forgiveness\" are selling you a free form."
+  },
+
+  /* -------------------------------------------------------- safety & legal */
+  {
+    id: "legal", group: "safe", tier: 2,
+    label: "Legal help",
+    sheetTitle: "Free legal help",
+    say: "I have a legal problem with ____ and I can't afford a lawyer. Does your office handle this, and if not — who does free legal help for my kind of case?",
+    fed: [
+      { n: "LawHelp.org", w: "every free legal aid program in {STATE}, by topic", url: "https://www.lawhelp.org/find-help" },
+      { n: "Free Legal Answers", w: "post a question, a volunteer lawyer answers — like a free consult in writing", url: "https://www.freelegalanswers.org" }
+    ],
+    local: [
+      { n: "Law school clinics", w: "students supervised by professors take real cases free — call the nearest law school and ask what their clinics handle" },
+      { n: "County bar association", w: "many run free advice nights and modest-means panels — ask for \"lawyer referral\"" }
+    ],
+    human: [
+      { n: "A legal aid intake screener", w: "one call tells you if they'll take the case and who else to try — always do the intake" }
+    ],
+    comm: ["legal", "taxlegal"],
+    tip: "Court papers have clocks on them. If anything has a deadline, make legal aid call #1 — and show up to every hearing even without a lawyer yet; showing up preserves your options."
+  },
+
+  {
+    id: "dv", group: "safe", tier: 0,
+    label: "Safety at home",
+    sheetTitle: "Being safe at home",
+    say: "I don't feel safe at home and I want to talk through my options — safety planning, somewhere to go, and what financial help exists so I can make a move.",
+    fed: [
+      { n: "National Domestic Violence Hotline", w: "24/7, free, confidential — call 800-799-7233 or text START to 88788; they plan for money, kids, pets, everything", tel: "800-799-7233", url: "https://www.thehotline.org" },
+      { n: "Crime victim compensation", w: "every state has a fund that pays victims' costs — relocation, medical, lost wages, counseling", url: "https://ovc.ojp.gov/help-for-victims/overview" }
+    ],
+    local: [
+      { n: "Your local DV program", w: "shelter, advocates who go to court with you, and emergency funds — the hotline connects you quietly" }
+    ],
+    human: [
+      { n: "A DV advocate", w: "free, confidential, and yours — they know the money programs abusers don't want you to find", tel: "800-799-7233" }
+    ],
+    comm: ["questions"],
+    tip: "If your browsing may be watched, use a library or work computer for this one, and clear this page from your history. You can also erase this tool's saved data any time under 05 · Privacy."
+  },
+
+  {
+    id: "disaster", group: "safe", tier: 0,
+    label: "Disaster recovery",
+    sheetTitle: "Recovering after a disaster",
+    say: "We were hit by the ____ . I want to register for FEMA assistance and find every other recovery program — state, county, and charity — before deadlines pass.",
+    fed: [
+      { n: "DisasterAssistance.gov", w: "one application covers FEMA money for repairs, housing and losses", url: "https://www.disasterassistance.gov", tel: "800-621-3362" },
+      { n: "SBA disaster loans", w: "cheap rebuild loans for homeowners and renters too — not just businesses; applying can also unlock more FEMA money", url: "https://www.sba.gov/funding-programs/disaster-assistance" }
+    ],
+    local: [
+      { n: "211 — local disaster recovery", w: "state funds, church rebuild crews, replacement documents, food and supplies", tel: "211", url: "https://www.211.org" },
+      { n: "Long-Term Recovery Group", w: "after the cameras leave, this local committee hands out the donated money — ask 211 \"who runs long-term recovery here?\"" }
+    ],
+    human: [
+      { n: "A disaster case manager", w: "assigned free through recovery groups — they carry your case across every program", tel: "211" }
+    ],
+    comm: ["questions", "reports"],
+    tip: "Register with FEMA even if you think you won't qualify, and appeal every denial — first denials are routine and appeals work. Photograph everything before you clean up."
+  }
+];
+
+/* ==================================================================
+   Situation flags — each one opens extra doors.
+   ================================================================== */
+const FLAGS = [
+  { id: "single", label: "Single parent",
+    doors: [
+      { n: "Child support enforcement", w: "the state collects for free — and can reopen old cases", url: "https://www.acf.gov/css/parents" },
+      { n: "TANF + childcare subsidy together", w: "cash help and childcare are one application in many states — ask for both", url: "https://www.acf.gov/ofa/map/about/help-families" },
+      { n: "EITC — the single-parent superpower", w: "worth up to several thousand at tax time; VITA files it free", tel: "800-906-9887" }
+    ] },
+  { id: "kids5", label: "Pregnant, or kids under 5",
+    doors: [
+      { n: "WIC", w: "groceries and formula until each child turns 5", url: "https://www.fns.usda.gov/wic/applicant-participant/apply" },
+      { n: "Head Start / Early Head Start", w: "free child development + childcare", url: "https://headstart.gov/center-locator" },
+      { n: "Diaper bank", w: "free diapers monthly", url: "https://nationaldiaperbanknetwork.org/find-a-diaper-bank/" }
+    ] },
+  { id: "vet", label: "Veteran or military family",
+    doors: [
+      { n: "Your County Veterans Service Officer", w: "free claims sharks — they get more money out of the VA than anyone; first-timers call 888-777-4443", url: "https://nvf.org/veteran-service-officers/", tel: "888-777-4443" },
+      { n: "VA benefits check", w: "disability, pension, home loans, healthcare — worth a full review even decades later", url: "https://www.va.gov", tel: "800-698-2411" },
+      { n: "Veteran-owned business doors", w: "VetBiz certification opens set-aside contracts and V-WISE/Boots-to-Business training", url: "https://www.sba.gov/business-guide/grow-your-business/veteran-owned-businesses" }
+    ] },
+  { id: "senior", label: "60 or older",
+    doors: [
+      { n: "Eldercare Locator", w: "one number opens every senior program in your county — meals, rides, repairs, bill help", tel: "800-677-1116", url: "https://eldercare.acl.gov" },
+      { n: "BenefitsCheckUp", w: "NCOA's free screener — the average senior finds thousands/year in missed benefits", url: "https://benefitscheckup.org" },
+      { n: "Medicare Savings Programs + SHIP counselor", w: "the state can pay your Medicare premium; a free SHIP counselor checks in 20 minutes", url: "https://www.shiphelp.org", tel: "877-839-2675" }
+    ] },
+  { id: "dis", label: "Living with a disability",
+    doors: [
+      { n: "SSI / SSDI review", w: "monthly checks — and back pay from your application date", url: "https://www.ssa.gov/benefits/disability/", tel: "800-772-1213" },
+      { n: "Vocational Rehabilitation", w: "state-paid training, equipment and job support", url: "https://rsa.ed.gov/about/states" },
+      { n: "Center for Independent Living", w: "local advocates for housing, benefits and equipment", url: "https://www.ilru.org/projects/cil-net/cil-center-and-association-directory" }
+    ] },
+  { id: "care", label: "Caring for a family member",
+    doors: [
+      { n: "Get paid to care", w: "ask Medicaid about \"self-directed care\" — many states pay family caregivers", url: "https://www.medicaid.gov/medicaid/long-term-services-supports/self-directed-services" },
+      { n: "Caregiver support + respite", w: "free breaks and supplies via your Area Agency on Aging", tel: "800-677-1116" }
+    ] },
+  { id: "unemp", label: "Out of work right now",
+    doors: [
+      { n: "Unemployment insurance", w: "file the same week — waiting costs you weeks of checks", url: "https://www.careeronestop.org/localhelp/unemploymentbenefits/unemployment-benefits.aspx" },
+      { n: "American Job Center", w: "free coach + real training dollars (WIOA)", url: "https://www.careeronestop.org/localhelp/americanjobcenters/find-american-job-centers.aspx", tel: "877-872-5627" }
+    ] },
+  { id: "student", label: "Student (or heading back)",
+    doors: [
+      { n: "Campus emergency aid", w: "most colleges keep quiet emergency grants and food pantries for enrolled students — ask the dean of students" },
+      { n: "FAFSA re-check after life changes", w: "income dropped? Ask financial aid for a \"professional judgment\" review mid-year" }
+    ] },
+  { id: "woman", label: "Woman",
+    doors: [
+      { n: "Women's Business Centers", w: "free training and lending doors for women entrepreneurs", url: "https://www.sba.gov/local-assistance" },
+      { n: "Amber Grant & women-focused grants", w: "monthly small-business grants for women — quick applications", url: "https://ambergrantsforwomen.com" }
+    ] },
+  { id: "minority", label: "Part of a minority community",
+    doors: [
+      { n: "MBDA Business Centers", w: "free consulting + capital doors for minority-owned businesses (call first — centers are in flux this year)", url: "https://www.mbda.gov/mbda-programs/business-centers" },
+      { n: "SBA 8(a) program", w: "a 9-year runway of set-aside government contracts for disadvantaged-owned businesses", url: "https://www.sba.gov/federal-contracting/contracting-assistance-programs/8a-business-development-program" },
+      { n: "CDFIs — community lenders", w: "mission lenders who say yes when banks don't", url: "https://www.cdfifund.gov/tools-resources/cdfi-locator" }
+    ] },
+  { id: "tribal", label: "Native American / tribal member",
+    doors: [
+      { n: "Your tribe's programs first", w: "housing (NAHASDA), tribal TANF, energy help, burial, education — the tribal office knows the full list" },
+      { n: "BIA financial assistance", w: "general assistance where tribal/state programs don't reach", url: "https://www.bia.gov/bia/ois/dhs" },
+      { n: "IHS healthcare", w: "care at Indian Health Service and tribal clinics", url: "https://www.ihs.gov/findhealthcare/" }
+    ] },
+  { id: "imm", label: "Immigrant or refugee",
+    doors: [
+      { n: "Programs that don't ask status", w: "WIC, food banks, community health centers, emergency Medicaid, and 211 help regardless of papers" },
+      { n: "Refugee resettlement services", w: "cash, job help and case management through local resettlement agencies", url: "https://www.acf.gov/orr/map/find-resources-and-contacts-your-state" },
+      { n: "Free/low-cost immigration legal help", w: "only DOJ-accredited reps or lawyers — never notarios", url: "https://www.immigrationadvocates.org/legaldirectory/" }
+    ] },
+  { id: "lgbtq", label: "LGBTQ+",
+    doors: [
+      { n: "Your local LGBTQ community center", w: "many run assistance funds, housing help and free counseling", url: "https://www.lgbtcenters.org/LGBTCenters" },
+      { n: "NGLCC business certification", w: "opens corporate supplier-diversity contracts", url: "https://nglcc.org" }
+    ] },
+  { id: "justice", label: "Been through the justice system",
+    doors: [
+      { n: "Reentry programs via 211", w: "housing, jobs, ID replacement, record expungement clinics — say \"reentry services\"", tel: "211" },
+      { n: "SBA microloans still say yes", w: "a record doesn't disqualify you from the $50,000 microloan program", url: "https://www.sba.gov/funding-programs/loans/microloans" },
+      { n: "Federal Bonding Program", w: "free insurance that makes employers comfortable hiring you", url: "https://bonds4jobs.com" }
+    ] },
+  { id: "rural", label: "Small town or rural area",
+    doors: [
+      { n: "USDA Rural Development", w: "the countryside's own bank: home repair grants, zero-down home loans, business grants", url: "https://www.rd.usda.gov" },
+      { n: "County Cooperative Extension office", w: "free experts on everything from small farms to family budgets — every county has one", url: "https://www.nifa.usda.gov/about-nifa/how-we-work/extension/cooperative-extension-system" }
+    ] },
+  { id: "snap", label: "Already get SNAP or Medicaid",
+    doors: [
+      { n: "Your benefits card is a key", w: "say \"I'm on SNAP/Medicaid\" when calling — it fast-tracks Lifeline phone/internet, free school meals, utility discounts, museum passes and more" },
+      { n: "Lifeline auto-qualify", w: "SNAP or Medicaid = automatic eligibility", url: "https://www.lifelinesupport.org" }
+    ] }
+];
+
+
+/* ==================================================================
+   States, ZIP→state, poverty-line math
+   ================================================================== */
+const STATES = [["AL","Alabama"],["AK","Alaska"],["AZ","Arizona"],["AR","Arkansas"],["CA","California"],["CO","Colorado"],["CT","Connecticut"],["DE","Delaware"],["DC","Washington, DC"],["FL","Florida"],["GA","Georgia"],["HI","Hawaii"],["ID","Idaho"],["IL","Illinois"],["IN","Indiana"],["IA","Iowa"],["KS","Kansas"],["KY","Kentucky"],["LA","Louisiana"],["ME","Maine"],["MD","Maryland"],["MA","Massachusetts"],["MI","Michigan"],["MN","Minnesota"],["MS","Mississippi"],["MO","Missouri"],["MT","Montana"],["NE","Nebraska"],["NV","Nevada"],["NH","New Hampshire"],["NJ","New Jersey"],["NM","New Mexico"],["NY","New York"],["NC","North Carolina"],["ND","North Dakota"],["OH","Ohio"],["OK","Oklahoma"],["OR","Oregon"],["PA","Pennsylvania"],["PR","Puerto Rico"],["RI","Rhode Island"],["SC","South Carolina"],["SD","South Dakota"],["TN","Tennessee"],["TX","Texas"],["UT","Utah"],["VT","Vermont"],["VA","Virginia"],["WA","Washington"],["WV","West Virginia"],["WI","Wisconsin"],["WY","Wyoming"]];
+
+const ZIP3 = [[5,5,"NY"],[6,9,"PR"],[10,27,"MA"],[28,29,"RI"],[30,38,"NH"],[39,49,"ME"],[50,59,"VT"],[60,69,"CT"],[70,89,"NJ"],[100,149,"NY"],[150,196,"PA"],[197,199,"DE"],[200,200,"DC"],[201,201,"VA"],[202,205,"DC"],[206,219,"MD"],[220,246,"VA"],[247,268,"WV"],[270,289,"NC"],[290,299,"SC"],[300,319,"GA"],[320,349,"FL"],[350,369,"AL"],[370,385,"TN"],[386,397,"MS"],[398,399,"GA"],[400,427,"KY"],[430,459,"OH"],[460,479,"IN"],[480,499,"MI"],[500,528,"IA"],[530,549,"WI"],[550,567,"MN"],[570,577,"SD"],[580,588,"ND"],[590,599,"MT"],[600,629,"IL"],[630,658,"MO"],[660,679,"KS"],[680,693,"NE"],[700,714,"LA"],[716,729,"AR"],[730,732,"OK"],[733,733,"TX"],[734,749,"OK"],[750,799,"TX"],[800,816,"CO"],[820,831,"WY"],[832,838,"ID"],[840,847,"UT"],[850,865,"AZ"],[870,884,"NM"],[885,885,"TX"],[889,898,"NV"],[900,961,"CA"],[967,968,"HI"],[970,979,"OR"],[980,994,"WA"],[995,999,"AK"]];
+
+function zipToState(zip) {
+  const p = parseInt(String(zip).slice(0, 3), 10);
+  if (isNaN(p)) return "";
+  for (const [a, b, st] of ZIP3) if (p >= a && p <= b) return st;
+  return "";
+}
+
+/* 2026 federal poverty line (48 states + DC): $15,960 + $5,680/person */
+function fpl(hh) { return 15960 + 5680 * (Math.min(Math.max(hh, 1), 8) - 1); }
+
+const URGENTS = [
+  { id: "evict",   need: "rent",      label: "I got an eviction notice or court papers" },
+  { id: "shutoff", need: "utilities", label: "I have a utility shutoff notice" },
+  { id: "nofood",  need: "food",      label: "We don't have enough food this week" },
+  { id: "nosleep", need: "shelter",   label: "I could lose my housing within days" },
+  { id: "unsafe",  need: "dv",        label: "I'm not safe at home" },
+  { id: "disaster",need: "disaster",  label: "A disaster (storm, fire, flood) just hit us" }
+];
+
+const INCOMES = [
+  { id: "skip", label: "I'd rather not say" },
+  { id: "u20",  label: "Under $20,000" },
+  { id: "u40",  label: "$20,000 – $40,000" },
+  { id: "u65",  label: "$40,000 – $65,000" },
+  { id: "o65",  label: "Over $65,000" }
+];
+
+const TIERS = [
+  { badge: "today",  suit: "♥", cls: "t0", label: "Today",        why: "This has a clock on it. Make these calls first — crisis doors open fastest." },
+  { badge: "week",   suit: "♦", cls: "t1", label: "This week",    why: "Steady the ship: bills, food, income. These calls take pressure off everything else." },
+  { badge: "month",  suit: "♠", cls: "t2", label: "This month",   why: "Fixes that stick: appointments to book and applications to start this month." },
+  { badge: "steady", suit: "♣", cls: "t3", label: "When you're steady", why: "The build-your-future money. Start booking free mentors now — apply when you're ready." }
+];
+
+/* ==================================================================
+   App state
+   ================================================================== */
+const LS_KEY = "lh-ask-v1";
+
+let S = {
+  step: 0,
+  needs: [], urgent: [], flags: [], custom: "",
+  zip: "", state: "", hh: "", inc: "",
+  built: false,
+  done: {}
+};
+
+function loadS() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (raw) S = Object.assign(S, JSON.parse(raw));
+  } catch (e) {}
+}
+function saveS() {
+  try { localStorage.setItem(LS_KEY, JSON.stringify(S)); } catch (e) {}
+}
+
+const $ = (sel) => document.querySelector(sel);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+function stateName() {
+  const f = STATES.find(([c]) => c === S.state);
+  return f ? f[1] : "";
+}
+
+function fill(str) {
+  if (!str) return str;
+  return str
+    .replace(/\{ZIP\}/g, S.zip ? encodeURIComponent(S.zip) : "")
+    .replace(/\{STATE\}/g, stateName() || "your state");
+}
+
+function fillUrl(url) {
+  if (!url) return url;
+  if (url.includes("{ZIP}") && !S.zip) {
+    // no zip: send them to the tool's front door instead of a broken search
+    return url.split("/search_results")[0] || url.replace(/\{ZIP\}/g, "");
+  }
+  return fill(url);
+}
+
+function toast(msg) {
+  const t = $("#toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toast._h);
+  toast._h = setTimeout(() => t.classList.remove("show"), 2600);
+}
+
+/* ==================================================================
+   Tabs
+   ================================================================== */
+const PANELS = ["situation", "sheet", "progress", "tips", "privacy"];
+
+function goTab(id) {
+  PANELS.forEach((p) => {
+    $("#panel-" + p).hidden = p !== id;
+  });
+  document.querySelectorAll(".tab").forEach((b) => b.classList.toggle("active", b.dataset.tab === id));
+  if (id === "sheet") renderSheet();
+  if (id === "progress") renderProgress();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+document.addEventListener("click", (e) => {
+  const tab = e.target.closest(".tab");
+  if (tab) { goTab(tab.dataset.tab); return; }
+  const go = e.target.closest("[data-goto]");
+  if (go) { e.preventDefault(); goTab(go.dataset.goto); }
+});
+
+/* ==================================================================
+   Wizard
+   ================================================================== */
+const STEPS = 6;
+
+function optPill(kind, name, value, label, checked, sub) {
+  return `<label class="opt ${kind === "check" ? "sq" : ""} ${checked ? "on" : ""}">
+    <input type="${kind === "check" ? "checkbox" : "radio"}" name="${name}" value="${esc(value)}" ${checked ? "checked" : ""}>
+    <span class="dot" aria-hidden="true"></span>
+    <span>${label}${sub ? ` <span style="color:var(--ink-faint);font-size:13px">${sub}</span>` : ""}</span>
+  </label>`;
+}
+
+function wizHead(n, title, help) {
+  return `<div class="qhead">
+      <span class="mono-label">Step ${n} of ${STEPS}</span>
+      <div class="qtrack"><i style="width:${Math.round(((n - 1) / STEPS) * 100)}%"></i></div>
+    </div>
+    <h3 class="qtitle">${title}</h3>
+    <p class="qhelp">${help}</p>`;
+}
+
+function wizFoot(n) {
+  const last = n === STEPS;
+  return `<div class="qfoot">
+      <button class="btn ghost" data-wz="back" ${n === 1 ? "style='visibility:hidden'" : ""}>← Back</button>
+      <span class="fine">${n === 1 ? "6 short steps · about 3 minutes · not an application — nothing is sent anywhere" : ""}</span>
+      <button class="btn ${last ? "big" : ""}" data-wz="next">${last ? "Build my call sheet →" : "Next →"}</button>
+    </div>`;
+}
+
+function renderWizard() {
+  const q = $("#qcard");
+  const n = S.step + 1;
+  let inner = "";
+
+  if (S.step === 0) {
+    inner = wizHead(1, "Which of these do you need <em>help</em> with?",
+      "Pick everything that's true — each one becomes its own problem on your list, with its own calls. Nobody sees your picks.");
+    inner += GROUPS.map((g) => {
+      const needs = NEEDS.filter((nd) => nd.group === g.id);
+      if (!needs.length) return "";
+      return `<div class="optgroup">
+        <span class="mono-label"><span class="g-suit" aria-hidden="true">${g.suit}</span>${g.label}</span>
+        <div class="opts">${needs.map((nd) => optPill("check", "needs", nd.id, nd.label, S.needs.includes(nd.id))).join("")}</div>
+      </div>`;
+    }).join("");
+  }
+
+  if (S.step === 1) {
+    inner = wizHead(2, "Is anything on fire <em>right now?</em>",
+      "Some problems have clocks on them. Anything you check here jumps to the top of your call sheet with today-moves.");
+    inner += `<div class="opts" style="flex-direction:column;align-items:flex-start">` +
+      URGENTS.map((u) => optPill("check", "urgent", u.id, u.label, S.urgent.includes(u.id))).join("") +
+      `</div>
+      <p class="fine" style="margin-top:14px">Nothing burning? Skip ahead — that's a good week.</p>`;
+  }
+
+  if (S.step === 2) {
+    inner = wizHead(3, "Where do you live?",
+      "Matthew's rule #3: the money isn't in Washington — it's handed out where you live. Your ZIP points every link on your sheet at your county's money.");
+    inner += `
+      <div class="field-row">
+        <div class="field">
+          <label for="wz-zip">ZIP code</label>
+          <input id="wz-zip" inputmode="numeric" autocomplete="postal-code" maxlength="5" placeholder="e.g. 21201" value="${esc(S.zip)}">
+        </div>
+        <div class="field">
+          <label for="wz-state">State</label>
+          <select id="wz-state">
+            <option value="">Choose your state…</option>
+            ${STATES.map(([c, nm]) => `<option value="${c}" ${S.state === c ? "selected" : ""}>${nm}</option>`).join("")}
+          </select>
+          <p class="hint" id="wz-state-hint"></p>
+        </div>
+      </div>
+      <p class="fine">Optional, but it makes the sheet much sharper. Your ZIP never leaves this page.</p>`;
+  }
+
+  if (S.step === 3) {
+    inner = wizHead(4, "Does any of this describe you?",
+      "This isn't nosiness — whole pots of money are set aside for people in these shoes. Each one you check opens extra doors on your sheet.");
+    inner += `<div class="opts">` +
+      FLAGS.map((f) => optPill("check", "flags", f.id, f.label, S.flags.includes(f.id))).join("") +
+      `</div>
+      <p class="fine" style="margin-top:14px">Check only what you're comfortable with. It stays on this device.</p>`;
+  }
+
+  if (S.step === 4) {
+    inner = wizHead(5, "Your household, roughly",
+      "A rough range is plenty — this only helps us point out which programs you likely fit. We never hide programs based on income: Matthew's rule is that 80% of the money has no income test at all.");
+    inner += `
+      <div class="field">
+        <label>How many people live in your home (you included)?</label>
+        <div class="opts">${[1,2,3,4,5,6,7,8].map((k) =>
+          optPill("radio", "hh", k, k === 8 ? "8 or more" : String(k), String(S.hh) === String(k))).join("")}</div>
+      </div>
+      <div class="field" style="margin-top:16px">
+        <label>Household income, before taxes, per year — ballpark</label>
+        <div class="opts">${INCOMES.map((i) => optPill("radio", "inc", i.id, i.label, S.inc === i.id)).join("")}</div>
+        <p class="hint" id="fpl-hint"></p>
+      </div>`;
+  }
+
+  if (S.step === 5) {
+    inner = wizHead(6, "Anything else, in your own words?",
+      "One problem per line — “my roof leaks”, “I owe the dentist $900”. Each line gets its own card with the exact places to call about it.");
+    inner += `
+      <div class="field">
+        <label for="wz-custom">Your list (optional)</label>
+        <textarea id="wz-custom" placeholder="One problem per line…">${esc(S.custom)}</textarea>
+      </div>
+      <p class="fine">Never type your SSN, account numbers or passwords anywhere in this tool.</p>`;
+  }
+
+  q.innerHTML = inner + wizFoot(n);
+  wireWizard();
+  renderRail();
+}
+
+function wireWizard() {
+  const q = $("#qcard");
+
+  q.querySelectorAll("input[name=needs]").forEach((el) => el.addEventListener("change", () => {
+    el.closest(".opt").classList.toggle("on", el.checked);
+    S.needs = [...q.querySelectorAll("input[name=needs]:checked")].map((i) => i.value);
+    saveS(); renderRail();
+  }));
+
+  q.querySelectorAll("input[name=urgent]").forEach((el) => el.addEventListener("change", () => {
+    el.closest(".opt").classList.toggle("on", el.checked);
+    S.urgent = [...q.querySelectorAll("input[name=urgent]:checked")].map((i) => i.value);
+    saveS(); renderRail();
+  }));
+
+  q.querySelectorAll("input[name=flags]").forEach((el) => el.addEventListener("change", () => {
+    el.closest(".opt").classList.toggle("on", el.checked);
+    S.flags = [...q.querySelectorAll("input[name=flags]:checked")].map((i) => i.value);
+    saveS(); renderRail();
+  }));
+
+  q.querySelectorAll("input[name=hh], input[name=inc]").forEach((el) => el.addEventListener("change", () => {
+    q.querySelectorAll(`input[name=${el.name}]`).forEach((o) => o.closest(".opt").classList.toggle("on", o.checked));
+    if (el.name === "hh") S.hh = el.value; else S.inc = el.value;
+    saveS(); fplHint(); renderRail();
+  }));
+
+  const zip = $("#wz-zip");
+  if (zip) {
+    zip.addEventListener("input", () => {
+      S.zip = zip.value.replace(/\D/g, "").slice(0, 5);
+      zip.value = S.zip;
+      if (S.zip.length >= 3) {
+        const st = zipToState(S.zip);
+        if (st && st !== S.state) {
+          S.state = st;
+          $("#wz-state").value = st;
+          $("#wz-state-hint").textContent = "We guessed " + stateName() + " from your ZIP — change it if that's wrong.";
+        }
+      }
+      saveS(); renderRail();
+    });
+    $("#wz-state").addEventListener("change", (e) => {
+      S.state = e.target.value; $("#wz-state-hint").textContent = ""; saveS(); renderRail();
+    });
+  }
+
+  const cust = $("#wz-custom");
+  if (cust) cust.addEventListener("input", () => { S.custom = cust.value; saveS(); });
+
+  q.querySelectorAll("[data-wz]").forEach((b) => b.addEventListener("click", () => {
+    if (b.dataset.wz === "back") { S.step = Math.max(0, S.step - 1); saveS(); renderWizard(); return; }
+    if (S.step === STEPS - 1) { buildSheet(); return; }
+    S.step = Math.min(STEPS - 1, S.step + 1);
+    saveS(); renderWizard();
+  }));
+
+  fplHint();
+}
+
+function fplHint() {
+  const el = $("#fpl-hint");
+  if (!el) return;
+  const hh = parseInt(S.hh, 10);
+  if (!hh) { el.textContent = ""; return; }
+  const line = fpl(hh);
+  const snap = Math.round((line * 1.3) / 100) * 100;
+  const wic = Math.round((line * 1.85) / 100) * 100;
+  el.textContent = "Rough guide for a household of " + hh + ": food & energy programs often reach ~$" +
+    snap.toLocaleString("en-US") + "/yr, and WIC-type programs ~$" + wic.toLocaleString("en-US") +
+    "/yr. Higher than that? Apply anyway — deductions surprise people.";
+}
+
+/* ==================================================================
+   The rail — the list building itself while they answer
+   ================================================================== */
+function doorCount() {
+  let n = 0;
+  for (const id of S.needs) {
+    const nd = NEEDS.find((x) => x.id === id);
+    if (nd) n += (nd.fed || []).length + (nd.local || []).length + (nd.human || []).length;
+  }
+  for (const f of S.flags) {
+    const fl = FLAGS.find((x) => x.id === f);
+    if (fl) n += fl.doors.length;
+  }
+  n += customList().length * 4;
+  return n;
+}
+
+function customList() {
+  return (S.custom || "").split("\n").map((s) => s.trim()).filter(Boolean).slice(0, 10);
+}
+
+function effectiveTier(nd) {
+  const bump = URGENTS.some((u) => S.urgent.includes(u.id) && u.need === nd.id);
+  return bump ? 0 : nd.tier;
+}
+
+function renderRail() {
+  const el = $("#rail-body");
+  const picked = NEEDS.filter((nd) => S.needs.includes(nd.id) ||
+    URGENTS.some((u) => S.urgent.includes(u.id) && u.need === nd.id));
+  const doors = doorCount();
+
+  if (!picked.length && !customList().length) {
+    el.innerHTML = `<div class="rail-empty"><div class="q" aria-hidden="true">?</div>
+      <p>Answer the questions and watch your list build itself.</p></div>`;
+  } else {
+    const rows = picked
+      .sort((a, b) => effectiveTier(a) - effectiveTier(b))
+      .map((nd) => {
+        const t = TIERS[effectiveTier(nd)];
+        return `<li><span class="s" style="color:var(--${t.cls === "t0" ? "red" : t.cls === "t1" ? "gold-2" : t.cls === "t2" ? "blue" : "green"})">${t.suit}</span>${esc(nd.label)}</li>`;
+      }).join("") +
+      customList().map((c) => `<li><span class="s" style="color:var(--ink-faint)">?</span>${esc(c)}</li>`).join("");
+    el.innerHTML = `
+      <div class="rail-count">${picked.length + customList().length}<small> problem${picked.length + customList().length === 1 ? "" : "s"} → <b>${doors}</b> doors to knock on</small></div>
+      <ul class="rail-list">${rows}</ul>
+      ${S.built ? `<p style="margin:14px 0 0"><button class="btn" data-goto="sheet">See my call sheet →</button></p>` : ""}`;
+  }
+  const bub = $("#bub-sheet");
+  const total = picked.length + customList().length;
+  bub.hidden = !S.built || !total;
+  bub.textContent = total;
+}
+
+/* ==================================================================
+   Building & rendering the call sheet
+   ================================================================== */
+function buildSheet() {
+  // urgency can add needs the member didn't tick
+  for (const u of URGENTS) {
+    if (S.urgent.includes(u.id) && !S.needs.includes(u.need)) S.needs.push(u.need);
+  }
+  S.built = true;
+  saveS();
+  goTab("sheet");
+  toast("Your call sheet is ready. Don't say grants — say financial assistance.");
+}
+
+function resItem(nd, sec, i, r) {
+  if (r.only && r.only !== S.state) return "";
+  const key = nd + "|" + sec + "|" + i;
+  const done = !!S.done[key];
+  const bits = [];
+  if (r.url) bits.push(`<a href="${esc(fillUrl(r.url))}" target="_blank" rel="noopener">${esc(fillUrl(r.url).replace(/^https?:\/\/(www\.)?/, "").split("/")[0])}</a>`);
+  if (r.tel) bits.push(`<a href="tel:${esc(r.tel.replace(/[^\d]/g, "") || r.tel)}">${esc(r.tel)}</a>`);
+  if (r.how) bits.unshift(esc(fill(r.how)));
+  return `<li class="${done ? "done-row" : ""}">
+    <button class="ck ${done ? "done" : ""}" data-ck="${esc(key)}" aria-label="Mark done: ${esc(r.n)}" aria-pressed="${done}"></button>
+    <div><span class="r-name">${esc(fill(r.n))}</span> <span class="r-what">— ${esc(fill(r.w))}</span>
+    ${bits.length ? `<span class="r-how">${bits.join(" · ")}</span>` : ""}</div>
+  </li>`;
+}
+
+function sectionHtml(nd, tag, cls, title, items) {
+  const rows = (items || []).map((r, i) => resItem(nd.id, tag, i, r)).join("");
+  if (!rows) return "";
+  return `<h4><span class="tag ${cls}">${tag}</span>${title}</h4><ul class="res">${rows}</ul>`;
+}
+
+function askCard(nd, num) {
+  const t = TIERS[effectiveTier(nd)];
+  const comm = (nd.comm || []).map((k) => SPACES[k]).filter(Boolean);
+  return `<article class="ask ${t.cls}" data-suit="${t.suit}">
+    <div class="ask-head">
+      <div class="ask-num" aria-hidden="true">${num}</div>
+      <div>
+        <div class="badges"><span class="badge ${t.badge}">${t.suit} ${t.label}</span></div>
+        <h3 class="ask-title">${esc(nd.sheetTitle)}</h3>
+      </div>
+    </div>
+    <div class="ask-body">
+      <div class="say">
+        <span class="mono-label">Say this on the phone</span>
+        <p class="said">“${esc(fill(nd.say))}”</p>
+      </div>
+      ${sectionHtml(nd, "fed", "fed", "Federal help", nd.fed)}
+      ${sectionHtml(nd, "local", "local", "State & local help" + (stateName() ? " · " + esc(stateName()) : ""), nd.local)}
+      ${sectionHtml(nd, "human", "human", "Go talk to a human", nd.human)}
+      ${comm.length ? `<h4><span class="tag comm">community</span>In Lesko Help</h4><ul class="res">${comm.map((c) =>
+        `<li><div><span class="r-name"><a href="${c.url}" target="_blank" rel="noopener">${esc(c.n)}</a></span></div></li>`).join("")}</ul>` : ""}
+    </div>
+    ${nd.tip ? `<div class="ask-foot"><span>💡 ${esc(fill(nd.tip))}</span></div>` : ""}
+  </article>`;
+}
+
+function customCard(text, num, idx) {
+  const t = TIERS[2];
+  const items = [
+    { n: "211 — describe it in your own words", w: "they hear everything, and they know who handles yours", tel: "211", url: "https://www.211.org" },
+    { n: "FindHelp near {ZIP}", w: "type a few words of your problem into the search box", url: "https://www.findhelp.org/search_results/{ZIP}" },
+    { n: "Your reference librarian", w: "a free professional researcher — bring this exact problem to the library desk" },
+    { n: "Your Congressperson's caseworker", w: "if any government office is involved, their staff untangles it free", url: "https://www.commoncause.org/find-your-representative/" }
+  ];
+  const nd = { id: "custom" + idx };
+  return `<article class="ask t2" data-suit="♠">
+    <div class="ask-head">
+      <div class="ask-num" aria-hidden="true">${num}</div>
+      <div>
+        <div class="badges"><span class="badge month">♠ This month</span><span class="badge plain">in your words</span></div>
+        <h3 class="ask-title">${esc(text)}</h3>
+      </div>
+    </div>
+    <div class="ask-body">
+      <div class="say">
+        <span class="mono-label">Say this on the phone</span>
+        <p class="said">“Hi, I'm dealing with ${esc(text.toLowerCase())} and I'm looking for any financial assistance or free services for my situation. Am I in the right place — and if not, who should I call?”</p>
+      </div>
+      ${sectionHtml({ id: "custom" + idx }, "local", "local", "Start with these", items)}
+      <h4><span class="tag comm">community</span>In Lesko Help</h4>
+      <ul class="res">
+        <li><div><span class="r-name"><a href="${SPACES.questions.url}" target="_blank" rel="noopener">Questions Channel</a></span> <span class="r-what">— post this exact problem; the staff answers</span></div></li>
+        <li><div><span class="r-name"><a href="${SPACES.airesearch.url}" target="_blank" rel="noopener">AI Grant Researcher</a></span> <span class="r-what">— request a research report on it for your ZIP</span></div></li>
+      </ul>
+    </div>
+  </article>`;
+}
+
+function boosterCard() {
+  const picked = FLAGS.filter((f) => S.flags.includes(f.id));
+  if (!picked.length) return "";
+  return `<article class="ask t1" data-suit="♦">
+    <div class="ask-head">
+      <div class="ask-num" aria-hidden="true">★</div>
+      <div>
+        <div class="badges"><span class="badge week">♦ Extra doors</span></div>
+        <h3 class="ask-title">Because of who you are</h3>
+      </div>
+    </div>
+    <div class="ask-body">
+      <p style="margin:4px 0 6px;color:var(--ink-soft);max-width:70ch">Programs set aside for people in your shoes. Mention these words on every call — they unlock things.</p>
+      ${picked.map((f) => sectionHtml({ id: "flag-" + f.id }, "unlock", "human", f.label, f.doors)).join("")}
+    </div>
+  </article>`;
+}
+
+function renderSheet() {
+  const el = $("#sheet-body");
+  const picked = NEEDS.filter((nd) => S.needs.includes(nd.id));
+  const customs = customList();
+
+  if (!S.built || (!picked.length && !customs.length)) {
+    el.innerHTML = `<div class="empty-sheet">
+      <div class="q" aria-hidden="true">?</div>
+      <h3>No call sheet yet</h3>
+      <p>Answer the questions under <b>01 · My Situation</b> and your personal call sheet will be built right here.</p>
+      <button class="btn big" data-goto="situation">Start with question 1 →</button>
+    </div>`;
+    $("#sheet-legend").hidden = true;
+    return;
+  }
+
+  $("#sheet-legend").hidden = false;
+  $("#print-date").textContent = new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+  $("#sheet-lead").innerHTML =
+    (stateName() ? `Built for <b>${esc(stateName())}</b>${S.zip ? " · ZIP " + esc(S.zip) : ""}. ` : "") +
+    `Work it top to bottom — <em style="color:var(--red)">and never say “grants” on the phone; say “financial assistance.”</em>`;
+
+  const sorted = picked.slice().sort((a, b) => effectiveTier(a) - effectiveTier(b));
+  let html = "";
+
+  html += `<div class="first-calls">
+    <span class="mono-label">Before anything else — the three master keys</span>
+    <h3>Every call sheet starts with these</h3>
+    <ol>
+      <li><b>Dial 211</b> (or text your ZIP to 898-211) — one call sorts your whole situation into local programs. <a href="https://www.211.org" target="_blank" rel="noopener">211.org</a></li>
+      <li><b>FindHelp.org</b> — every nonprofit program near you${S.zip ? `: <a href="https://www.findhelp.org/search_results/${encodeURIComponent(S.zip)}" target="_blank" rel="noopener">see your ZIP</a>` : ` — <a href="https://www.findhelp.org" target="_blank" rel="noopener">findhelp.org</a>`}.</li>
+      <li><b>The USA.gov Benefit Finder</b> — a 10-minute anonymous quiz across 1,000+ federal programs. <a href="https://www.usa.gov/benefit-finder" target="_blank" rel="noopener">usa.gov/benefit-finder</a></li>
+    </ol>
+  </div>`;
+
+  html += `<div class="mini t-blue noprint" data-suit="♠">
+    <span class="mono-label">Have these ready when you call</span>
+    <p>Photo ID · proof of income (pay stubs or award letters) · the bills or notices themselves · your lease or mortgage statement. Real applications may ask for your SSN <b>at their office or on their official site</b> — never give it to anyone who called <em>you</em>.</p>
+  </div>`;
+
+  let num = 0;
+  let boosterPlaced = false;
+  for (const nd of sorted) {
+    if (!boosterPlaced && effectiveTier(nd) >= 2) { html += boosterCard(); boosterPlaced = true; }
+    num += 1;
+    html += askCard(nd, num);
+  }
+  customs.forEach((c, i) => { num += 1; html += customCard(c, num, i); });
+  if (!boosterPlaced) html += boosterCard();
+
+  html += `<div class="mini t-green" data-suit="♣">
+    <span class="mono-label">When you get a yes</span>
+    <p>Post it in <a href="${SPACES.success.url}" target="_blank" rel="noopener">Success Stories</a> — your win is the map for the next member. And when you hit a wall, bring this sheet to the
+    <a href="${SPACES.clinic.url}" target="_blank" rel="noopener">Thursday Drop-In Clinic</a> or ask in the
+    <a href="${SPACES.questions.url}" target="_blank" rel="noopener">Questions Channel</a>.</p>
+  </div>`;
+
+  el.innerHTML = html;
+
+  el.querySelectorAll("[data-ck]").forEach((b) => b.addEventListener("click", () => {
+    const k = b.dataset.ck;
+    S.done[k] = !S.done[k];
+    if (!S.done[k]) delete S.done[k];
+    saveS();
+    renderSheet();
+    if (Object.keys(S.done).length && S.done[k] !== undefined) toast("Checked off. Keep dialing — the next yes is out there.");
+  }));
+}
+
+/* ==================================================================
+   Copy as text
+   ================================================================== */
+function sheetAsText() {
+  const picked = NEEDS.filter((nd) => S.needs.includes(nd.id)).sort((a, b) => effectiveTier(a) - effectiveTier(b));
+  const customs = customList();
+  const L = [];
+  L.push("MY CALL SHEET — Lesko Help");
+  L.push((stateName() ? stateName() + (S.zip ? " · " + S.zip : "") + " · " : "") + new Date().toLocaleDateString("en-US"));
+  L.push("Rule: never say “grants” — say “financial assistance.”");
+  L.push("");
+  L.push("FIRST — the three master keys:");
+  L.push("  1. Dial 211 (or text your ZIP to 898-211) — 211.org");
+  L.push("  2. FindHelp.org" + (S.zip ? " — findhelp.org/search_results/" + S.zip : ""));
+  L.push("  3. USA.gov Benefit Finder — usa.gov/benefit-finder");
+  L.push("");
+  let num = 0;
+  const item = (r) => {
+    if (r.only && r.only !== S.state) return;
+    const bits = [fill(r.n), "— " + fill(r.w)];
+    if (r.url) bits.push("· " + fillUrl(r.url));
+    if (r.tel) bits.push("· " + r.tel);
+    L.push("   • " + bits.join(" "));
+  };
+  for (const nd of picked) {
+    num += 1;
+    const t = TIERS[effectiveTier(nd)];
+    L.push(num + ") " + nd.sheetTitle.toUpperCase() + "  [" + t.label + "]");
+    L.push("   SAY: “" + fill(nd.say) + "”");
+    (nd.fed || []).forEach(item);
+    (nd.local || []).forEach(item);
+    (nd.human || []).forEach(item);
+    (nd.comm || []).forEach((k) => { const c = SPACES[k]; if (c) L.push("   • Lesko Help: " + c.n + " · " + c.url); });
+    if (nd.tip) L.push("   TIP: " + fill(nd.tip));
+    L.push("");
+  }
+  customs.forEach((c) => {
+    num += 1;
+    L.push(num + ") " + c.toUpperCase() + "  [This month]");
+    L.push("   SAY: “I'm dealing with " + c.toLowerCase() + " and I'm looking for any financial assistance or free services for my situation.”");
+    L.push("   • 211 · FindHelp.org · your librarian · your Congressperson's caseworker");
+    L.push("");
+  });
+  const flags = FLAGS.filter((f) => S.flags.includes(f.id));
+  if (flags.length) {
+    L.push("EXTRA DOORS — because of who you are:");
+    flags.forEach((f) => {
+      L.push("  " + f.label + ":");
+      f.doors.forEach((r) => L.push("   • " + fill(r.n) + " — " + fill(r.w) + (r.url ? " · " + fillUrl(r.url) : "") + (r.tel ? " · " + r.tel : "")));
+    });
+    L.push("");
+  }
+  L.push("Stuck? Questions Channel: " + SPACES.questions.url);
+  L.push("Got a yes? Success Stories: " + SPACES.success.url);
+  L.push("— Free. Like it should be. · Lesko Help");
+  return L.join("\n");
+}
+
+/* ==================================================================
+   Progress
+   ================================================================== */
+function totalDoors() {
+  let n = 0;
+  const count = (nd, sec, items) => (items || []).forEach((r) => { if (!r.only || r.only === S.state) n += 1; });
+  NEEDS.filter((nd) => S.needs.includes(nd.id)).forEach((nd) => { count(nd, "fed", nd.fed); count(nd, "local", nd.local); count(nd, "human", nd.human); });
+  return n;
+}
+
+function renderProgress() {
+  const el = $("#progress-body");
+  const done = Object.keys(S.done).length;
+  const total = totalDoors();
+  if (!S.built || !total) {
+    el.innerHTML = `<div class="empty-sheet">
+      <div class="q" aria-hidden="true">?</div>
+      <h3>Nothing to track yet</h3>
+      <p>Build your call sheet first — then every box you check shows up here.</p>
+      <button class="btn big" data-goto="situation">Build my call sheet →</button>
+    </div>`;
+    return;
+  }
+  const pct = Math.min(100, Math.round((done / total) * 100));
+  const enc =
+    done === 0 ? "Every yes starts with an awkward first call. Make one today — just one." :
+    done < 3 ? "You've started — that already puts you ahead of most people. Keep the streak." :
+    done < 8 ? "This is real research. Every call teaches you who to call next." :
+    "You're working this list like a pro. Matthew would wear his best question-mark suit for you.";
+  el.innerHTML = `
+    <div class="stat-row">
+      <div class="stat"><b>${done}</b><span>doors knocked</span></div>
+      <div class="stat"><b>${total - done}</b><span>doors left</span></div>
+      <div class="stat"><b>${pct}%</b><span>of your sheet</span></div>
+    </div>
+    <div class="qtrack" style="height:10px;margin-bottom:18px"><i style="width:${pct}%"></i></div>
+    <div class="mini t-yellow" data-suit="♦">
+      <span class="mono-label">Keep going</span>
+      <p>${enc}</p>
+    </div>
+    <div class="mini t-green" data-suit="♣">
+      <span class="mono-label">Got money? Got a yes?</span>
+      <p>Post it in <a href="${SPACES.success.url}" target="_blank" rel="noopener">Success Stories</a> — and tell the room what words worked. Your call is somebody else's map.</p>
+    </div>
+    <p class="fine">Checkmarks live on your call sheet (tab 02). This page just adds them up.</p>`;
+}
+
+/* ==================================================================
+   Buttons: copy, print, edit, wipe
+   ================================================================== */
+$("#btn-copy").addEventListener("click", async () => {
+  const txt = sheetAsText();
+  try {
+    await navigator.clipboard.writeText(txt);
+    toast("Copied. Paste it into notes, a text, or an email to yourself.");
+  } catch (e) {
+    const ta = document.createElement("textarea");
+    ta.value = txt; document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); toast("Copied. Paste it anywhere."); }
+    catch (e2) { toast("Couldn't copy automatically — use Print instead."); }
+    ta.remove();
+  }
+});
+
+$("#btn-print").addEventListener("click", () => window.print());
+$("#btn-edit").addEventListener("click", () => { goTab("situation"); });
+
+$("#btn-wipe").addEventListener("click", () => {
+  if (!confirm("Erase your answers, call sheet and progress from this device? There's no undo.")) return;
+  try { localStorage.removeItem(LS_KEY); } catch (e) {}
+  location.reload();
+});
+
+/* ==================================================================
+   Boot
+   ================================================================== */
+loadS();
+renderWizard();
+renderRail();
+</script>
+
+</body>
+</html>
