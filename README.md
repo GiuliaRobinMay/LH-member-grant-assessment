@@ -49,8 +49,23 @@ dead: ACP, federal Emergency Rental Assistance, LIHWAP, FEMA COVID funeral
 assistance, IRS Direct File, the SAVE plan (members are pointed to the 2026
 IDR/RAP changes instead). ACF links use the new `acf.gov` domain.
 
-## Deploying
+## Deploying & embedding
 
-Any static host works. To mirror the Credit Score Coach setup: create a
-Netlify site from this repo (or GitHub Pages), then embed the URL in a
-Mighty Networks space in the **Lesko Toolbox** collection.
+Live at **https://leskomemberassessment.netlify.app/** (Netlify, auto-deploys
+from this repo — same setup as the Credit Score Coach).
+
+Embed in a Mighty Networks space (Lesko Toolbox collection) with:
+
+```html
+<iframe
+  src="https://leskomemberassessment.netlify.app/"
+  title="What Should I Ask For? — Lesko Help call sheet builder"
+  style="width:100%; height:90vh; min-height:900px; border:0; border-radius:16px; background:#faf6ec;"
+  loading="lazy"
+  allow="clipboard-write">
+</iframe>
+```
+
+`allow="clipboard-write"` keeps the "Copy as text" button working inside the
+iframe; the cream `background` avoids a white flash while it loads. Adjust
+`height`/`min-height` to taste — the app scrolls inside the frame.
