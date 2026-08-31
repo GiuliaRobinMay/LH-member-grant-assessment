@@ -23,8 +23,8 @@ in the member's own words, print, and copy-as-text. (Three tabs — The Quiz / M
 / Privacy. The quiz is one small page per topic — 15 topic pages drawn from
 the community's Quick Guide spaces and Matthew's reports (home, bills, food &
 everyday needs, health/dental/vision, family, seniors, veterans, disability,
-work, business, nonprofit, cars, school, legal & safety, pets) plus 5
-finishing pages, with a progress bar over all 20. A solid frame in the four
+work, business, nonprofit, cars, school, legal & safety, pets) with 49
+pickable problems in total, plus 5 finishing pages — progress bar over all 20. A solid frame in the four
 brand colors runs around the whole app.)
 
 Priority tiers ride on the card suits:

@@ -1729,7 +1729,8 @@ const NEEDS = [
     ],
     local: [
       { n: "Your county behavioral health department", w: "free/cheap counseling, case managers, and crisis teams — every county has one" },
-      { n: "NAMI local chapter", w: "free support groups and family classes", url: "https://www.nami.org/findsupport", tel: "800-950-6264" }
+      { n: "NAMI local chapter", w: "free support groups and family classes", url: "https://www.nami.org/findsupport", tel: "800-950-6264" },
+      { n: "University training clinics (couples & family too)", w: "psychology and marriage-and-family-therapy programs see people at very low cost, supervised by professors — call the nearest university and ask for the \"training clinic\"" }
     ],
     human: [
       { n: "A peer support specialist", w: "someone who's been there, paid to walk with you — ask the county or NAMI for \"peer support\"" }
@@ -2027,6 +2028,387 @@ const NEEDS = [
     ],
     comm: ["vets", "reports"],
     tip: "Never pay a \"claims consultant.\" Accredited VSOs do the same work free — and they're better at it."
+  },
+
+  /* ============ expansion: one real list of options per topic page ============ */
+  {
+    id: "funeral", group: "bills", tier: 2,
+    label: "Funeral costs",
+    sheetTitle: "Help with funeral costs",
+    say: "We just lost someone and the funeral is more than we can pay. What help exists — county burial assistance, Social Security, veteran burial benefits — and what are the honest low-cost options?",
+    fed: [
+      { n: "Social Security survivor benefits", w: "the $255 lump-sum death payment plus monthly survivor checks many families never claim", url: "https://www.ssa.gov/survivors", tel: "800-772-1213" },
+      { n: "VA burial benefits", w: "if they served: burial allowance, free cemetery plot, headstone and flag", url: "https://www.va.gov/burials-memorials/" }
+    ],
+    local: [
+      { n: "County burial assistance", w: "most counties quietly pay basic burial or cremation for families who can't", how: "call county social services or the coroner's office and ask for \"indigent burial assistance\"" },
+      { n: "Funeral Consumers Alliance", w: "volunteers who know real local prices and your rights", url: "https://funerals.org" }
+    ],
+    human: [
+      { n: "A county social services caseworker", w: "they process burial help and know the local charity funds" }
+    ],
+    comm: ["bills", "questions"],
+    tip: "Ask any funeral home for the itemized \"General Price List\" — it's your legal right, and direct cremation often costs a fifth of the package they quote first."
+  },
+
+  {
+    id: "medtravel", group: "health", tier: 2,
+    label: "Travel & lodging for medical care",
+    sheetTitle: "Getting to treatment — rides, flights & lodging",
+    say: "My treatment is far from home. Are there free flights, gas help, or free places to stay for patients and family?",
+    fed: [],
+    local: [
+      { n: "Air Charity Network / Angel Flights", w: "volunteer pilots fly patients to distant treatment free", url: "https://aircharitynetwork.org" },
+      { n: "American Cancer Society Hope Lodge", w: "free lodging near cancer centers for patients and caregivers", url: "https://www.cancer.org/support-programs-and-services/patient-lodging.html", tel: "800-227-2345" },
+      { n: "Ronald McDonald House", w: "free family lodging when a child is in the hospital", url: "https://rmhc.org" },
+      { n: "Medicaid non-emergency medical rides", w: "if you have Medicaid, rides to appointments are a covered benefit — ask your plan for \"NEMT\"" }
+    ],
+    human: [
+      { n: "The hospital social worker", w: "travel funds, gas cards and lodging lists all run through them — ask for one by name at any treatment center" }
+    ],
+    comm: ["health", "families"],
+    tip: "Matthew's patient-travel report lives in the Lesko Grant Reports space — condition-specific funds exist for many diagnoses."
+  },
+
+  {
+    id: "schoolkids", group: "family", tier: 1,
+    label: "School costs, supplies & kids' activities",
+    sheetTitle: "School costs, supplies & kids' activities",
+    say: "My kids need school supplies and I can't cover the fees and activities. What can the school waive, and what community programs should we be on?",
+    fed: [
+      { n: "Free school meals", w: "breakfast and lunch — one form at the school office, and it unlocks other fee waivers", how: "ask the school office for the meal application" }
+    ],
+    local: [
+      { n: "The school family liaison / counselor", w: "fee waivers, backpack and coat programs, holiday help — schools hold quiet funds for exactly this" },
+      { n: "211 — back-to-school events", w: "free supplies drives every summer", tel: "211", url: "https://www.211.org" },
+      { n: "Boys & Girls Clubs and YMCA scholarships", w: "low/no-cost after-school and sports — every club has a scholarship rate; ask", url: "https://www.bgca.org/get-involved/find-a-club/" },
+      { n: "Every Kid Sports", w: "pays registration fees so kids can play", url: "https://everykidsports.org" }
+    ],
+    human: [
+      { n: "The school counselor", w: "one conversation: \"what can you waive, and what programs should my kids be on?\"" }
+    ],
+    comm: ["families", "reports"],
+    tip: "Being on free school meals is a key — it often waives testing, sports and activity fees automatically. Ask what it unlocks at your school."
+  },
+
+  {
+    id: "childsupport", group: "family", tier: 2,
+    label: "Child support — getting it or fixing it",
+    sheetTitle: "Child support — getting it or fixing it",
+    say: "I need help with child support — collecting what's owed, or changing an order I truly can't pay. How do I start with the state office, and where's the free legal help?",
+    fed: [
+      { n: "State child support services", w: "the state collects for free — locating parents, garnishing, reopening old cases", url: "https://www.acf.gov/css/parents" }
+    ],
+    local: [
+      { n: "Family court self-help center", w: "free forms and clinics at most courthouses — ask the clerk" },
+      { n: "Legal aid family law unit", w: "free lawyers for custody and support cases", url: "https://www.lawhelp.org/find-help" }
+    ],
+    human: [
+      { n: "Your child support caseworker", w: "if income changed, say the magic words: \"I want a review and adjustment\"" }
+    ],
+    comm: ["families", "legal"],
+    tip: "Both directions are normal: the state collects free, and orders can be lowered legally when income drops. Never just stop paying — always file."
+  },
+
+  {
+    id: "seniorrepair", group: "seniors", tier: 2,
+    label: "Senior home repairs, ramps & grab bars",
+    sheetTitle: "Senior home repairs, ramps & grab bars",
+    say: "I'm a senior homeowner and I need repairs / grab bars / a ramp. What senior repair programs and volunteer groups cover my county?",
+    fed: [
+      { n: "USDA Section 504 grant (62+)", w: "up to $10,000 in repair grants for older homeowners outside big cities", url: "https://www.rd.usda.gov/programs-services/single-family-housing-programs/single-family-housing-repair-loans-grants" },
+      { n: "Weatherization", w: "free furnace, insulation and safety fixes", url: "https://www.energy.gov/scep/wap/how-apply-weatherization-assistance" }
+    ],
+    local: [
+      { n: "Area Agency on Aging minor-repair program", w: "grab bars, rails, small fixes — many counties run one", tel: "800-677-1116", url: "https://eldercare.acl.gov" },
+      { n: "Rebuilding Together", w: "volunteers repair seniors' homes free", url: "https://rebuildingtogether.org/get-help" },
+      { n: "Volunteer handyman ministries", w: "church crews do small jobs free — 211 keeps the list", tel: "211" }
+    ],
+    human: [
+      { n: "An Area Agency on Aging care manager", w: "ask for a \"home safety check\" — it opens the repair money" }
+    ],
+    comm: ["seniors", "housing"],
+    tip: "Say \"aging in place\" on every call — it's the password that opens grab-bar, ramp and repair funds."
+  },
+
+  {
+    id: "kinship", group: "seniors", tier: 1,
+    label: "Grandparents raising grandkids",
+    sheetTitle: "Raising your grandkids — money & support",
+    say: "I'm raising my grandchild. What financial help exists — child-only TANF, kinship payments, guardianship assistance — and who walks me through applying?",
+    fed: [
+      { n: "Child-only TANF", w: "monthly cash for the child — in most states YOUR income doesn't count for a child-only grant", url: "https://www.acf.gov/ofa/map/about/help-families" },
+      { n: "Guardianship assistance (GAP)", w: "ongoing payments when you take legal guardianship through child welfare — ask before you sign anything" },
+      { n: "Grandfamilies resources", w: "state-by-state fact sheets on every kinship program", url: "https://www.gu.org/explore-our-topics/grandfamilies/" }
+    ],
+    local: [
+      { n: "Kinship navigator program", w: "free guides who've walked hundreds of grandfamilies through the paperwork — ask 211 or child welfare for the \"kinship navigator\"", tel: "211" },
+      { n: "School enrollment help", w: "kids can enroll without full paperwork — ask for the McKinney-Vento liaison if documents are a problem" }
+    ],
+    human: [
+      { n: "A kinship navigator", w: "start here — one call sorts TANF, Medicaid, school and legal steps" }
+    ],
+    comm: ["seniors", "families"],
+    tip: "Ask specifically for \"child-only TANF.\" Many grandparents never apply because they assume their own income counts — for a child-only grant it usually doesn't."
+  },
+
+  {
+    id: "vethousing", group: "vets", tier: 1,
+    label: "Veteran housing & emergency help",
+    sheetTitle: "Veterans: housing & emergency help",
+    say: "I'm a veteran and my housing is getting shaky. I want SSVF or HUD-VASH help before this becomes a crisis — who serves my county?",
+    fed: [
+      { n: "VA homeless & at-risk line", w: "24/7 — rent help, deposits, and housing before things break", tel: "877-424-3838" },
+      { n: "SSVF", w: "pays rent, deposits and moving costs for veteran families at risk", url: "https://www.va.gov/homeless/ssvf/" },
+      { n: "HUD-VASH", w: "housing vouchers plus a VA case manager" }
+    ],
+    local: [
+      { n: "Your County Veterans Service Officer", w: "knows every local veteran fund on top of the VA ones", url: "https://nvf.org/veteran-service-officers/", tel: "888-777-4443" },
+      { n: "American Legion & VFW relief funds", w: "posts keep quiet emergency funds for local veterans — call the nearest post" }
+    ],
+    human: [
+      { n: "A VA homeless program coordinator", w: "reached through 877-424-3838 — call at \"worried,\" not at \"evicted\"", tel: "877-424-3838" }
+    ],
+    comm: ["vets", "housing"],
+    tip: "SSVF exists to PREVENT the crisis — the earlier you call, the faster the money moves."
+  },
+
+  {
+    id: "vetwork", group: "vets", tier: 3,
+    label: "Veteran business & job programs",
+    sheetTitle: "Veterans: business & job programs",
+    say: "I'm a veteran starting a business / job hunting. What veteran programs apply — Boots to Business, VBOCs, hiring preference — and who mentors me free?",
+    fed: [
+      { n: "Veterans Business Outreach Centers", w: "free business training and Boots to Business courses for veterans", url: "https://www.sba.gov/local-assistance/resource-partners/veterans-business-outreach-center-vboc-program" },
+      { n: "VR&E (Chapter 31)", w: "the VA pays for training, education and even business startup for service-connected vets", url: "https://www.va.gov/careers-employment/vocational-rehabilitation/" }
+    ],
+    local: [
+      { n: "The veterans rep at your American Job Center", w: "by law veterans get priority of service — ask for the vet rep by name", url: "https://www.careeronestop.org/localhelp/americanjobcenters/find-american-job-centers.aspx", tel: "877-872-5627" },
+      { n: "SCORE veteran mentors", w: "free mentors, many veterans themselves", url: "https://www.score.org/find-mentor" }
+    ],
+    human: [
+      { n: "A VBOC advisor", w: "the veteran-specific version of the free business mentor — book them first" }
+    ],
+    comm: ["vets", "business"],
+    tip: "Say \"I'd like priority of service as a veteran\" at the job center — it's the law, and it moves you up every list."
+  },
+
+  {
+    id: "disequip", group: "disability", tier: 2,
+    label: "Equipment, ramps & home changes",
+    sheetTitle: "Equipment, ramps & home changes",
+    say: "I need equipment / a ramp / a home modification. What programs lend or pay for this, and who helps me figure out what fits before anyone buys anything?",
+    fed: [
+      { n: "Your state assistive technology program", w: "free device loans, demos and reuse — every state runs one", url: "https://at3center.net/state-at-programs/" },
+      { n: "Medicaid waivers", w: "home modifications and equipment through home-and-community-based services — ask your caseworker about \"waiver programs\"" },
+      { n: "VA HISA grant (veterans)", w: "home improvement money for medical needs, even without service connection", url: "https://www.prosthetics.va.gov/psas/HISA2.asp" }
+    ],
+    local: [
+      { n: "Center for Independent Living", w: "ramps, reuse closets, advocacy — run by people with disabilities", url: "https://www.ilru.org/projects/cil-net/cil-center-and-association-directory" },
+      { n: "Medical equipment loan closets", w: "wheelchairs, walkers, shower chairs — free loans in most counties; ask 211 for the \"equipment loan closet\"", tel: "211" },
+      { n: "Civic clubs (Lions, Rotary, Knights)", w: "local clubs quietly fund ramps — one letter to the club president often does it" }
+    ],
+    human: [
+      { n: "An assistive technology specialist", w: "free trials before anyone spends a dime — through your state AT program" }
+    ],
+    comm: ["seniors", "families"],
+    tip: "Try before you buy: the state AT program lends devices for weeks so you only pursue funding for what actually works."
+  },
+
+  {
+    id: "diswork", group: "disability", tier: 2,
+    label: "Working with a disability",
+    sheetTitle: "Working with a disability — without losing your benefits",
+    say: "I have a disability and I want to work. How do Ticket to Work and VR apply to me — and how do I protect my benefits while I try?",
+    fed: [
+      { n: "Ticket to Work", w: "try working with protections on your SSI/SSDI", url: "https://choosework.ssa.gov", tel: "866-968-7842" },
+      { n: "Vocational Rehabilitation", w: "the state pays for training, equipment and job support", url: "https://rsa.ed.gov/about/states" },
+      { n: "A PASS plan", w: "set aside money for a work or business goal without losing SSI — almost nobody asks; ask", url: "https://www.ssa.gov/ssi/spotlights/spot-plans-self-support.htm" }
+    ],
+    local: [
+      { n: "CIL employment services", w: "peer help from people who've done it", url: "https://www.ilru.org/projects/cil-net/cil-center-and-association-directory" }
+    ],
+    human: [
+      { n: "A WIPA benefits counselor", w: "free math on exactly how work affects your checks — before you leap", url: "https://choosework.ssa.gov/findhelp/" }
+    ],
+    comm: ["seniors", "career"],
+    tip: "The fear of losing benefits stops more people than the rules do. One WIPA session replaces the fear with numbers."
+  },
+
+  {
+    id: "uihelp", group: "work", tier: 1,
+    label: "Unemployment claim problems",
+    sheetTitle: "Fixing an unemployment claim",
+    say: "My unemployment claim is denied / stuck / says I owe money back. I want to appeal — what's my deadline, and who helps me free?",
+    fed: [
+      { n: "Your state UI office", w: "file, check status, and start the appeal — the letter's deadline is short and real", url: "https://www.careeronestop.org/localhelp/unemploymentbenefits/unemployment-benefits.aspx" }
+    ],
+    local: [
+      { n: "Legal aid employment unit", w: "free lawyers for UI appeals — most appeals that show up win something", url: "https://www.lawhelp.org/find-help" },
+      { n: "Your state legislator's office", w: "stuck claims move when a legislator's caseworker calls the agency — that's their job", url: "https://www.commoncause.org/find-your-representative/" }
+    ],
+    human: [
+      { n: "A legal aid employment attorney", w: "bring the denial letter — deadlines first, everything else second" }
+    ],
+    comm: ["career", "legal"],
+    tip: "Appeal everything, and ask for a \"waiver\" on any overpayment — hardship waivers exist and are granted more than people think."
+  },
+
+  {
+    id: "workgear", group: "work", tier: 2,
+    label: "Work clothes, tools & fees",
+    sheetTitle: "Work clothes, tools & starting costs",
+    say: "I have a job / interview / training lined up and I need clothes, boots, tools or a license fee covered so I can start. What help exists?",
+    fed: [
+      { n: "WIOA support services", w: "job centers can pay for boots, tools, gas, even license fees when it keeps you employed — ask \"what support services can you authorize?\"", url: "https://www.careeronestop.org/localhelp/americanjobcenters/find-american-job-centers.aspx", tel: "877-872-5627" }
+    ],
+    local: [
+      { n: "Dress for Success", w: "free interview and work clothes for women, plus coaching", url: "https://dressforsuccess.org" },
+      { n: "Interview clothing closets", w: "men's and women's — 211 keeps the local list", tel: "211" },
+      { n: "Goodwill job services", w: "more than a store — free job help and sometimes gear funds", url: "https://www.goodwill.org" }
+    ],
+    human: [
+      { n: "Your American Job Center counselor", w: "never turn down a job over boots — say it out loud; they have a fund for exactly that" }
+    ],
+    comm: ["career", "bills"],
+    tip: "The sentence that works: \"I'll lose this job offer unless I can cover ____ — what can you authorize?\""
+  },
+
+  {
+    id: "bizliving", group: "business", tier: 3,
+    label: "Living costs while you launch",
+    sheetTitle: "Living costs while you launch the business",
+    say: "I'm starting my business and I need to cover living costs while it grows. What programs let me do that without losing everything?",
+    fed: [
+      { n: "Self-Employment Assistance", w: "in some states you can keep unemployment checks while building a business full-time — ask your UI office \"do we have SEA?\"", url: "https://www.careeronestop.org/localhelp/unemploymentbenefits/unemployment-benefits.aspx" },
+      { n: "A PASS plan (if on SSI)", w: "set aside income for the business without losing benefits", url: "https://www.ssa.gov/ssi/spotlights/spot-plans-self-support.htm" },
+      { n: "SBA microloan working capital", w: "the $50,000 microloan can cover working capital, not just equipment", url: "https://www.sba.gov/funding-programs/loans/microloans" }
+    ],
+    local: [
+      { n: "Same-week gig income as a bridge", w: "legit, $0 to join — keeps the lights on while you build", url: "https://gigs.indeed.com" }
+    ],
+    human: [
+      { n: "An SBDC advisor", w: "free cash-flow plan so the launch doesn't eat the rent", url: "https://americassbdc.org" }
+    ],
+    comm: ["business", "airesearch"],
+    tip: "Matthew's angle: there IS money to live on while you start — but only for people who ask the UI office and Social Security the right questions."
+  },
+
+  {
+    id: "farmbiz", group: "business", tier: 3,
+    label: "Farm, land & rural business",
+    sheetTitle: "Farm, land & rural business money",
+    say: "I want to start or grow a farm or rural business. What USDA money and free help applies to a beginner like me?",
+    fed: [
+      { n: "FSA beginning farmer loans & microloans", w: "the government's own farm bank — built for first-timers", url: "https://www.farmers.gov/your-business/beginning-farmers" },
+      { n: "USDA Rural Development business programs", w: "grants and guarantees for rural businesses of every kind", url: "https://www.rd.usda.gov" },
+      { n: "NRCS conservation cost-share", w: "they pay most of the cost of fences, water and soil projects", url: "https://www.nrcs.usda.gov" }
+    ],
+    local: [
+      { n: "County Cooperative Extension office", w: "free farm experts in every county — they've launched more farms than any bank", url: "https://www.nifa.usda.gov/about-nifa/how-we-work/extension/cooperative-extension-system" }
+    ],
+    human: [
+      { n: "Your county extension agent", w: "walk in and say what you want to grow — the rest is their job" }
+    ],
+    comm: ["business", "reports"],
+    tip: "USDA has a whole \"beginning farmer\" lane with easier rules — say the words \"beginning farmer\" on every call."
+  },
+
+  {
+    id: "ged", group: "school", tier: 2,
+    label: "GED & adult education",
+    sheetTitle: "Your GED & adult education, free",
+    say: "I want my GED / stronger reading and math. Where are the free classes near me, and is there help with the test fees?",
+    fed: [
+      { n: "Free adult education classes", w: "your school district and community college run free GED prep — by law", how: "call the community college and ask for \"adult education\"" },
+      { n: "GED testing service", w: "practice tests and your state's rules", url: "https://ged.com" }
+    ],
+    local: [
+      { n: "Library literacy programs", w: "free tutoring, patient and judgment-free", url: "https://www.proliteracy.org/findaprogram" },
+      { n: "Test fee help", w: "many states now cover the GED test cost — ask the adult ed office \"is the test covered here?\"" }
+    ],
+    human: [
+      { n: "An adult education advisor", w: "at the community college — they place you at the right level and know every fund" }
+    ],
+    comm: ["career", "reports"],
+    tip: "A GED changes what every other program on this sheet can do for you — and the classes cost nothing."
+  },
+
+  {
+    id: "immigration", group: "safe", tier: 2,
+    label: "Immigration papers & citizenship",
+    sheetTitle: "Immigration papers & citizenship help",
+    say: "I need help with my papers / citizenship and can't afford a lawyer. Where is the free, DOJ-accredited help near me — and do I qualify for a fee waiver?",
+    fed: [
+      { n: "USCIS fee waivers (Form I-912)", w: "many application fees can be waived for low income — file the waiver, don't skip the application", url: "https://www.uscis.gov/i-912" },
+      { n: "CitizenshipWorks", w: "free guided citizenship applications with legal review", url: "https://www.citizenshipworks.org" }
+    ],
+    local: [
+      { n: "DOJ-accredited legal help directory", w: "the only safe list — nonprofits legally allowed to handle immigration cases", url: "https://www.immigrationadvocates.org/legaldirectory/" },
+      { n: "Catholic Charities & resettlement agencies", w: "low-cost immigration legal clinics in most cities" },
+      { n: "Library citizenship classes", w: "free classes and practice interviews — ask your branch" }
+    ],
+    human: [
+      { n: "A DOJ-accredited representative", w: "never a \"notario\" — accreditation is the whole game" }
+    ],
+    comm: ["legal", "questions"],
+    tip: "\"Notarios\" are the #1 immigration scam in America. Only DOJ-accredited reps or real lawyers touch your case — and fee waivers are real."
+  },
+
+  {
+    id: "expunge", group: "safe", tier: 2,
+    label: "Clearing your record (expungement)",
+    sheetTitle: "Clearing your record",
+    say: "I want to clean up my record so I can work and rent. Do I qualify for expungement or sealing in my state, and when is the next free clinic?",
+    fed: [],
+    local: [
+      { n: "Legal aid expungement clinics", w: "free record-clearing days — often one afternoon of forms", url: "https://www.lawhelp.org/find-help" },
+      { n: "Court self-help center", w: "the clerk can point you to the forms and fee waivers" },
+      { n: "Clean Slate laws", w: "several states now clear eligible records automatically — ask legal aid \"am I covered by clean slate?\"" }
+    ],
+    human: [
+      { n: "A legal aid attorney at an expungement day", w: "211 knows when the next one runs", tel: "211" }
+    ],
+    comm: ["legal", "career"],
+    tip: "One afternoon at an expungement clinic can reopen years of job and housing doors. This is the highest-paying paperwork most people never do."
+  },
+
+  {
+    id: "iddocs", group: "safe", tier: 1,
+    label: "ID, birth certificate & lost papers",
+    sheetTitle: "Replacing your ID & papers",
+    say: "I lost my ID / birth certificate / Social Security card, and I need them to apply for everything else. What's the cheapest, fastest way to replace them — and who helps with the fees?",
+    fed: [
+      { n: "Social Security card — free", w: "replacements never cost anything; anyone charging is a scam", url: "https://www.ssa.gov/number-card/replace-card", tel: "800-772-1213" },
+      { n: "Birth certificates — official state offices", w: "the CDC directory lists every state's real vital-records office", url: "https://www.cdc.gov/nchs/w2w/index.htm" }
+    ],
+    local: [
+      { n: "211 — ID voucher programs", w: "fee help for birth certificates and state IDs", tel: "211", url: "https://www.211.org" },
+      { n: "Homeless services ID clinics", w: "if you're unhoused, ID help is a core service — ask any shelter or outreach worker" }
+    ],
+    human: [
+      { n: "A 211 navigator", w: "ask for an \"ID voucher\" before paying any fee", tel: "211" }
+    ],
+    comm: ["questions", "reports"],
+    tip: "Papers first — every program on this sheet needs them. Do this card before the others if it applies."
+  },
+
+  {
+    id: "license", group: "cars", tier: 2,
+    label: "Driver's license & car insurance problems",
+    sheetTitle: "Getting legal to drive again",
+    say: "My license is suspended over fines / insurance is unaffordable. What legal, low-cost paths get me driving again?",
+    fed: [],
+    local: [
+      { n: "Legal aid license-reinstatement clinics", w: "many states ended debt-based suspensions — free clinics sort fines, payment plans and reinstatement", url: "https://www.lawhelp.org/find-help" },
+      { n: "The court clerk — two questions", w: "\"is there a payment plan?\" and \"do you ever run an amnesty day?\" Both exist more often than people think" },
+      { n: "California Low Cost Auto Insurance", w: "state-run cheap liability coverage for lower incomes", url: "https://www.mylowcostauto.com", only: "CA" }
+    ],
+    human: [
+      { n: "A legal aid traffic attorney", w: "bring every ticket and letter — they untangle the stack in one sitting" }
+    ],
+    comm: ["cars", "legal"],
+    tip: "Suspended-for-fines is a solvable paperwork problem, not a life sentence — the reinstatement clinic is the shortcut."
   },
 
 ];
